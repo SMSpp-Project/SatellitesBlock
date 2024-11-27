@@ -28,38 +28,6 @@
 #                                                                            #
 ##############################################################################
 
-CC = clang++ -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION
-#SW = -g3 -glldb -fno-inline -std=c++17 -ferror-limit=1
-# production compiler options
-SW = -O3 -DNDEBUG -std=c++17
-SATSDR = .
-SMS++OBJ = ../smspp/lib/libSMS++.a
-
-# the Boost library
-include ../extlib/makefile-libBoost
-
-# the Eigen library
-include ../extlib/makefile-libEigen
-
-# the NetCDF library
-include ../extlib/makefile-libNetCDF
-
-# the CPLEX library
-include ../extlib/makefile-libCPLEX
-
-# external -I directives for the core SMS++
-SMS++INC = -I ../smspp/include $(libBoostINC) $(libEigenINC) $(libNtCDFINC) $(libCPLEXINC)
-
-# define & include the necessary modules- - - - - - - - - - - - - - - - - - -
-# if a module is not used in the current configuration, just comment out the
-# corresponding include line
-# each module outputs some macros to be used here:
-# *OBJ is the final object/library
-# *H   is the list of all include files
-# *INC is the -I< include directories >
-
-MILPINC = $(SATSDR)/../milpsolver/include
-
 # include the makefile requiring all external modules in input
 include $(SATSDR)/makefile
 

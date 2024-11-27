@@ -21,23 +21,11 @@ DIR = .
 # debug switches with address sanitizer and extra pedantic warning
 #SW = -g3 -glldb -fno-inline -std=c++17 -ferror-limit=1 -fsanitize=undefined -fsanitize=address -fno-omit-frame-pointer -Wpedantic -Wextra -Wno-unused-parameter
 # production switches
-SW = -O3 -std=c++17 -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION 
-#-DNDEBUG -DCLANG_1200_0_32_27_PATCH -ferror-limit=1 
+#SW = -O3 -std=c++17 -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION 
+SW = -O3 -std=c++17 -DNDEBUG -DCLANG_1200_0_32_27_PATCH -ferror-limit=1
 
 # compiler
-CC = clang++ -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION
-
-# basic CPLEX directory
-libCPLEXBSCDIR = /Applications/CPLEX_Studio2211/cplex/
-
-# lib Cplex directory
-libCPLEXINCDIR = $(libCPLEXBSCDIR)lib/arm64_osx/static_pic/
-
-libCPLEXLIB = -L$(libCPLEXINCDIR) -lilocplex -lcplex $(libCPLEXEXTLIB) 
-libCPLEXINC = -I$(libCPLEXBSCDIR)include/ 
-
-libOSIINC = -I/usr/local/include/coin
-libOSILIB = -rpath /usr/local/lib/ -lOsiClp -lClp -lOsi -lCoinUtils -lOsiCpx
+CC = clang++ #-D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION
 
 # default target- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -61,15 +49,15 @@ clean::
 SATSDR = ..
 include $(SATSDR)/makefile-c
 
-LAGRANGIANDR = ../../lagrangiandualsolver
-BUNDLEDR = ../../bundlesolver
+#LAGRANGIANDR = ../../lagrangiandualsolver
+#BUNDLEDR = ../../bundlesolver
 
-#LgDSLVSDR = $(LAGRANGIANDR)
-#LgDSLVODR = $(LAGRANGIANDR)/obj/
-#include $(LAGRANGIANDR)/makefile-c
+LgDSLVSDR = $(LAGRANGIANDR)
+LgDSLVODR = $(LAGRANGIANDR)/obj/
+include $(LAGRANGIANDR)/makefile-c
 
-libNDOSDR = ../../bundlesolver/NdoFiOracle
-include ../../bundlesolver/NdoFiOracle/lib/makefile
+libNDOSDR = $(BUNDLEDR)/NdoFiOracle
+include $(libNDOSDR)/lib/makefile
 
 BNDSLVSDR = $(BUNDLEDR)
 BNDSLVODR = $(BUNDLEDR)
@@ -81,10 +69,10 @@ include $(BUNDLEDR)/makefile
 MOBJ =  $(SATOBJ) 
 
 # libraries
-MLIB =  $(SATLIB) -L"/Library/gurobi1001/macos_universal2/lib" -lgurobi100
+MLIB =  $(SATLIB) 
 
 $(DIR)/$(NAME): $(MOBJ) $(DIR)/test.o  
-	$(CC) -o $(DIR)/$(NAME) ../../milpsolver/obj/MILPSolver.o ../../milpsolver/obj/CPXMILPSolver.o ../../milpsolver/obj/GRBMILPSolver.o ../../lagrangiandualsolver/LagrangianDualSolver.o ../../bundlesolver/BundleSolver.o ../../bundlesolver/ParallelBundleSolver.o ../../primalproximalheur/PrimalProximalHeur.o $(libNDOOBJ) $^ $(MLIB) $(libNDOINC) $(BNDSLVINC) $(libOSIINC) $(libOSILIB) $(SW) -lpthread -lm 
+	$(CC) -o $(DIR)/$(NAME) $(SW) 
 
 # dependencies: every .o from its .C + every recursively included .h- - - - -
 
@@ -97,6 +85,6 @@ MH =    $(SATH)
 # compile command
 
 $(DIR)/test.o: $(DIR)/test.cpp $(MH) 
-	$(CC) -c $*.cpp -o $@ $(MINC) -I../../lagrangiandualsolver/ -I../../bundlesolver/ -I../../milpsolver/include/ -I../../bundlesolver/ -I$(libNDOSDR)/OPTUtils -I../../bundlesolver/NdoFiOracle/NDOSlver -I../../primalproximalheur/ -I$(libNDOINC) -I$(BNDSLVINC) $(libOSIINC) $(libOSILIB) $(libCPLEXINC) -I"/Library/gurobi1001/macos_universal2/include/" $(SW)
+	$(CC) -c $*.cpp -o $@ $(MINC) $(SW)
 
 ############################ End of makefile #################################
