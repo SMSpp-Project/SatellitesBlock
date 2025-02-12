@@ -690,7 +690,6 @@ class SingleTargetBlockSbstMod : public SingleTargetBlockMod
 
  public:
 
-
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  ///< constructor: takes the SingleTargetBlock, the type, and the subset
