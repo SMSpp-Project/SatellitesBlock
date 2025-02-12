@@ -218,7 +218,7 @@ public:
  }
 
 /*--------------------------------------------------------------------------*/
- /// generate the abstract variables of the DCR
+ /// generate the abstract variables of the SingleTargetBlock
  /** Method that generates the abstract Variable of the SingleTarget. */
 
  void generate_abstract_variables( Configuration *stvv = nullptr ) override;
