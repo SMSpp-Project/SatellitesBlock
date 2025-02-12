@@ -46,7 +46,7 @@ namespace SMSpp_di_unipi_it
  class SatelliteSolution;  // forward declaration of SatelliteSolution
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- SatelliteBlock-RELATED TYPES ---------------------------*/
+/*----------------------- SatelliteBlock-RELATED TYPES ---------------------*/
 /*--------------------------------------------------------------------------*/
 /** @defgroup SatelliteBlock_TYPES SatelliteBlock-related types
  *  @{ */
@@ -77,6 +77,42 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
+
+/// Implementation of a simple SatelliteBlock concept.
+/*
+* Let T and \Delta t_m be the time horizon and the time width between two 
+* consecutive target observations for the target m\in\mathcal X$, respectively. 
+* We consider three sets of binary decision variables:
+*
+* (1) \pi[c] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 
+* is selected for the satellite, 
+* (2) \xi[ t ][ m ] \in \{ 0 , 1 \} indicating whether the satellite observes the 
+* target m at time t, and
+* (3) zeta \in \{ 0 , 1 \} indicating whether the current satellite is active in 
+* the constellation
+* 
+* Mathematically speaking, we have that the following constraints hold for each 
+* satellite.
+*
+* \f[
+* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi_{c}\, 
+\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ][ m ] \} 
+\ge \theta^{\max},       \forall t\in T(dt), \forall m \in \mathcal{X}     (1)
+* \f]
+* \f[
+* \sum_{ c \in [C] } \pi[ c ] = 1                                          (2)
+* \f]
+* \f[
+* \xi[ t ][ m ] \leq zeta, \forall t\in T(dt), \forall m \in \mathcal{X}   (3)
+* \f]
+*
+* Constraints (1) impose that, if the selected distances in longitude and latitude, 
+* \Delta lat[ c ][ t ][ m ] and \Delta long[ c ][ t ][ m ], are smaller than the 
+* threshold $\theta^{\max}$, then the target m is observed by the current satellite 
+* at time t. Constraint (2) requires that exactly one configuration is selected 
+* for the current satellite. Finally, constraints (3) active the current satellite 
+* in the constellation if it observes at least one target.
+*/
 
 class SatelliteBlock : public Block
 {
@@ -472,10 +508,7 @@ public:
  
  boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
  std::vector< ColVariable > zeta;   ///< the satellite activation variables
- 
  std::vector< ColVariable > activation; ///< the observation variables
- 
- std::vector< FRowConstraint > force_sat; 
  
  std::vector< FRowConstraint > orbitSelection; /// the satellite activation constraint
 
