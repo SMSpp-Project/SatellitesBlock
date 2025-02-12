@@ -735,7 +735,7 @@ class SingleTargetBlockSbstMod : public SingleTargetBlockMod
  };  // end( class( SingleTargetBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SingleTargetSolution -----------------------------*/
+/*-------------------------- CLASS SingleTargetSolution --------------------*/
 /*--------------------------------------------------------------------------*/
 
 class SingleTargetSolution : public Solution {

@@ -697,7 +697,7 @@ class SatelliteBlockSbstMod : public SatelliteBlockMod
  };  // end( class( SatelliteBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteSolution -----------------------------*/
+/*-------------------------- CLASS SatelliteSolution -----------------------*/
 /*--------------------------------------------------------------------------*/
 
 class SatelliteSolution : public Solution {
