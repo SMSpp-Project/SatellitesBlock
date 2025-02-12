@@ -642,8 +642,8 @@ class SatelliteBlockRngdMod : public SatelliteBlockMod
 /*--------------------------------------------------------------------------*/
 /// derived from SatelliteBlockMod for "subset" modifications
 /** Derived class from Modification to describe "subset" modifications to a
- *  SatelliteBlock, i.e., modifications that apply to an arbitrary subset of either
- * the arcs or the nodes. */
+ *  SatelliteBlock. 
+ */
 
 class SatelliteBlockSbstMod : public SatelliteBlockMod
 {

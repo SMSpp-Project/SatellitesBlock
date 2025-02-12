@@ -681,8 +681,8 @@ class SingleTargetBlockRngdMod : public SingleTargetBlockMod
 /*--------------------------------------------------------------------------*/
 /// derived from SingleTargetBlockMod for "subset" modifications
 /** Derived class from Modification to describe "subset" modifications to a
- *  SingleTargetBlock, i.e., modifications that apply to an arbitrary subset of either
- * the arcs or the nodes. */
+ *  SingleTargetBlock. 
+ */
 
 class SingleTargetBlockSbstMod : public SingleTargetBlockMod
 {
