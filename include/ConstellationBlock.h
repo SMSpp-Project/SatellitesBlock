@@ -205,8 +205,8 @@ class ConstellationBlock : public Block
 
  FNumber satellites;   /// the maximum number of satellites in the constellation
  FNumber targets;      ///< the number of targets
- FNumber time_step;    ///< the time discretization step
- FNumber horizon;      ///< the simulation horizon [sec]
+ FNumber time_step;    ///< the time discretization step [seconds]
+ FNumber horizon;      ///< the simulation horizon [seconds]
 
  Vec_CNumber periods;      ///< the number of periods per target
 
