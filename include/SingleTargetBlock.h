@@ -630,8 +630,8 @@ class SingleTargetBlockMod : public Modification
 /*--------------------------------------------------------------------------*/
 /// derived from SingleTargetBlockMod for "ranged" modifications
 /** Derived class from SingleTargetBlockMod to describe "ranged"
- * modifications to a SingleTargetBlock, i.e., modifications that apply to an interval
- * of either arcs or nodes. */
+ * modifications to a SingleTargetBlock. 
+ */
 
 class SingleTargetBlockRngdMod : public SingleTargetBlockMod
 {

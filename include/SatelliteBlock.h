@@ -591,8 +591,8 @@ class SatelliteBlockMod : public Modification
 /*--------------------------------------------------------------------------*/
 /// derived from SatelliteBlockMod for "ranged" modifications
 /** Derived class from SatelliteBlockMod to describe "ranged"
- * modifications to a SatelliteBlock, i.e., modifications that apply to an interval
- * of either arcs or nodes. */
+ * modifications to a SatelliteBlock.
+ */
 
 class SatelliteBlockRngdMod : public SatelliteBlockMod
 {
