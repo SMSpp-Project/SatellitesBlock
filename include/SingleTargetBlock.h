@@ -46,7 +46,7 @@ namespace SMSpp_di_unipi_it
  class SingleTargetSolution;  // forward declaration of SingleTargetSolution
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- SingleTargetBlock-RELATED TYPES ---------------------------*/
+/*----------------------- SingleTargetBlock-RELATED TYPES ------------------*/
 /*--------------------------------------------------------------------------*/
 /** @defgroup SingleTargetBlock_TYPES SingleTargetBlock-related types
  *  @{ */
@@ -73,7 +73,7 @@ namespace SMSpp_di_unipi_it
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SingleTargetBlock --------------------------------*/
+/*-------------------------- CLASS SingleTargetBlock -----------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -238,7 +238,7 @@ public:
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SingleTargetBlock --------------*/
+/*-------------- Methods for reading the data of the SingleTargetBlock -----*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the SingleTargetBlock
  *  @{ */
@@ -811,5 +811,5 @@ SMSpp_insert_in_factory_h;
 #endif  /* SingleTargetBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*------------------- End File SingleTargetBlock.h ------------------------*/
+/*------------------- End File SingleTargetBlock.h -------------------------*/
 /*--------------------------------------------------------------------------*/
