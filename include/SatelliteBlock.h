@@ -223,7 +223,7 @@ public:
  }
 
 /*--------------------------------------------------------------------------*/
- /// generate the abstract variables of the DCR
+ /// generate the abstract variables of the SatelliteBlock
  /** Method that generates the abstract Variable of the Satellite. */
 
  void generate_abstract_variables( Configuration *stvv = nullptr ) override;
