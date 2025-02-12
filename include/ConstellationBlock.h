@@ -119,10 +119,7 @@ class ConstellationBlock : public Block
 
 /*--------------------------------------------------------------------------*/
  /// load the ConstellationBlock out of an istream
- /** Load the ConstellationBlock out of an istream. 
-  *
-  * TODO: properly document the formats.
-  *
+ /*
   * If there is any Solver attached to this ConstellationBlock then a NBModification
   * (the "nuclear option") is issued. */
 
@@ -132,6 +129,7 @@ class ConstellationBlock : public Block
  /// generate the "abstract representation" of the Variable of the Block
  /** This method generates the "abstract representation" of the Variable of
   * the ConstellationBlock. 
+  */
 
  void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
@@ -147,8 +145,6 @@ class ConstellationBlock : public Block
  *  @{ */
 
  /// print the ConstellationBlock on an ostream with the given verbosity
- /** Print the ConstellationBlock on an ostream. So far vlvl is ignored and only very
-  * basic information is printed.
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
   
