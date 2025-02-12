@@ -73,7 +73,7 @@ namespace SMSpp_di_unipi_it
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteBlock --------------------------------*/
+/*-------------------------- CLASS SatelliteBlock --------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -454,7 +454,7 @@ public:
 
  Index n;                        ///< the number of targets
  Index t;                        ///< the total number of time step
- FNumber OrbitSet;           ///< the number of configurations
+ FNumber OrbitSet;               ///< the number of configurations
 
  FNumber indexOrbit;
  FNumber dt;                     ///< the time discretization step
@@ -484,7 +484,7 @@ public:
  boost::multi_array< FRowConstraint , 2 > obs1_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (1)
  boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (2)
  boost::multi_array< FRowConstraint , 2 > obs3_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (1)
- boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (3)
+ boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (2)
 
  FRealObjective c;               ///< the (linear) objective function
 
