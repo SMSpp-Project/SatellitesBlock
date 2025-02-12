@@ -70,22 +70,25 @@ namespace SMSpp_di_unipi_it
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple ConstellationBlock concept.
-/* ConstellationBlock is composed of some SatelliteBlocks linked by the observability 
-* constraints for the targets, indicating that each target has to be observed by at
-* least one satellite of the constellation within the revisit time 
+/* ConstellationBlock is composed of some SatelliteBlocks linked by the 
+* observability constraints for the targets, indicating that each target has to 
+* be observed by atleast one satellite of the constellation within the revisit time 
 * \f[
-    \sum_{\substack{t \in T(k,\Delta t_m,dt) \\ i \in \mathcal [s]}} \xi_{i,t,m} \ge 1 \quad 
-    \forall k \in [\lfloor T\slash\Delta t_m\rfloor], \forall m \in \mathcal{X},
+    \sum_{\substack{t \in T(k,\Delta t_m,dt) \\ i \in \mathcal [s]}} \xi_{i,t,m} 
+    \ge 1 \quad \forall k \in [\lfloor T\slash\Delta t_m\rfloor], \forall m \in 
+    \mathcal{X},
 * \f]
-* where \Delta t_m is the revisit time for target m \in \mathcal{X} and [s] = \{1,2,...,s\} is 
-* the set of the satellites in the constellation. Variables \xi_{i,t,m} indicating whether
-* the sallite i observes target m at time stamp t (see SatelliteBlock).
+* where \Delta t_m is the revisit time for target m \in \mathcal{X} and 
+* [s] = \{1,2,...,s\} is the set of the satellites in the constellation. Variables 
+* \xi_{i,t,m} indicating whether the sallite i observes target m at time stamp t 
+* (see SatelliteBlock.h).
 *
-* Moreover, we implement a family of symmetry breaking constraints, i.e, z_{i} \leq z_{i+1},
-* meaning that, if the (i+1)-th satellite is active in the constellation, then also 
-* the previous satellites should be active in the constellation. These latter constraints
-* have been implemented here since we consider the case where all the satellites are 
-* identical, i.e., they are caracterised by the same target capturing technology.
+* Moreover, we implement a family of symmetry breaking constraints, i.e, 
+* z_{i} \leq z_{i+1}, meaning that, if the (i+1)-th satellite is active in the 
+* constellation, then also the previous satellites should be active in the 
+* constellation. These latter constraints have been implemented here since we 
+* consider the case where all the satellites are identical, i.e., they are 
+* caracterised by the same target capturing technology.
 */
 
 class ConstellationBlock : public Block
