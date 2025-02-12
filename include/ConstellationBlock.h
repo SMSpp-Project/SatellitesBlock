@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the *concrete* class ConstellationBlock, which implements the
- * Block concept [see Block.h] for a Multicommodity Min Cost Flow problem.
+ * Block concept [see Block.h] for Satellite Constellation Design Problem (SCDP).
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -69,7 +69,7 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// Implementation of a simple MMCF Block concept.
+/// Implementation of a simple ConstellationBlock concept.
 
 class ConstellationBlock : public Block
 {
@@ -111,33 +111,7 @@ class ConstellationBlock : public Block
  *  @{ */
 
  /// loads the instance from the given file in the given format
- /** Loads a MMCF instance using filename as the "base filename". This method
-  * supports several formats depending on \p frmt, that is case-insensitive.
-  * In particular, for two single-file formats
-  *
-  * - frmt == 0 (default) or frmt == 'c': PPRN format
-  *
-  * - frmt == 's': Canad format
-  *
-  * it behaves just as the Block method (just open an ifstream and
-  * dispatch it load( std::istream & ). However, it also supports 5
-  * multi-file formats:
-  *
-  * - 'm': Mnetgen format
-  * - 'p': Jones-Lustig PSP (product-specific problem) format
-  * - 'o': Jones-Lustig OSP (origin-specific problem) format
-  * - 'd': Jones-Lustig OSP (origin-destination problem) format
-  * - 'u': same as 'd' but supply information is looked at in file
-  *        input + ".od" rather than input + ".sup" as in all the
-  *        other cases
-  *
-  * where input (prefixed as set by set_filename_prefix(), if any) is
-  * completed by the appropriate suffixes ".nod", ".arc", ".mut", ".sup"
-  * or ".od" to load different parts of the description of the MMCF
-  * instance.
-  *
-  * TODO: properly document all the formats.
-  *
+ /** Loads a SDCP instance using filename as the "base filename".
   * If there is any Solver attached to this ConstellationBlock then a NBModification
   * (the "nuclear option") is issued. */
 
@@ -145,8 +119,7 @@ class ConstellationBlock : public Block
 
 /*--------------------------------------------------------------------------*/
  /// load the ConstellationBlock out of an istream
- /** Load the ConstellationBlock out of an istream. Handles the two single-file
-  * formats, i.e., Canad and PPRN.
+ /** Load the ConstellationBlock out of an istream. 
   *
   * TODO: properly document the formats.
   *
@@ -158,25 +131,7 @@ class ConstellationBlock : public Block
 /*--------------------------------------------------------------------------*/
  /// generate the "abstract representation" of the Variable of the Block
  /** This method generates the "abstract representation" of the Variable of
-  * the ConstellationBlock, and in fact it decides which formulation of the MMCF
-  * problem is implemented. This is controlled by the parameter stvv. If stvv
-  * is not nullptr and it is a SimpleConfiguration< int >, or if
-  * f_BlockConfig->f_static_variables_Configuration is not nullptr and it is a
-  * SimpleConfiguration< int >, then the f_value (an int) dictates which
-  * MMCF formulation as follows:
-  *
-  * - [1]: the standard knapsack formulation in which get_NArcs()
-  *   BinaryKnapsackBlock sub-Block are constructed, one for each commodity,
-  *   and the flow constraints are handled in the father ConstellationBlock;
-  *
-  * - [0]: the standard flow formulation in which get_NComm() SatelliteBlock
-  *   sub-Block are constructed, one for each commodity, and the
-  *   linking constraints are handled in the father ConstellationBlock;
-  *
-  * - [other ones possibly to follow].
-  * 
-  *  by default is considered the Flow relaxation
-  */
+  * the ConstellationBlock. 
 
  void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
@@ -194,11 +149,6 @@ class ConstellationBlock : public Block
  /// print the ConstellationBlock on an ostream with the given verbosity
  /** Print the ConstellationBlock on an ostream. So far vlvl is ignored and only very
   * basic information is printed.
-  *
-  * TODO: implement some verbosity level that produce output files in at
-  *       least some of the single-file formats supported by load(); note
-  *       that for multi-file formats, print( std::string & ) must be used.
-  */
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
   
@@ -229,12 +179,6 @@ class ConstellationBlock : public Block
 
 
 /*--------------------------------------------------------------------------*/
- /** called at the end of any constructor, does some initializations that are
-  * common to them all: it is "protected" for allowing derived classes that
-  * use the "void" constructor to call it. */
-
- //void CmnIntlz( void );
-
 /* @} ----------------------------------------------------------------------*/
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -272,7 +216,7 @@ class ConstellationBlock : public Block
 
  boost::multi_array< FRowConstraint , 2 > observation; /// the observation constraints
  FRowConstraint observation1; /// the observation1 constraints
- FRowConstraint observation2; /// the observation1 constraints
+ FRowConstraint observation2; /// the observation2 constraints
 
  std::vector< FRowConstraint > symmetry; 
   
