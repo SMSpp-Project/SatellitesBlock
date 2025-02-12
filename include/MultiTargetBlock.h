@@ -204,8 +204,8 @@ class MultiTargetBlock : public Block
 
  FNumber satellites;   ///< the number of satellites in the MultiTarget
  FNumber targets;      ///< the number of targets
- FNumber time_step;    ///< the time discretization step
- FNumber horizon;      ///< the simulation horizon [sec]
+ FNumber time_step;    ///< the time discretization step [seconds]
+ FNumber horizon;      ///< the simulation horizon [seconds]
  FNumber indexOrbit;      ///< the number of possible orbital plane
 
  boost::multi_array< FRowConstraint , 3 > duplicate_pi; ///< duplicate_pi constraints; 
