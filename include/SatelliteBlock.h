@@ -3,7 +3,8 @@
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the *concrete* class SatelliteBlock, which implements
- * the Block concept [see Block.h] for the solution of Satellite observavility problem.
+ * the Block concept [see Block.h] for the solution of Satellite observavility 
+ * problem.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
