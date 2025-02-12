@@ -139,7 +139,7 @@ class ConstellationBlock : public Block
   override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE ConstellationBlock --------------*/
+/*--------------- METHODS FOR PRINTING & SAVING THE ConstellationBlock -----*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for printing & saving the ConstellationBlock
  *  @{ */
