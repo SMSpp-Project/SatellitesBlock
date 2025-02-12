@@ -65,7 +65,7 @@ namespace SMSpp_di_unipi_it
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS MultiTargetBlock ------------------------------*/
+/*-------------------------- CLASS MultiTargetBlock ------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -139,7 +139,7 @@ class MultiTargetBlock : public Block
   override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE MultiTargetBlock --------------*/
+/*--------------- METHODS FOR PRINTING & SAVING THE MultiTargetBlock -------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for printing & saving the MultiTargetBlock
  *  @{ */
@@ -149,7 +149,7 @@ class MultiTargetBlock : public Block
  void print( std::ostream & output , char vlvl = 0 ) const override;
   
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SingleTargetBlock ---------*/
+/*-------------- Methods for reading the data of the SingleTargetBlock -----*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the MultiTargetBlock
  *  @{ */
