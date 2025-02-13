@@ -85,7 +85,7 @@ namespace SMSpp_di_unipi_it
 * consecutive target observations for the target m\in\mathcal X$, respectively. 
 * We consider three sets of binary decision variables:
 *
-* (1) \pi[c] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 
+* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 
 * is selected for the satellite, 
 * (2) \xi[ t ][ m ] \in \{ 0 , 1 \} indicating whether the satellite observes the 
 * target m at time t, and
