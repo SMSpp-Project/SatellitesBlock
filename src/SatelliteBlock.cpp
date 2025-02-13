@@ -241,10 +241,13 @@ void SatelliteBlock::generate_abstract_variables( Configuration *stvv )
 
 void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
 {
-  //Thetamax[i] == (-alphaHalf + sum(activation_altitude[i,j]*asin(((RAYON+altitudeSet[j])/RAYON)*sin(alphaHalf)) for j=1:length(altitudeSet))))
 
   if( AR2 & HasCnst )  // the constraints are there already
     return;           // nothing to do
+
+  // generate the orbitSelection constraint, which select exctly one orbit
+  // configuration for the satellite: sum_{j \in OrbitSet} activation[ j ] == 1
+  // remember: activation[ j ] = 1 iff. the j-th configuration is selected 
 
   orbitSelection.resize( 1 );
   LinearFunction::v_coeff_pair orbit_var;
@@ -257,7 +260,13 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   orbitSelection[ 0 ].set_function( FunctAnm );
 
   add_static_constraint( orbitSelection );
-  
+
+  // generate the activationSat_cnst, which active the current satellite if
+  // there exists a target m is observed by this satellite at a given time step:
+  // zeta \leq xi[ i ][ j ], for all targets i's and time steps j's
+  // remember: zeta = 1 iff. the current satellite is active in the constellation
+  // and xi[ i ][ j ] = 1 iff. satellite observe target i at time step j
+
   activationSat_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
   for( Index i = 0 ; i < n ; ++i ){
     for( Index j = 0 ; j < t ; ++j ){
@@ -272,19 +281,24 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   }
   add_static_constraint( activationSat_cnst );
   
-  // generate observability constraints via big-M approach
+  // generate observability (linearize) constraints via big-M approac
+  // these constraints traslate the fact that a target is observed by
+  // the current satellite, i.e., xi[ i ][ j ] = 1, if the (scaled) 
+  // distance between the projection of the satellite position onto
+  // the Earth surface and the position of the target is smaller than
+  // a threshold theta^{\max} with respect to Latitude and Longitude.
 
-  //Thetamax[i]+(1-Xi[i,p,j])*M_limit >= (sum(act4[i,a,k,l,s]*CoverageSatLat[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
+  //Thetamax +(1 - xi[ i ][ j ]) * MLAT \geq 
+  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLat[ i ][ j ][ jj ]
+  // for all targets m's and time steps j's   
 
-  //Thetamax[i]+(1-Xi[i,p,j])*M_limit >= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
-  //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLat[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
-  //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
+  //Thetamax +(1 - xi[ i ][ j ]) * MLONG \geq 
+  // sum_{jj \in OrbitSet}  (activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ] 
+  // for all targets m's and time steps j's
+  
+  // MLAT and MLONG are two big-M parameters automatically computed 
+  // such that their numerical values are the smallest to guarantee 
+  // that constraint are valid (redundant when xi[ i ][ j ] = 0)
 
   obs2_cnst.resize(
     boost::multi_array_types::
