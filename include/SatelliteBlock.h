@@ -100,7 +100,7 @@ namespace SMSpp_di_unipi_it
 * \f[
 * \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ c ]\, 
 \Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi[ c ] \,\Delta long[ c ][ t ][ m ] \} 
-\ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}          (1)
+\ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}           (1)
 * \f]
 * \f[
 * \sum_{ c \in [C] } \pi[ c ] = 1                                          (2)
