@@ -127,7 +127,6 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  {
    j++;
 	altitudeSetVal = cbrt( ( MU * pow(( horizon ) / j, 2.0) ) / ( 4.0 * pow( PI , 2.0 ))) - RAYON;
-   //std::cout << altitudeSetVal << "\n";
 	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
 		altitude[indexLen] = altitudeSetVal;
@@ -182,13 +181,10 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
  std::cout << "alpha_flag=" << alpha_lim_flag << "\n";
  
- /***********************/
  if (alpha_lim_flag == 1) {
    std::cout << "theta_min: " << Theta_min << "\n";
  }
- /***********************/
  
- //Theta_max = Theta_min;
  double numbOfDiscretize = ceil(PI / Theta_min);
  
  std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
@@ -207,7 +203,6 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  std::generate(x.begin(), x.end(), [&] { return start_in + (iter++) * dx; });
 
  Vec_CNumber inclination = x;
- //std::cout << inclination;
 
  end_in = 2*PI;
  dx = (end_in - start_in) / (num_in - 1);
@@ -219,9 +214,7 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
  double thetaValFinal = Theta_min;
  double altitudeFinal = altitude[ indexLen-1 ]; 
- //double altitudeFinal = altitude[0];
- 
- //std::cout << "theta_min: " << Theta_min << "\n";
+
  std::cout << "alpha_half: " << aHalf * 180 / PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
  std::cout << "altitude: " << altitudeFinal << "\n";
