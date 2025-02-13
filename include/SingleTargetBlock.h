@@ -571,14 +571,14 @@ public:
 
  std::vector< ColVariable > Deltat_k1A;
  std::vector< ColVariable > Deltat_k2A;
- std::vector< ColVariable > Deltat_k2AUX;
 
- boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
  std::vector< ColVariable > h; ///< the two-observation variables
- boost::multi_array< ColVariable , 2 > activation; ///< the observation variables
 
  std::vector< ColVariable > d1; ///< the d1 variables
  std::vector< ColVariable > d2; ///< the d2 variables
+
+ boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
+ boost::multi_array< ColVariable , 2 > activation; ///< the observation variables
   
  std::vector< FRowConstraint > orbitSelection; /// the SingleTarget activation constraint
 
