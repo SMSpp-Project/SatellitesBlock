@@ -863,25 +863,35 @@ void SingleTargetBlock::guts_of_destructor( void )
  // clear the bound constraints
   
  Constraint::clear( orbitSelection ); 
+
  Constraint::clear( Deltat_max1 );
+ Constraint::clear( Deltat_max11 );
  Constraint::clear( Deltat_max2 );
+ Constraint::clear( Deltat_max22 );
  Constraint::clear( Deltat_max3 );
+
  Constraint::clear( Deltat_min_k1_1 );
  Constraint::clear( Deltat_min_k1_2 );
  Constraint::clear( Deltat_min_k2_1 );
  Constraint::clear( Deltat_min_k2_2 );
  Constraint::clear( d1_cnst );
  Constraint::clear( d2_cnst );
- //Constraint::clear( dA_cnst );
- //Constraint::clear( dB_cnst );
+
  Constraint::clear( h_cnst_1 );
  Constraint::clear( h_cnst_2 );
  Constraint::clear( h_cnst_3 );
+
  Constraint::clear( activationSat_cnst );
- //Constraint::clear( obs1_cnst );
+ Constraint::clear( activationSat1_cnst );
+
  Constraint::clear( obs2_cnst );
- //Constraint::clear( obs3_cnst );
  Constraint::clear( obs4_cnst );
+
+ Constraint::clear( obs_cnst );
+ Constraint::clear( obs_cnst_h );
+ Constraint::clear( obs_cnst_xi );
+
+ Constraint::clear( Deltat_max_dt1 );
   
  c.clear();  // clear the Objective
 
