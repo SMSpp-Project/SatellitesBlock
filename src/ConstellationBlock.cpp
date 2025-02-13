@@ -369,6 +369,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
    add_static_constraint( observation , "observation" );
 
    // symmetry breaking constraints: z[ i+1 ] \leq z[ i ] forall i \in [s-1]
+   // a satellite is active in the constellation if all the previous ones are active 
 
    symmetry.resize( satellites-1 );
    for( Index i = 0 ; i < satellites-1 ; ++i ) {
