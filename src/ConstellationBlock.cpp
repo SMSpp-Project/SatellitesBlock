@@ -359,7 +359,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
           v_var.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_z(), 0.0 ));
        }
 
-      // fake constraints when j \geq periods[i]: we simply set 0 * z[ i ] = 0 for SatelliteBlock i
+      // fake constraints when j \geq periods[i]: we simply set 0 * z[ i ] == 0 for SatelliteBlock i
       observation[ i ][ j ].set_function( new LinearFunction( std::move( v_var )));
       observation[ i ][ j ].set_rhs( 0.0 ); 
       observation[ i ][ j ].set_lhs( 0.0 );
