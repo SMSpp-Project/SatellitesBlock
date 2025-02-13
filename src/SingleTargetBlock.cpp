@@ -260,7 +260,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( b2 );
 
-  // z[ j ] is the variable indicating whether the constellation 
+  // z[ j ] is the (binary) variable indicating whether the constellation 
   // observes the current target at time stamp j  
   zeta.resize( t );
   for( auto & var : zeta )
@@ -268,9 +268,9 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( zeta );
 
-  // activation[ i ][ jj ] is a variable indicating whether satellite
-  // i is in orbital configuration jj (OrbitSet is the max number of 
-  // orbital configuration, see MultiTargetBlock.cpp)
+  // activation[ i ][ jj ] is the (binary) variable indicating whether 
+  // satellitei is in orbital configuration jj (OrbitSet is the max number 
+  // of orbital configuration, see MultiTargetBlock.cpp)
   activation.resize( boost::extents[ n ][ OrbitSet ] );
   for( Index i = 0 ; i < n ; ++i )
     for( Index j = 0 ; j < OrbitSet ; ++j )
@@ -278,7 +278,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( activation );
 
-  // h[ ii ] is the variable indicating whether the constellation 
+  // h[ ii ] is the (binary) variable indicating whether the constellation 
   // observes the current target both at time stamps i and j with 
   // j > i; ii is an incremental index in {1,2,\dots, t * (t-1)/2}, 
   // where t is the total number of time stamps
@@ -288,6 +288,8 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( h );
 
+  // xi[ i ][ j ] is the (binary) indicating whether the satellite i 
+  // observes the current target at time stamp j
   xi.resize( boost::extents[ n ][ t ] );
   for( Index i = 0 ; i < n ; ++i )
     for( Index j = 0 ; j < t ; ++j )
