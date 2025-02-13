@@ -79,7 +79,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  * < number of revisit period of the target 1 > < latitude of the target 1 > < longitude of the target 1 >
  * < ... >
  * < number of revisit period of the target m > < latitude of the target m > < longitude of the target m >
- * <maximum number of satellites active in the constellation >
+ * < maximum number of satellites active in the constellation >
  *
  */ 
 
