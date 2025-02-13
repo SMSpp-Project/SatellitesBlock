@@ -217,6 +217,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
   if( AR3 & HasVar )  // the variables are there already
     return;           // nothing to do
 
+  // Deltat is the maximum revisit time (the objective to minimize)  
   Deltat.resize( 1 );
   for( auto & var : Deltat )
    var.set_type( ColVariable::kNonNegative );
