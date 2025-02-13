@@ -360,7 +360,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
   * the configuration of each satellite find for a given target should be 
   * the same for all the targets, i.e., the satellite orbital configuration
   * should be independent from the target, but it should be associated with
-  * the satellites of the constellation
+  * the satellites of the constellation. These are the constraints linking
+  * the SingleTargetBlocks (each of them containing a copy of the variable 
+  * \pi[ j ][ k ] which active/deacrive a satellite orbital configuration)
   */
 
    duplicate_pi.resize( boost::multi_array_types::extent_gen()[ targets - 1  ][ satellites ][ indexOrbit ] );
