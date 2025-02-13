@@ -498,7 +498,7 @@ public:
 
  FNumber indexOrbit;
  FNumber dt;                     ///< the time discretization step
- FNumber T;                      ///< the simulation horizon
+ FNumber T;                      ///< the simulation timw horizon
  FNumber alphaHalf;              ///< the alpha half satellite parameter
 
  FNumber altitudeVal;        ///< vector of satellite altitude values
