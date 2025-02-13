@@ -236,13 +236,13 @@ void ConstellationBlock::load( const std::string & input , char frmt )
             indexOrbit1 = 0;
             for( Index j = 0 ; j < t ; ++j ) 
             {
-             // formula to compute the latitude of the projection of the position of satellite 
-             // onto the Earth surface corresponding to a given configuration
+             // formula to compute the latitude of the projection of the position 
+             // of satellite onto the Earth surface corresponding to a given configuration
              lat_Sat = asin(((sin(inclination[jj])*(altitude[ii]+RAYON)*sin(meanAnomaly[l]))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON)) 
 		                        + ((sin(inclination[jj])*t_u[ii]*cos(meanAnomaly[l]))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]));
 
-            // formula to compute the longitude of the projection of the position of satellite 
-            // onto the Earth surface corresponding to a given configuration
+            // formula to compute the longitude of the projection of the position 
+            // of satellite onto the Earth surface corresponding to a given configuration
              long_Sat = fmod(-(angle0 + (WE*((j)*time_step))) + 
 		                        atan2((((sin(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) + (cos(nodeAscendant[k])*cos(inclination[jj])*
 		                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))	+ ((-(sin(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
@@ -255,7 +255,9 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
 	     for( Index i = 0 ; i < targets ; ++i ) 
              {
+                // compute the (absolute) difference between the latitude of the target and the lat_Sat
                 CoverageSatLat1[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat); 
+                // compute the scaled (absolute) difference between the latitude of the target and the long_Sat
                 CoverageSatLong1[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]); 
                 if(cos(Latitude[i]) < 0)
                   std::cout << "ERROR!" << "\n";
@@ -263,6 +265,8 @@ void ConstellationBlock::load( const std::string & input , char frmt )
                   indexOrbit1 += 1;
              }
             }
+            // the orbital configuration that do not observe any satellite in any time-step are discarded 
+            // so that the solution space is maintened reasonably "small"
             if (indexOrbit1>=1){
                for( Index j = 0 ; j < t ; ++j ) 
                {
