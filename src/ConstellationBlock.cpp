@@ -259,15 +259,15 @@ void ConstellationBlock::load( const std::string & input , char frmt )
                 CoverageSatLat1[ i ][ j ][ index1 ] = std::abs( Latitude[ i ] - lat_Sat ); 
                 // compute the scaled (absolute) difference between the latitude of the target and the long_Sat
                 CoverageSatLong1[ i ][ j ][ index1 ] = std::abs( Longitude[ i ] - long_Sat ) * cos( Latitude[ i ] ); 
-                if(cos(Latitude[i]) < 0)
+                if( cos(Latitude[i]) < 0 )
                   std::cout << "ERROR!" << "\n";
-                if (CoverageSatLat1[ i ][ j ][ index1 ] <= thetaValFinal and CoverageSatLong1[ i ][ j ][ index1 ] <= thetaValFinal)
+                if ( CoverageSatLat1[ i ][ j ][ index1 ] <= thetaValFinal and CoverageSatLong1[ i ][ j ][ index1 ] <= thetaValFinal )
                   indexOrbit1 += 1;
              }
             }
             // the orbital configuration that do not observe any satellite in any time-step 
             // are discarded so that the solution space is maintened reasonably "small"
-            if (indexOrbit1>=1){
+            if ( indexOrbit1>=1 ){
                for( Index j = 0 ; j < t ; ++j ) 
                {
                   for( Index i = 0 ; i < targets ; ++i ) 
