@@ -236,9 +236,13 @@ void ConstellationBlock::load( const std::string & input , char frmt )
             indexOrbit1 = 0;
             for( Index j = 0 ; j < t ; ++j ) 
             {
+             // formula to compute the latitude of the projection of the position of satellite 
+             // onto the Earth surface corresponding to a given configuration
              lat_Sat = asin(((sin(inclination[jj])*(altitude[ii]+RAYON)*sin(meanAnomaly[l]))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON)) 
 		                        + ((sin(inclination[jj])*t_u[ii]*cos(meanAnomaly[l]))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]));
-             
+
+            // formula to compute the longitude of the projection of the position of satellite 
+            // onto the Earth surface corresponding to a given configuration
              long_Sat = fmod(-(angle0 + (WE*((j)*time_step))) + 
 		                        atan2((((sin(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) + (cos(nodeAscendant[k])*cos(inclination[jj])*
 		                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))	+ ((-(sin(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
