@@ -70,6 +70,19 @@ void  ConstellationBlock::load( std::istream & input , char frmt ){
 void ConstellationBlock::load( const std::string & input , char frmt )
 {
 
+ /* The structure of the input file to load the instance data should be the 
+ * following:
+ *
+ * <time horizon in hour>
+ * <time step for time discretization>
+ * <number m of targets>
+ * <number of revisit period of the target 1> <latitude of the target 1> <longitude of the target 1>
+ * <...>
+ * <number of revisit period of the target m> <latitude of the target m> <longitude of the target m>
+ * <maximum number of satellites active in the constellation >
+ *
+ */ 
+
  // ensure starting from clean slate
  guts_of_destructor();
 
