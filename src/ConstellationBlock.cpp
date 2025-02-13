@@ -221,7 +221,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  double lat_Sat;
  double long_Sat;
 
- int ii = indexLen-1;
+ int ii = indexLen - 1;
  int index1 = -1;
  int indexOrbit = 0;
  int addOrbit = 0;
