@@ -80,13 +80,14 @@ namespace SMSpp_di_unipi_it
 /// Implementation of a simple SingleTargetBlock concept.
 /*
 * Let T and be the time horizon, we indicate with [T] := \{ 1,2,...,T \} 
-* the set of time stamps. [C] is the set of possible orbital configurations.
+* the set of time stamps. dt is the time-step for time discretization. 
+* [C] is the set of possible orbital configurations.
 *
 * We consider two sets of non-negative continuous decision variables:
 *
-* (1) \Delta t is the maximum revisit time for the current target
-* (2) \Delta t_1 and \Delta t_2 are areauxiliary variables to define the
-* revisit times before time stamp k \in [T] for the current target
+* (1) \Delta_t is the maximum revisit time for the current target
+* (2) \Delta_t^1[ k ] and \Delta_t^2[ k ] are are auxiliary variables to 
+* define the revisit times before time stamp k \in [T] for the current target
 *
 * We consider four sets of binary decision variables:
 *
@@ -102,11 +103,22 @@ namespace SMSpp_di_unipi_it
 * The model we are going to solve reads as follows.
 *
 * \f[
-*   min \Delta_t
+*   min \Delta_t                                                    (1)
+* \f]
+* \f[
+*   min \Delta_t^1[ k ] = \min_{j \in [T] : j \leq k} 
+*   \{ dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
+*   \forall k \in [T]                                               (2)
+* \f]
+*   min \Delta_t^2[ k ] = \min_{j \in [T] : j \leq k} 
+*   \{ T - dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
+*   \forall k \in [T]                                               (3)
 * \f]
 *
 * The objective function (1) minimizes the maximum revisit time for the current 
-* target Constraints (1) impose that
+* target Constraints (2) and (3) define \Delta_t^1[ k ] and \Delta_t^2[ k ],
+* respectively, as the revisit times before time stamp k \in [T] for the current 
+* target. 
 */
 
 class SingleTargetBlock : public Block
