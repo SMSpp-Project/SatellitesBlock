@@ -70,6 +70,17 @@ namespace SMSpp_di_unipi_it
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple MultiTargetBlock concept.
+/* MultiTargetBlock is composed of some SingleBlocks linked by the 
+* configuration constraints for the satellites, indicating that each satellite 
+must have a unique orbital configuration
+* \f[
+    \sum_{i \in [C]} pi[ i ][ c ] = 1, \forall i \in [s],
+* \f]
+* where [s] = \{1,2,...,s\} is the set of the satellites in the constellation. 
+* Variables pi[ i ][ c ] indicating whether the sallite i is in orbital 
+configuration c (the possible configuration are pre-computed when loading the 
+problem instance, see SingleTargetBlock.h).
+*
 
 class MultiTargetBlock : public Block
 {
