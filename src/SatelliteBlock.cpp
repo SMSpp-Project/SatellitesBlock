@@ -193,17 +193,6 @@ void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber hori
             } 
          }
 
- // allocate observability variables - - - - - - - - - - - - - - - - - - - - - 
-
- //generate_abstract_variables();
- //generate_objective();
-
- // throw Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
- // note: this is a NBModification, the "nuclear option"
-
- //if( anyone_there() )
- // add_Modification( std::make_shared< NBModification >( this ) );
-
  }  // end( SatelliteBlock::load( memory ) )
 
 /*--------------------------------------------------------------------------*/
@@ -213,17 +202,6 @@ void SatelliteBlock::load( std::istream & input , char frmt )
  // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
 
  guts_of_destructor();
-
- // allocate memory - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
- // read problem data - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- 
- // allocate observability variables - - - - - - - - - - - - - - - - - - - - - 
-
- //generate_abstract_variables();
-
- // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
- // note: this is a NBModification, the "nuclear option"
 
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
@@ -310,12 +288,6 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
 	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
 
-  obs1_cnst.resize(
-    boost::multi_array_types::
-    extent_gen()[ n ][ t ] );
-  obs3_cnst.resize(
-    boost::multi_array_types::
-    extent_gen()[ n ][ t ] );
   obs2_cnst.resize(
     boost::multi_array_types::
     extent_gen()[ n ][ t ] );
@@ -355,19 +327,9 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
       obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
       obs4_cnst[ i ][ j ].set_lhs( -thetaVal-MLONG ); 
       obs4_cnst[ i ][ j ].set_function( Funct2 );
-
-      obs1_cnst[ i ][ j ].set_rhs( -thetaVal );
-      obs1_cnst[ i ][ j ].set_lhs( -Inf< double >() ); 
-      obs1_cnst[ i ][ j ].set_function( Funct1 );
-
-      obs3_cnst[ i ][ j ].set_rhs( -thetaVal );
-      obs3_cnst[ i ][ j ].set_lhs( -Inf< double >() ); 
-      obs3_cnst[ i ][ j ].set_function( Funct2 );
     }
   }
 
-  //add_static_constraint( obs1_cnst );
-  //add_static_constraint( obs3_cnst );
   add_static_constraint( obs2_cnst );
   add_static_constraint( obs4_cnst );
 
@@ -535,9 +497,7 @@ void SatelliteBlock::guts_of_destructor( void )
  // clear the bound constraints
  Constraint::clear( orbitSelection );   // static
  Constraint::clear( activationSat_cnst );   // static
- Constraint::clear( obs1_cnst );
  Constraint::clear( obs2_cnst );
- Constraint::clear( obs3_cnst );
  Constraint::clear( obs4_cnst );
 
  c.clear();  // clear the Objective

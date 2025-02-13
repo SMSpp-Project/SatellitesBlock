@@ -518,10 +518,8 @@ public:
 
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the observation variables
 
- boost::multi_array< FRowConstraint , 2 > obs1_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (1)
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (2)
- boost::multi_array< FRowConstraint , 2 > obs3_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (1)
- boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (2)
+ boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat 
+ boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
 
  FRealObjective c;               ///< the (linear) objective function
 

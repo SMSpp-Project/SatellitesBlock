@@ -54,7 +54,7 @@ SMSpp_insert_in_factory_cpp_1( ConstellationBlock );
 
 static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
 static const auto RAYON = 6378136.3; //[m]
-static const auto PI = 3.14159265;
+static const auto PI = 3.14159265; 
 static const auto MU = 3.986004418e14; //[m^3/s^2]
 static const auto WE = 7.2921e-5;
 static const auto FACTOR = 1.2;
@@ -157,7 +157,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  }
 
  double alt = altitude[altSet-1];
- //double alt = altitude[0];
  for( Index ii = 0 ; ii < altSet ; ++ii ){
    t_p[ ii ] = sqrt(MU / ( pow(RAYON+altitude[ii],3)));
    t_u[ ii ] = sqrt(MU / (RAYON+altitude[ ii ]));
@@ -166,7 +165,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  }
 
  double Theta_max = thetaVal[altSet-1];
- //Theta_min = thetaVal[0];
  Theta_max = Theta_min;
  double numbOfDiscretize = ceil(PI/Theta_min);
  
@@ -186,7 +184,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  std::generate(x.begin(), x.end(), [&] { return start_in + (iter++) * dx; });
 
  Vec_CNumber inclination = x;
- //std::cout << inclination;
 
  end_in = 2*PI;
  dx = (end_in - start_in) / (num_in - 1);
@@ -198,9 +195,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  double thetaValFinal = Theta_min;
  double altitudeFinal = altitude[indexLen-1]; 
- //double altitudeFinal = altitude[0];
- 
- //std::cout << "theta_min: " << Theta_min << "\n";
+
  std::cout << "alpha_half: " << aHalf*180/PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
  std::cout << "altitude: " << altitudeFinal << "\n";
@@ -215,10 +210,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  double lat_Sat;
  double long_Sat;
 
- //for( Index ii = 0 ; ii < altSet ; ++ii )
- //{
  int ii = indexLen-1;
- //int ii = 0; 
  int index1 = -1;
  int indexOrbit = 0;
  int addOrbit = 0;
@@ -246,21 +238,12 @@ void ConstellationBlock::load( const std::string & input , char frmt )
              if( long_Sat <= 0 )
 			      long_Sat += 2*PI;
 
-	     /*
-	     for( Index i = 0 ; i < targets ; ++i )                                                                                                                                                        
-             {                                                                                                                                                                                              
-                CoverageSatLat[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat);                                                                                                                      
-                CoverageSatLong[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]);
-	     }}
-	     indexOrbit += 1;
-	     */
 	     for( Index i = 0 ; i < targets ; ++i ) 
              {
                 CoverageSatLat1[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat); 
                 CoverageSatLong1[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]); 
                 if(cos(Latitude[i]) < 0)
                   std::cout << "ERROR!" << "\n";
-                //std::cout << i << " " << j << " " << ii << " " << jj << " " << k << " " << l << " " << "\n";
                 if (CoverageSatLat1[ i ][ j ][ index1 ] <= thetaValFinal and CoverageSatLong1[ i ][ j ][ index1 ] <= thetaValFinal)
                   indexOrbit1 += 1;
              }
@@ -280,17 +263,10 @@ void ConstellationBlock::load( const std::string & input , char frmt )
           }
        }
     }
- //}
 
  iFile >> satellites;
  std::cout << "number Orbits: " << indexOrbit << "\n";
- /*
- satellites = 0;
- for( Index i = 0 ; i < targets ; ++i )
- {
-   satellites += periods[i];
- }
- */
+
  v_Block.resize( satellites );
  std::cout << "SATELLITES: " << satellites << "\n";
   
@@ -301,8 +277,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
                CoverageSatLat , CoverageSatLong );
     v_Block[ i ] = SB;
  }
-
-    
 
  // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
  // note: this is a NBModification, the "nuclear option"
@@ -338,7 +312,6 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 
    for( Index i = 0 ; i < targets ; ++i ) {
     pp = horizon/time_step/periods[i];
-    //std::cout << pp << "\n";
     for( Index j = 0 ; j < periods[i] ; ++j ) {
       LinearFunction::v_coeff_pair v_var;
       
@@ -366,23 +339,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
    }
 
    add_static_constraint( observation , "observation" );
-/*
-   LinearFunction::v_coeff_pair v_var;
-   for( Index k = 0 ; k < satellites ; ++k )
-       v_var.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_z(), 1.0 ));
 
-   observation1.set_function( new LinearFunction( std::move( v_var )));
-   observation1.set_rhs( satellites  );//Inf< double >() 
-   observation1.set_lhs( satellites  );
-
-   add_static_constraint( observation1 , "observation1" );
-
-   observation2.set_function( new LinearFunction( std::move( v_var )));
-   observation2.set_rhs( satellites+1  );//Inf< double >() 
-   observation2.set_lhs( -Inf< double >() );
-
-   add_static_constraint( observation2 , "observation2" );
-*/
    symmetry.resize( satellites-1 );
    for( Index i = 0 ; i < satellites-1 ; ++i ) {
       LinearFunction::v_coeff_pair v_vars;
