@@ -228,17 +228,17 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
  FNumber t = horizon / time_step;
 
- boost::multi_array< double , 3 > CoverageSatLat( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
- boost::multi_array< double , 3 > CoverageSatLong( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
- boost::multi_array< double , 3 > CoverageSatLat1( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
- boost::multi_array< double , 3 > CoverageSatLong1( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLat( boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLong( boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLat1( boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLong1( boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ]);
 
  double lat_Sat;
  double long_Sat;
 
  //for( Index ii = 0 ; ii < altSet ; ++ii )
  //{
- int ii = indexLen-1;
+ int ii = indexLen - 1;
  //int ii = 0; 
  int index1 = -1;
  indexOrbit = 0;
@@ -276,8 +276,8 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 	     */
 	     for( Index i = 0 ; i < targets ; ++i ) 
              {
-                CoverageSatLat1[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat); 
-                CoverageSatLong1[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]); 
+                CoverageSatLat1[ i ][ j ][ index1 ] = std::abs( Latitude[ i ] - lat_Sat ); 
+                CoverageSatLong1[ i ][ j ][ index1 ] = std::abs( Longitude[ i ] - long_Sat ) * cos ( Latitude[ i ] ); 
                 if(cos(Latitude[i]) < 0)
                   std::cout << "ERROR!" << "\n";
                 //std::cout << i << " " << j << " " << ii << " " << jj << " " << k << " " << l << " " << "\n";
@@ -309,8 +309,8 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  std::cout << "SATELLITES: " << satellites << "\n";
   
  for( Index i = 0 ; i < targets ; ++i ){
-   boost::multi_array< double , 2 > CoverageSatLatThis(boost::extents[t][indexOrbit]);
-   boost::multi_array< double , 2 > CoverageSatLongThis(boost::extents[t][indexOrbit]);
+   boost::multi_array< double , 2 > CoverageSatLatThis( boost::extents[ t ][ indexOrbit ]);
+   boost::multi_array< double , 2 > CoverageSatLongThis( boost::extents[ t ][ indexOrbit ]);
    
    for( Index j = 0 ; j < t ; ++j )  {
       for( Index k = 0 ; k < indexOrbit ; ++k ) { 
