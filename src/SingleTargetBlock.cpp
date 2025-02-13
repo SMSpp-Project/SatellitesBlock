@@ -61,7 +61,7 @@ using FNumber = SingleTargetBlock::FNumber;
 /*--------------------------------------------------------------------------*/
 
 static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
-static const double RAYON = 6378136.3; [ m ]
+static const double RAYON = 6378136.3; //[m]
 static const auto PI = 3.14159265;
 
 /*--------------------------------------------------------------------------*/
