@@ -328,6 +328,14 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( orbitSelection , "orbitSelection" );
 
+  // generate the activationSat_cnst constraints, which active variable z[ j ]
+  // if one variable xi[ i ][ j ] is active: xi[ i ][ j ] \leq zeta[ j ] \forall
+  // i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites, and 
+  // \forall j \in [T] where [T] := \{1,2,...,T\} and T is the time horizon 
+  // (in seconds),i.e., the constellation observes the current target at time stamp j 
+  // (z[ j ] = 1) iff. there exists at least satellite that observes the target at time 
+  // stamp j (xi[ i ][ j ] = 1) 
+
   activationSat_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
   for( Index i = 0 ; i < n ; ++i ){
     for( Index j = 0 ; j < t ; ++j ){
@@ -341,6 +349,13 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
     }
   }
   add_static_constraint( activationSat_cnst , "activationSat_cnst" );
+
+  // generate the activationSat1_cnst constraints, which deactive variable z[ j ]
+  // if all variables xi[ i ][ j ] are not active: sum_{i \in [n]} xi[ i ][ j ] \geq zeta[ j ] 
+  // \forall j \in [T] where [T] := \{1,2,...,T\} and T is the time horizon (in seconds),
+  // i.e., the constellation not observe the current target at time stamp j (z[ j ] = 0) 
+  // iff. there not exists any satellite that observe the target at time stamp j 
+  // (xi[ i ][ j ] = 0 \forall i \in [n] where [n] := \{1,2,...,n\}) 
 
   activationSat1_cnst.resize( t );
   for( Index i = 0 ; i < t ; ++i ){
