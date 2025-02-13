@@ -157,10 +157,10 @@ SMSpp_insert_in_factory_cpp_0( SatelliteSolution );
 /*--------------------------------------------------------------------------*/
 
 void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber horizon, 
-                            FNumber altValues , FNumber thetaValues ,
-                            FNumber indOrbit , FNumber aHalf ,
-                            boost::multi_array< double , 3 > CoverageLat , 
-                            boost::multi_array< double , 3 > CoverageLong )
+                           FNumber altValues , FNumber thetaValues ,
+                           FNumber indOrbit , FNumber aHalf ,
+                           boost::multi_array< double , 3 > CoverageLat , 
+                           boost::multi_array< double , 3 > CoverageLong )
 {
  // sanity checks - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
