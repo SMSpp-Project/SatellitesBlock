@@ -103,24 +103,27 @@ namespace SMSpp_di_unipi_it
 * The model we are going to solve reads as follows.
 *
 * \f[
-*   min \Delta_t                                                    (1)
+*   min \Delta_t                                                      (1)
 * \f]
 * \f[
 *   min \Delta_t^1[ k ] = \min_{j \in [T] : j \leq k} 
 *   \{ dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
-*   \forall k \in [T]                                               (2)
+*   \forall k \in [T]                                                  (2)
 * \f]
 *   min \Delta_t^2[ k ] = \min_{j \in [T] : j \leq k} 
 *   \{ T - dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
-*   \forall k \in [T]                                               (3)
+*   \forall k \in [T]                                                  (3)
 * \f]
 * \f[
-*   min \Delta_t >= \max \{ \Delta_t^1[ k ], \Delta_t^2[ k ] \}     (4)
+*   min \Delta_t >= \max \{ \Delta_t^1[ k ], \Delta_t^2[ k ] \}        (4)
 * \f]
 * \f[
 * \xi[ i ][ t ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ i ][ c] \, 
 \Delta lat[ c ][ t ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ] \} 
-\ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}    (5)
+\ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}       (5)
+* \f]
+* \f[
+*   min xi[ i ][ t ] \leq z[ t ], \forall i \in [s], \forall t \in [T] (6)
 * \f]
 *
 * The objective function (1) minimizes the maximum revisit time for the current 
@@ -131,7 +134,10 @@ namespace SMSpp_di_unipi_it
 * and \Delta_t^2[ k ], see constraint (4). Constraints (5) are the observability
 * constraints, and defines when the satellite i observes the current target at
 * time stamp t, i.e., when variable \xi[ i ][ t ] is equal to one. Constraints (5)
-* are opportunely linearized when defining the constraints of the current Block. 
+* are opportunely linearized when defining the constraints of the current Block.
+* Constraints (6) active varibale z[ t ] if there exists at least a satellite i
+* such that xi[ i ][ t ] = 1, meaning the constellation observes the current
+* target if there is at least a satellite observing the target. 
 */
 
 class SingleTargetBlock : public Block
