@@ -98,9 +98,9 @@ namespace SMSpp_di_unipi_it
 * satellite.
 *
 * \f[
-* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi_{c}\, 
-\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ][ m ] \} 
-\ge \theta^{\max},       \forall t\in T(dt), \forall m \in \mathcal{X}     (1)
+* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ c ]\, 
+\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi[ c ] \,\Delta long[ c ][ t ][ m ] \} 
+\ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}          (1)
 * \f]
 * \f[
 * \sum_{ c \in [C] } \pi[ c ] = 1                                          (2)
@@ -113,9 +113,9 @@ namespace SMSpp_di_unipi_it
 * \Delta lat[ c ][ t ][ m ] and \Delta long[ c ][ t ][ m ], are smaller than the 
 * threshold $\theta^{\max}$, then the target m is observed by the current satellite 
 * at time t. Constraint (1) is opportunely linearized when defining the constraints
-* of the Block. Constraint (2) requires that exactly one configuration is selected 
-* for the current satellite. Finally, constraints (3) active the current satellite 
-* in the constellation if it observes at least one target.
+* of the current Block. Constraint (2) requires that exactly one configuration is 
+* selected for the current satellite. Finally, constraints (3) active the current 
+* satellite in the constellation if it observes at least one target.
 */
 
 class SatelliteBlock : public Block
