@@ -606,9 +606,8 @@ public:
  boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat 
  boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
 
- std::vector< FRowConstraint > obs_cnst;  
- std::vector< FRowConstraint > obs_cnst_h;  
- std::vector< FRowConstraint > obs_cnst_xi;  
+ std::vector< FRowConstraint > obs_cnst_h; /// additional constraints on variables h
+ std::vector< FRowConstraint > obs_cnst_xi; /// additional constraints on variables xi
 
  std::vector< FRowConstraint > Deltat_max_dt1; // the constraint Delta t \geq dt
   
