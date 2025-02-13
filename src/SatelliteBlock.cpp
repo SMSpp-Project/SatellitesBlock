@@ -183,7 +183,6 @@ void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber hori
   CoverageSatLong.resize(boost::extents[num_targets][t][OrbitSet]);
 
   int index1 = -1;
-  //for( Index ii = 0 ; ii < altSet ; ++ii )
     for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
             for( Index j = 0 ; j < t ; ++j ) {
               for( Index i = 0 ; i < num_targets ; ++i ){
