@@ -71,7 +71,7 @@ void  ConstellationBlock::load( std::istream & input , char frmt ){
 
 void ConstellationBlock::load( const std::string & input , char frmt )
 {
-
+   
  /* The structure of the input file to load the instance data should be the 
  * following:
  *
