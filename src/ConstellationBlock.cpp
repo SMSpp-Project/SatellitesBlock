@@ -322,7 +322,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
    for( auto blck : v_Block )
     blck->generate_abstract_constraints();
 
-  // generate the observability constraints  - - - - - - - - - - - - - - -
+  // generate the observability constraints  - - - - - - - - - - - - - - - 
 
    double maxPeriods = *max_element(periods.begin(), periods.end());
    observation.resize(
