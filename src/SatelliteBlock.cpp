@@ -293,7 +293,7 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   // for all targets m's and time steps j's   
 
   // theta^{\max} + (1 - xi[ i ][ j ]) * MLONG \geq 
-  // sum_{jj \in OrbitSet}  (activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ] 
+  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ] 
   // for all targets m's and time steps j's
   
   // MLAT and MLONG are two big-M parameters automatically computed 
