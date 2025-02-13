@@ -500,8 +500,8 @@ public:
  FNumber T;                      ///< the simulation timw horizon
  FNumber alphaHalf;              ///< the alpha half satellite parameter
 
- FNumber altitudeVal;        ///< vector of satellite altitude values
- FNumber thetaVal;           ///< vector of satellite theta values
+ FNumber altitudeVal;            ///< vector of satellite altitude values
+ FNumber thetaVal;               ///< vector of satellite theta values
 
  boost::multi_array< double , 3 > CoverageSatLat;  ///< the matrix of pre-computed CoverageSatLat
  boost::multi_array< double , 3 > CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
