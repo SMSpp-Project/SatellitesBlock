@@ -376,9 +376,9 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
       LinearFunction::v_coeff_pair v_vars;
       v_vars.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ i ] )->i2p_z(), -1.0 ));
       v_vars.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ i+1 ] )->i2p_z(), 1.0 ));
-      symmetry[i].set_function( new LinearFunction( std::move( v_vars )));
-      symmetry[i].set_rhs( 0.0 ); 
-      symmetry[i].set_lhs( -Inf< double >() );
+      symmetry[ i ].set_function( new LinearFunction( std::move( v_vars )));
+      symmetry[ i ].set_rhs( 0.0 ); 
+      symmetry[ i ].set_lhs( -Inf< double >() );
    }
 
    //add_static_constraint( symmetry , "symmetry" );
