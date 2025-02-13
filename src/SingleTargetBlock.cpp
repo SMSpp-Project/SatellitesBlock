@@ -724,7 +724,7 @@ void SingleTargetBlock::generate_objective( Configuration *objc )
 
   // the objective is the minimization of Deltat, which represents the 
   // maximum revisit time for the current target
-  
+
   p[ 0 ].first = &Deltat[ 0 ];
   p[ 0 ].second = 1.0;
 
@@ -902,7 +902,6 @@ void SingleTargetBlock::guts_of_destructor( void )
  Constraint::clear( obs2_cnst );
  Constraint::clear( obs4_cnst );
 
- Constraint::clear( obs_cnst );
  Constraint::clear( obs_cnst_h );
  Constraint::clear( obs_cnst_xi );
 
