@@ -173,26 +173,23 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  }
 
  double alt = altitude[altSet-1];
- //double alt = altitude[0];
  for( Index ii = 0 ; ii < altSet ; ++ii ){
-   t_p[ ii ] = sqrt(MU / ( pow(RAYON+altitude[ii],3)));
-   t_u[ ii ] = sqrt(MU / (RAYON+altitude[ ii ]));
-   t_GM[ ii ] = sqrt((RAYON+altitude[ ii ]) / MU);
-   thetaVal[ ii ] = -aHalf + asin(((RAYON+altitude[ii])/RAYON)*sin(aHalf));
+   t_p[ ii ] = sqrt(MU / ( pow( RAYON + altitude[ ii ] , 3)));
+   t_u[ ii ] = sqrt(MU / ( RAYON + altitude[ ii ]));
+   t_GM[ ii ] = sqrt(( RAYON + altitude[ ii ]) / MU);
+   thetaVal[ ii ] = -aHalf + asin((( RAYON + altitude[ ii ]) / RAYON ) * sin( aHalf ));
  }
 
- //double Theta_max = thetaVal[altSet-1];
  std::cout << "alpha_flag=" << alpha_lim_flag << "\n";
  
  /***********************/
  if (alpha_lim_flag == 1) {
-   /////Theta_min = thetaVal[altSet-1];//*1.2;
    std::cout << "theta_min: " << Theta_min << "\n";
  }
  /***********************/
  
  //Theta_max = Theta_min;
- double numbOfDiscretize = ceil(PI/Theta_min);
+ double numbOfDiscretize = ceil(PI / Theta_min);
  
  std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
 
@@ -221,20 +218,20 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  Vec_CNumber meanAnomaly = x;
 
  double thetaValFinal = Theta_min;
- double altitudeFinal = altitude[indexLen-1]; 
+ double altitudeFinal = altitude[ indexLen-1 ]; 
  //double altitudeFinal = altitude[0];
  
  //std::cout << "theta_min: " << Theta_min << "\n";
- std::cout << "alpha_half: " << aHalf*180/PI << "\n";
+ std::cout << "alpha_half: " << aHalf * 180 / PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
  std::cout << "altitude: " << altitudeFinal << "\n";
 
  FNumber t = horizon / time_step;
 
- boost::multi_array< double , 3 > CoverageSatLat(boost::extents[targets][t][incSet*ascSet*anmSet]);
- boost::multi_array< double , 3 > CoverageSatLong(boost::extents[targets][t][incSet*ascSet*anmSet]);
- boost::multi_array< double , 3 > CoverageSatLat1(boost::extents[targets][t][incSet*ascSet*anmSet]);
- boost::multi_array< double , 3 > CoverageSatLong1(boost::extents[targets][t][incSet*ascSet*anmSet]);
+ boost::multi_array< double , 3 > CoverageSatLat( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLong( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLat1( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLong1( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
 
  double lat_Sat;
  double long_Sat;
