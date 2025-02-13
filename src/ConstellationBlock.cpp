@@ -137,11 +137,11 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  periods.resize( targets );
  for( Index i = 0 ; i < targets ; ++i )
  {
-   iFile >> periods[i];
-   iFile >> Latitude[i];
-   iFile >> Longitude[i];
-   Latitude[i] *= PI/180;
-   Longitude[i] *= PI/180;
+   iFile >> periods[ i ];
+   iFile >> Latitude[ i ];
+   iFile >> Longitude[ i ];
+   Latitude[ i ] *= PI / 180;
+   Longitude[ i ] *= PI / 180;
  }
 
  Vec_CNumber t_p;
