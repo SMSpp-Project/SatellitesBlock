@@ -603,10 +603,8 @@ public:
  std::vector< FRowConstraint > h_cnst_2; ///< the linearization of the product of two zeta's (2)
  std::vector< FRowConstraint > h_cnst_3; ///< the linearization of the product of two zeta's (3)
 
- boost::multi_array< FRowConstraint , 2 > obs1_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (1)
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (2)
- boost::multi_array< FRowConstraint , 2 > obs3_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (1)
- boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (2)
+ boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat 
+ boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
 
  std::vector< FRowConstraint > obs_cnst;  
  std::vector< FRowConstraint > obs_cnst_h;  
