@@ -259,7 +259,9 @@ public:
   * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ]) 
   */
 
-  // for the computation of the parameters, please see ConstellationBlock 
+  // for the computation of the parameters, please see ConstellationBlock, where
+  // there is a load() which read an input file in an opportune style with the 
+  // parameters of the instance to be solved
 
  void load( FNumber n , FNumber dt , FNumber T , FNumber altValues , FNumber thetaValues ,
               FNumber indexOrbit, FNumber aHalf ,
