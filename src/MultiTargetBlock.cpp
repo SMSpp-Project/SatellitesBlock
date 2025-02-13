@@ -353,6 +353,16 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
    for( auto blck : v_Block )
     blck->generate_abstract_constraints();
 
+
+  // generate the configuration constraints  - - - - - - - - - - - - - - - 
+  /* \pi[ i ][ j ][ k ] == \pi[ i+1 ][ j ][ k ] \forall i \in [targets-1], 
+  * \forall j \in [satellites] and \forall [ k ] \in [indexOrbit]
+  * the configuration of each satellite find for a given target should be 
+  * the same for all the targets, i.e., the satellite orbital configuration
+  * should be independent from the target, but it should be associated with
+  * the satellites of the constellation
+  */
+
    duplicate_pi.resize( boost::multi_array_types::extent_gen()[ targets - 1  ][ satellites ][ indexOrbit ] );
    for( Index i = 0 ; i < targets - 1  ; ++i ) {
       for( Index j = 0 ; j < satellites  ; ++j ) {
@@ -360,9 +370,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
             LinearFunction::v_coeff_pair v_vars;
             v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_pi( j , k ), 1.0 ));
             v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i+1 ] )->i2p_pi( j , k ), -1.0 ));
-            duplicate_pi[i][j][k].set_function( new LinearFunction( std::move( v_vars )));
-            duplicate_pi[i][j][k].set_rhs( 0.0 ); 
-            duplicate_pi[i][j][k].set_lhs( 0.0 );
+            duplicate_pi[ i ] [ j ][ k ].set_function( new LinearFunction( std::move( v_vars )));
+            duplicate_pi[ i ][ j ][ k ].set_rhs( 0.0 ); 
+            duplicate_pi[ i ][ j ][ k ].set_lhs( 0.0 );
          }
       }
    }
@@ -381,6 +391,7 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
 
 void MultiTargetBlock::print( std::ostream & output , char vlvl ) const
 {
+   // TO DO: implement print() method for printing instance data to output file
  }
 
 /*--------------------------------------------------------------------------*/
