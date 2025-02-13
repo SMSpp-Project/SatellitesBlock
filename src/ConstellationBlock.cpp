@@ -177,7 +177,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  double Theta_max = thetaVal[ altSet-1 ];
  Theta_max = Theta_min;
- double numbOfDiscretize = ceil(PI/Theta_min);
+ double numbOfDiscretize = ceil( PI / Theta_min );
  
  std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
 
