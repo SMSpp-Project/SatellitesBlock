@@ -572,7 +572,7 @@ public:
  std::vector< ColVariable > Deltat_k1A;
  std::vector< ColVariable > Deltat_k2A;
 
- std::vector< ColVariable > h; ///< the two-observation variables
+ std::vector< ColVariable > h; ///< the two-observations variables
 
  std::vector< ColVariable > d1; ///< the d1 variables
  std::vector< ColVariable > d2; ///< the d2 variables
