@@ -187,7 +187,6 @@ void SingleTargetBlock::load( FNumber num_satellites , FNumber time_step ,
   CoverageSatLong.resize(boost::extents[ t ][ OrbitSet ]);
 
   int index1 = -1;
-  //for( Index ii = 0 ; ii < altSet ; ++ii )
     for( Index j = 0 ; j < t ; ++j ) {
       for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
         CoverageSatLat[ j ][ jj ] = CoverageLat[ j ][ jj ];
