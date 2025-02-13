@@ -403,27 +403,24 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
   add_static_constraint( h_cnst_3 , "h_cnst_3" );
 
-  // generate observability constraints via big-M approach
+  // generate observability (linearize) constraints via big-M approac
+  // these constraints traslate the fact that a target is observed by
+  // the current satellite, i.e., xi[ i ][ j ] = 1, if the (scaled) 
+  // distance between the projection of the satellite position onto
+  // the Earth surface and the position of the target is smaller than
+  // a threshold theta^{\max} with respect to Latitude and Longitude.
 
-  //Thetamax[i]+(1-Xi[i,p,j])*M_limit >= (sum(act4[i,a,k,l,s]*CoverageSatLat[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
+  // theta^{\max} + (1 - xi[ i ][ j ]) * MLAT \geq 
+  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLat[ i ][ j ][ jj ]
+  // for all targets m's and time steps j's   
 
-  //Thetamax[i]+(1-Xi[i,p,j])*M_limit >= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
-  //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLat[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
-  //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
-	//	for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
-
-  obs1_cnst.resize(
-    boost::multi_array_types::
-    extent_gen()[ n ][ t ] );
-  obs3_cnst.resize(
-    boost::multi_array_types::
-    extent_gen()[ n ][ t ] );
+  // theta^{\max} + (1 - xi[ i ][ j ]) * MLONG \geq 
+  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ] 
+  // for all targets m's and time steps j's
+  
+  // MLAT and MLONG are two big-M parameters automatically computed 
+  // such that their numerical values are the smallest to guarantee 
+  // that constraint are valid (redundant when xi[ i ][ j ] = 0)
 
   obs2_cnst.resize(
     boost::multi_array_types::
@@ -464,20 +461,8 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
       obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
       obs4_cnst[ i ][ j ].set_lhs(( -thetaVal-MLONG )); 
       obs4_cnst[ i ][ j ].set_function( Funct2 );
-
-      obs1_cnst[ i ][ j ].set_rhs(( -thetaVal ));
-      obs1_cnst[ i ][ j ].set_lhs( -Inf< double >() ); 
-      obs1_cnst[ i ][ j ].set_function( Funct1 );
-
-      obs3_cnst[ i ][ j ].set_rhs(( -thetaVal ));
-      obs3_cnst[ i ][ j ].set_lhs( -Inf< double >() ); 
-      obs3_cnst[ i ][ j ].set_function( Funct2 );
-
     }
   }
-
-  //add_static_constraint( obs1_cnst );
-  //add_static_constraint( obs3_cnst );
   
   add_static_constraint( obs2_cnst );
   add_static_constraint( obs4_cnst );
