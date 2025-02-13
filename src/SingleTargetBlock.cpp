@@ -362,7 +362,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ){
     for( Index j = i+1 ; j < t ; ++j ){
-      //if ( j > i ) {
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &h[ ii ], -1.0 ));
         v_var.push_back( std::make_pair( &zeta[ i ] ,  1.0 ));
@@ -380,7 +379,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ){
     for( Index j = i+1 ; j < t ; ++j ){
-      //if ( j > i ) {
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &h[ ii ], -1.0 ));
         v_var.push_back( std::make_pair( &zeta[ j ] ,  1.0 ));
@@ -397,7 +395,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ){
     for( Index j = i+1 ; j < t ; ++j ){
-      //if ( j > i ) {
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &h[ ii ], 1.0 ));
         v_var.push_back( std::make_pair( &zeta[ i ] ,  -1.0 ));
