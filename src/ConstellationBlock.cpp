@@ -169,10 +169,10 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  double alt = altitude[altSet-1];
  for( Index ii = 0 ; ii < altSet ; ++ii ){
-   t_p[ ii ] = sqrt(MU / ( pow(RAYON+altitude[ ii ],3)));
-   t_u[ ii ] = sqrt(MU / (RAYON+altitude[ ii ]));
-   t_GM[ ii ] = sqrt((RAYON+altitude[ ii ]) / MU);
-   thetaVal[ ii ] = -aHalf + asin(((RAYON+altitude[ ii ])/RAYON)*sin(aHalf));
+   t_p[ ii ] = sqrt(MU / ( pow( RAYON + altitude[ ii ], 3 )));
+   t_u[ ii ] = sqrt(MU / ( RAYON+altitude[ ii ]));
+   t_GM[ ii ] = sqrt(( RAYON + altitude[ ii ]) / MU);
+   thetaVal[ ii ] = -aHalf + asin((( RAYON + altitude[ ii ]) / RAYON ) * sin( aHalf ));
  }
 
  double Theta_max = thetaVal[altSet-1];
@@ -205,7 +205,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  Vec_CNumber meanAnomaly = x;
 
  double thetaValFinal = Theta_min;
- double altitudeFinal = altitude[indexLen-1]; 
+ double altitudeFinal = altitude[ indexLen-1 ]; 
 
  std::cout << "alpha_half: " << aHalf*180/PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
