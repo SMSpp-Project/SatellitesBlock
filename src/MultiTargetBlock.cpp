@@ -353,7 +353,6 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
    for( auto blck : v_Block )
     blck->generate_abstract_constraints();
 
-
   // generate the configuration constraints  - - - - - - - - - - - - - - - 
   /* \pi[ i ][ j ][ k ] == \pi[ i+1 ][ j ][ k ] \forall i \in [targets-1], 
   * \forall j \in [satellites] and \forall [ k ] \in [indexOrbit]
