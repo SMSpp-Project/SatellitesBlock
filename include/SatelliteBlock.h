@@ -746,7 +746,7 @@ public:
 
 friend SatelliteBlock;  ///< make SatelliteBlock friend
 
-/*---------------- CONSTRUCTING AND DESTRUCTING SatelliteSolution ----------------*/
+/*---------------- CONSTRUCTING AND DESTRUCTING SatelliteSolution ----------*/
 
   explicit SatelliteSolution( void ) { }  /// constructor, it has nothing to do
 
@@ -756,7 +756,7 @@ friend SatelliteBlock;  ///< make SatelliteBlock friend
 
  ~SatelliteSolution() = default;  ///< destructor: it is virtual, and empty
 
-/*------------- METHODS DESCRIBING THE BEHAVIOR OF A SatelliteSolution -----------*/
+/*------------- METHODS DESCRIBING THE BEHAVIOR OF A SatelliteSolution ------*/
 
   void read( const Block * block ) override final;
 
