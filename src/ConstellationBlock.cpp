@@ -52,7 +52,7 @@ SMSpp_insert_in_factory_cpp_1( ConstellationBlock );
 
 static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
 static const auto RAYON = 6378136.3; //[m]
-static const auto PI = 3.14159265; 
+static const auto PI = 3.14159265; //[degrees]
 static const auto MU = 3.986004418e14; //[m^3/s^2]
 static const auto WE = 7.2921e-5; //[rad/s]
 static const auto FACTOR = 1.2;
