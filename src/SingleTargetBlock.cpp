@@ -260,6 +260,8 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( b2 );
 
+  // z[ j ] is the variable indicating whether the constellation 
+  // observes the current target at time stamp j  
   zeta.resize( t );
   for( auto & var : zeta )
    var.set_type( ColVariable::kBinary );
@@ -273,6 +275,10 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( activation );
 
+  // h[ ii ] is the variable indicating whether the constellation 
+  // observes the current target both at time stamps i and j with 
+  // j > i; ii is an incremental index in {1,2,\dots, t * (t-1)/2}, 
+  // where t is the total number of time stamps
   h.resize( t * (t-1)/2 );
   for( auto & var : h )
    var.set_type( ColVariable::kBinary );
