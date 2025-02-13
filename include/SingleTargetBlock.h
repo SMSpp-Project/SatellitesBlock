@@ -77,6 +77,45 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
+/// Implementation of a simple SingleTargetBlock concept.
+/*
+* Let T and \Delta t_m be the time horizon and the time width between two 
+* consecutive target observations for the target m\in\mathcal X$, respectively. 
+*
+* We consider two sets of non-negative continuous decision variables:
+*
+* (1) \Delta t is the maximum revisit time for the current target
+* (2) \Delta t_1 and \Delta t_2 are areauxiliary variables to define the
+* revisit times before time stamp k \in [T] for the current target
+*
+* We consider four sets of binary decision variables:
+*
+* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 
+* is selected for the satellite, 
+* (2) \xi[ t ][ m ] \in \{ 0 , 1 \} indicating whether the satellite i observes 
+* the curent target at time t, and
+* (3) zeta[ t ] \in \{ 0 , 1 \} indicating whether the constellation observes  
+* the current target
+* (4) h[ k ][ j ] \in \{ 0 , 1 \} indicating whether the constellation observes  
+* the current target in two time stamps k and j
+* 
+* Mathematically speaking, we have that the following constraints hold for each 
+* satellite.
+*
+* \f[
+* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi_{c}\, 
+\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ][ m ] \} 
+\ge \theta^{\max},       \forall t\in T(dt), \forall m \in \mathcal{X}     (1)
+* \f]
+* \f[
+* \sum_{ c \in [C] } \pi[ c ] = 1                                          (2)
+* \f]
+* \f[
+* \xi[ t ][ m ] \leq zeta, \forall t\in T(dt), \forall m \in \mathcal{X}   (3)
+* \f]
+*
+* Constraints (1) impose that
+*/
 
 class SingleTargetBlock : public Block
 {
