@@ -554,7 +554,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
     for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &Deltat_k1A[ ii ], -1.0 ));
         v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - T )));
@@ -572,7 +571,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
     for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &Deltat_k2A[ ii ], 1.0 ));
         v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt )));
@@ -590,7 +588,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
     for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &Deltat_k1[ i ], -1.0 ));
         v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T )));
@@ -608,7 +605,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
     for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &Deltat_k1[ i ], -1.0 ));
         v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T )));
@@ -643,7 +639,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
     for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &Deltat_k2[ i ], 1.0 ));
         v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T)));
@@ -661,7 +656,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
     for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
         LinearFunction::v_coeff_pair v_var;
         v_var.push_back( std::make_pair( &Deltat_k2[ i ], 1.0 ));
         v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T)));
