@@ -596,9 +596,6 @@ public:
  std::vector< FRowConstraint > Deltat_min_k2_2; ///< the Deltat_min_k2 constraints (2)
  std::vector< FRowConstraint > d2_cnst; /// the d2 activation constraint
   
- std::vector< FRowConstraint > d1A_cnst;
- std::vector< FRowConstraint > d2A_cnst;
-  
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the observation constraints
  std::vector< FRowConstraint > activationSat1_cnst; ///< the observation constraints
 
