@@ -722,6 +722,9 @@ void SingleTargetBlock::generate_objective( Configuration *objc )
  
   LinearFunction::v_coeff_pair p( 1 );
 
+  // the objective is the minimization of Deltat, which represents the 
+  // maximum revisit time for the current target
+  
   p[ 0 ].first = &Deltat[ 0 ];
   p[ 0 ].second = 1.0;
 
