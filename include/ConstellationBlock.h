@@ -76,7 +76,7 @@ namespace SMSpp_di_unipi_it
 * time: 
 * \f[
     \sum_{\substack{t \in T(k,\Delta t_m,dt) \\ i \in \mathcal [s]}} 
-    \xi[ i ][ t ][ m ] \ge 1 \quad \forall k \in [\lfloor T\slash\Delta t_m\rfloor], 
+    \xi[ i ][ t ][ m ] \ge 1, \forall k \in [\lfloor T\slash\Delta t_m\rfloor], 
     \forall m \in \mathcal{X},
 * \f]
 * where \Delta t_m is the revisit time for target m \in \mathcal{X} and 
