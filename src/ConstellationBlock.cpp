@@ -79,7 +79,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  horizon *= 3600.0;
  iFile >> time_step;
  iFile >> targets;
-  
 
  std::cout << "TARGETS: " << targets << "\n";
  std::cout << "TIME STEP: " << time_step << "\n";
