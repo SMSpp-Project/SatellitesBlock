@@ -1004,7 +1004,7 @@ void SingleTargetBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
  }  // end( SingleTargetBlock::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- METHODS OF DCRSolution ------------------------*/
+/*-------------------------- METHODS OF SingleTargetSolution ---------------*/
 /*--------------------------------------------------------------------------*/
 
 void SingleTargetSolution::deserialize( const netCDF::NcGroup & group )
