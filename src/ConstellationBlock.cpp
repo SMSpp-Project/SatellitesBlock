@@ -207,7 +207,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  double thetaValFinal = Theta_min;
  double altitudeFinal = altitude[ indexLen-1 ]; 
 
- std::cout << "alpha_half: " << aHalf*180/PI << "\n";
+ std::cout << "alpha_half: " << aHalf * 180 / PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
  std::cout << "altitude: " << altitudeFinal << "\n";
 
