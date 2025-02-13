@@ -268,6 +268,9 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( zeta );
 
+  // activation[ i ][ jj ] is a variable indicating whether satellite
+  // i is in orbital configuration jj (OrbitSet is the max number of 
+  // orbital configuration, see MultiTargetBlock.cpp)
   activation.resize( boost::extents[ n ][ OrbitSet ] );
   for( Index i = 0 ; i < n ; ++i )
     for( Index j = 0 ; j < OrbitSet ; ++j )
