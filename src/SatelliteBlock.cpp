@@ -288,11 +288,11 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   // the Earth surface and the position of the target is smaller than
   // a threshold theta^{\max} with respect to Latitude and Longitude.
 
-  //Thetamax +(1 - xi[ i ][ j ]) * MLAT \geq 
+  // Thetamax +(1 - xi[ i ][ j ]) * MLAT \geq 
   // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLat[ i ][ j ][ jj ]
   // for all targets m's and time steps j's   
 
-  //Thetamax +(1 - xi[ i ][ j ]) * MLONG \geq 
+  // Thetamax +(1 - xi[ i ][ j ]) * MLONG \geq 
   // sum_{jj \in OrbitSet}  (activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ] 
   // for all targets m's and time steps j's
   
