@@ -213,10 +213,10 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  FNumber t = horizon / time_step;
 
- boost::multi_array< double , 3 > CoverageSatLat(boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
- boost::multi_array< double , 3 > CoverageSatLong(boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
- boost::multi_array< double , 3 > CoverageSatLat1(boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
- boost::multi_array< double , 3 > CoverageSatLong1(boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLat( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLong( oost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLat1( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
+ boost::multi_array< double , 3 > CoverageSatLong1( boost::extents[ targets ][ t ][ incSet*ascSet*anmSet ]);
 
  double lat_Sat;
  double long_Sat;
