@@ -1037,7 +1037,6 @@ void SingleTargetSolution::read( const Block * block )
 
 void SingleTargetSolution::write( Block * block ) 
 {
-
  auto SATB = dynamic_cast<SingleTargetBlock * >( block );
  if( ! SATB )
   throw( std::invalid_argument( "block is not a SingleTargetBlock" ) );
@@ -1045,7 +1044,6 @@ void SingleTargetSolution::write( Block * block )
  if( ! v_zeta.empty() ) {
   SATB->set_zeta( v_zeta.begin() );
   }
-
 }
 
 SingleTargetSolution * SingleTargetSolution::scale( double factor ) const
