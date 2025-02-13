@@ -495,16 +495,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   
   add_static_constraint( obs2_cnst );
   add_static_constraint( obs4_cnst );
-     
-  Deltat_max_dt.resize( 1 );
-  LinearFunction::v_coeff_pair v_vart;
-  v_vart.push_back( std::make_pair( &Deltat[ 0 ], 1.0 ));
-  LinearFunction* Functt = new LinearFunction( std::move( v_vart ));
-  Deltat_max_dt[ 0 ].set_rhs( T/2.0 - 1.0 );
-  Deltat_max_dt[ 0 ].set_lhs( -Inf< double >() );
-  Deltat_max_dt[ 0 ].set_function( Functt );
 
-  //add_static_constraint( Deltat_max_dt , "Deltat_max_dt" );
+  // generate the Deltat_max_dt1 constraints: Deltat \geq dt, indicating 
+  // that the maximum revisit time Deltat for the current target should 
+  // be greather than the single time step dt.
 
   Deltat_max_dt1.resize( 1 );
   LinearFunction::v_coeff_pair v_vart1;
