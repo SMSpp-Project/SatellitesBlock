@@ -56,7 +56,7 @@ static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
 static const auto RAYON = 6378136.3; //[m]
 static const auto PI = 3.14159265;
 static const auto MU = 3.986004418e14; //[m^3/s^2]
-static const auto WE = 7.2921e-5;
+static const auto WE = 7.2921e-5; //[rad/s]
 static const auto FACTOR = 1.2;
 static const auto angle0 = -1.3882860164509252;
 
@@ -64,11 +64,27 @@ static const auto angle0 = -1.3882860164509252;
 /*------------------------ OTHER INITIALIZATIONS ---------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void  MultiTargetBlock::load( std::istream & input , char frmt ){
+void  MultiTargetBlock::load( std::istream & input , char frmt )
+{
+    // TO DO: implement load() method for loading instance data 
+   // from input file (for the file format, see next load() method)
 }
 
 void MultiTargetBlock::load( const std::string & input , char frmt )
 {
+
+ /* The structure of the input file to load the instance data should be the 
+ * following:
+ *
+ * < time horizon (in hours) >
+ * < time step for time discretization (in seconds) >
+ * < number m of targets >
+ * < latitude of the target 1 > < longitude of the target 1 >
+ * < ... >
+ * < latitude of the target m > < longitude of the target m >
+ * < maximum number of satellites active in the constellation >
+ *
+ */ 
 
  // ensure starting from clean slate
  guts_of_destructor();
@@ -92,9 +108,9 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  int indexLen = 0;
  double j = 0.0;
 
- for( Index i = 0 ; i < horizon/3600.0 ; ++i ){
+ for( Index i = 0 ; i < horizon / 3600.0 ; ++i ){
    j++;
-	altitudeSetVal = cbrt( ( MU* pow((horizon)/j,2.0) ) / (4.0*pow(PI,2.0))) - RAYON;
+	altitudeSetVal = cbrt( ( MU* pow(( horizon ) / j , 2.0) ) / ( 4.0 * pow( PI, 2.0 ))) - RAYON;
 	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
 		indexLen++;
@@ -107,10 +123,10 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  indexLen = 0;
 
  j = 0.0;
- for( Index i = 0 ; i < horizon/3600.0 ; ++i )
+ for( Index i = 0 ; i < horizon / 3600.0 ; ++i )
  {
    j++;
-	altitudeSetVal = cbrt( ( MU * pow((horizon)/j, 2.0) ) / (4.0*pow(PI, 2.0) )) - RAYON;
+	altitudeSetVal = cbrt( ( MU * pow(( horizon ) / j, 2.0) ) / ( 4.0 * pow( PI , 2.0 ))) - RAYON;
    //std::cout << altitudeSetVal << "\n";
 	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
@@ -124,10 +140,10 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  Longitude.resize( targets );
  for( Index i = 0 ; i < targets ; ++i )
  {
-   iFile >> Latitude[i];
-   iFile >> Longitude[i];
-   Latitude[i] *= PI/180;
-   Longitude[i] *= PI/180;
+   iFile >> Latitude[ i ];
+   iFile >> Longitude[ i ];
+   Latitude[i] *= PI / 180;
+   Longitude[i] *= PI / 180;
  }
 
  Vec_CNumber t_p;
@@ -135,21 +151,21 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  Vec_CNumber t_GM;
  Vec_CNumber thetaVal;
 
- t_p.resize(altSet);
- t_u.resize(altSet);
- t_GM.resize(altSet);
- thetaVal.resize(altSet);
+ t_p.resize( altSet );
+ t_u.resize( altSet );
+ t_GM.resize( altSet );
+ thetaVal.resize( altSet );
 
  double alphalim;
- double Theta_min = ((2*PI*time_step)/(2*periodSat[indexLen-1]))*FACTOR;
+ double Theta_min = (( 2 * PI * time_step ) / ( 2 * periodSat[ indexLen-1 ])) * FACTOR;
  std::cout << "theta_min: " << Theta_min << "\n";
- double aHalf = atan(sin(Theta_min)/((RAYON+altitude[indexLen-1])/RAYON - cos(Theta_min)));
+ double aHalf = atan( sin( Theta_min ) / (( RAYON + altitude[ indexLen-1 ]) / RAYON - cos( Theta_min )));
 
  int alpha_lim_flag = 0;
  
  for( Index ii = 0 ; ii < altSet ; ++ii ){
-   if(((RAYON+altitude[ ii ])/RAYON)*sin(aHalf) > 1){
-      aHalf = asin((RAYON/(RAYON+altitude[ ii ])));
+   if((( RAYON + altitude[ ii ]) / RAYON ) * sin( aHalf ) > 1){
+      aHalf = asin(( RAYON / ( RAYON + altitude[ ii ])));
       std::cout << "WARNING: computed alpha_lim\n";
       alpha_lim_flag = 1;
       break;
