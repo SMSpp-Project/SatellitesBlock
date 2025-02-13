@@ -378,10 +378,7 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
    }
 
    add_static_constraint( duplicate_pi , "duplicate_pi" );
-
    std::cout << "Constraints generated!\n";
-
-  // generate the observability constraints  - - - - - - - - - - - - - - -
 
  }  // end( MultiTargetBlock::generate_abstract_constraints() )
 
