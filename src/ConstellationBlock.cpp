@@ -265,8 +265,8 @@ void ConstellationBlock::load( const std::string & input , char frmt )
                   indexOrbit1 += 1;
              }
             }
-            // the orbital configuration that do not observe any satellite in any time-step are discarded 
-            // so that the solution space is maintened reasonably "small"
+            // the orbital configuration that do not observe any satellite in any time-step 
+            // are discarded so that the solution space is maintened reasonably "small"
             if (indexOrbit1>=1){
                for( Index j = 0 ; j < t ; ++j ) 
                {
