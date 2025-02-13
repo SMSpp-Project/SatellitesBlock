@@ -256,9 +256,9 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 	     for( Index i = 0 ; i < targets ; ++i ) 
              {
                 // compute the (absolute) difference between the latitude of the target and the lat_Sat
-                CoverageSatLat1[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat); 
+                CoverageSatLat1[ i ][ j ][ index1 ] = std::abs(Latitude[ i ] - lat_Sat); 
                 // compute the scaled (absolute) difference between the latitude of the target and the long_Sat
-                CoverageSatLong1[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]); 
+                CoverageSatLong1[ i ][ j ][ index1 ] = std::abs(Longitude[ i ] - long_Sat) * cos(Latitude[ i ]); 
                 if(cos(Latitude[i]) < 0)
                   std::cout << "ERROR!" << "\n";
                 if (CoverageSatLat1[ i ][ j ][ index1 ] <= thetaValFinal and CoverageSatLong1[ i ][ j ][ index1 ] <= thetaValFinal)
