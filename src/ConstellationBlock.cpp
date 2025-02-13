@@ -149,15 +149,15 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  Vec_CNumber t_GM;
  Vec_CNumber thetaVal;
 
- t_p.resize(altSet);
- t_u.resize(altSet);
- t_GM.resize(altSet);
- thetaVal.resize(altSet);
+ t_p.resize( altSet );
+ t_u.resize( altSet );
+ t_GM.resize( altSet );
+ thetaVal.resize( altSet );
 
  double alphalim;
- double Theta_min = ((2*PI*time_step)/(2*periodSat[indexLen-1]))*FACTOR;
+ double Theta_min = (( 2 * PI * time_step ) / ( 2 * periodSat[ indexLen-1 ])) * FACTOR;
  std::cout << "theta_min: " << Theta_min << "\n";
- double aHalf = atan(sin(Theta_min)/((RAYON+altitude[indexLen-1])/RAYON - cos(Theta_min)));
+ double aHalf = atan( sin( Theta_min ) / (( RAYON + altitude[ indexLen-1 ]) / RAYON - cos( Theta_min )));
 
  for( Index ii = 0 ; ii < altSet ; ++ii ){
    if((( RAYON + altitude[ ii ]) / RAYON ) * sin( aHalf ) > 1){
