@@ -82,8 +82,8 @@ SatelliteBlock * oSAT = nullptr;    // original SatelliteBlock
 int main( int argc , char **argv )
 {
   namespace stdfs = std::filesystem;
-  std::string file = argv[ 1 ];
-  std::string solver = argv[ 2 ];
+  std::string file = argv[ 1 ]; // input file (for the format, see ConstellationBlock)
+  std::string solver = argv[ 2 ]; // solver configuration as BlockSolverConfig file
 
   std::ifstream ifile( file );
 
