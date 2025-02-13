@@ -368,6 +368,8 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 
    add_static_constraint( observation , "observation" );
 
+   // symmetry breaking constraints: z[ i+1 ] \leq z[ i ] forall i \in [s-1]
+
    symmetry.resize( satellites-1 );
    for( Index i = 0 ; i < satellites-1 ; ++i ) {
       LinearFunction::v_coeff_pair v_vars;
