@@ -311,7 +311,7 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
    
   // generate the orbitSelection constraint, which select exctly one orbit
   // configuration for the satellite: sum_{j \in OrbitSet} activation[ i ][ j ] == 1
-  // \forall i in [n] where [n] := \{1,2,...,n\} and n is the number of satellites  
+  // \forall i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites  
   // remember: activation[ i ][ j ] = 1 iff. the j-th configuration is selected 
   // for the i-th satellite active in the constellation
 
