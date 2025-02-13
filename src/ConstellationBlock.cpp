@@ -112,7 +112,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  {
    j++;
 	altitudeSetVal = cbrt( ( MU * pow((horizon)/j, 2.0) ) / (4.0*pow(PI, 2.0) )) - RAYON;
-   //std::cout << altitudeSetVal << "\n";
 	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
 		altitude[indexLen] = altitudeSetVal;
