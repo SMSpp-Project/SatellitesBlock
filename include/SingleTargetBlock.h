@@ -98,7 +98,7 @@ namespace SMSpp_di_unipi_it
 * (3) zeta[ t ] \in \{ 0 , 1 \} indicating whether the constellation observes  
 * the current target
 * (4) h[ k ][ j ] \in \{ 0 , 1 \} indicating whether the constellation observes  
-* the current target in two time stamps k and j
+* the current target in two time stamps k and j, such that k > j
 * 
 * The model we are going to solve reads as follows.
 *
@@ -123,7 +123,19 @@ namespace SMSpp_di_unipi_it
 \ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}       (5)
 * \f]
 * \f[
-*   min xi[ i ][ t ] \leq z[ t ], \forall i \in [s], \forall t \in [T] (6)
+*   xi[ i ][ t ] \leq z[ t ], \forall i \in [s], \forall t \in [T]     (6)
+* \f]
+* \f[
+*   sum_{ i \in [s] } xi[ i ][ t ] \geq z[ t ], \forall t \in [T]      (7)
+* \f]
+* \f[
+*   h[ k ][ j ] \leq z[ k ], \forall k,j \in [T] : k > j               (8)
+* \f]
+* \f[
+*   h[ k ][ j ] \leq z[ j ], \forall k,j \in [T] : k > j               (9)
+* \f]
+* \f[
+*   h[ k ][ j ] \geq z[ k ] + z[ j ] - 1 , \forall k,j \in [T] : k > j (10)
 * \f]
 *
 * The objective function (1) minimizes the maximum revisit time for the current 
@@ -137,7 +149,12 @@ namespace SMSpp_di_unipi_it
 * are opportunely linearized when defining the constraints of the current Block.
 * Constraints (6) active varibale z[ t ] if there exists at least a satellite i
 * such that xi[ i ][ t ] = 1, meaning the constellation observes the current
-* target if there is at least a satellite observing the target. 
+* target if there is at least a satellite observing the target. Constraints (7)
+* ensures that if  sum_{ i \in [s] } xi[ i ][ t ] = 0, then z[ t ] = 0, i.e.,
+* if no satellite in the constellation observes the target at time t, then 
+* z[ t ] is not active. Constraints (8)-(10) linearize the constraint 
+* h[ k ][ j ] = z[ k ] * z[ j ], defining when the target is observed by the
+* constellation at two time stamp k > j.
 */
 
 class SingleTargetBlock : public Block
