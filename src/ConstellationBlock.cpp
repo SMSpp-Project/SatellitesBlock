@@ -65,6 +65,8 @@ static const auto angle0 = -1.3882860164509252;
 /*--------------------------------------------------------------------------*/
 
 void  ConstellationBlock::load( std::istream & input , char frmt ){
+   // TO DO: implement load() method for loading instance data 
+   // from input file (for the file format, see next load() method)
 }
 
 void ConstellationBlock::load( const std::string & input , char frmt )
@@ -394,6 +396,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 
 void ConstellationBlock::print( std::ostream & output , char vlvl ) const
 {
+   // TO DO: implement print() method for printing instance data to output file
  }
 
 /*--------------------------------------------------------------------------*/
