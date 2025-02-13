@@ -71,7 +71,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 {
 
  /* The structure of the input file to load the instance data should be the 
- * following:
+ * following (see, as example, input file in testConstellation directory):
  *
  * < time horizon (in hours) >
  * < time step for time discretization (in seconds) >
