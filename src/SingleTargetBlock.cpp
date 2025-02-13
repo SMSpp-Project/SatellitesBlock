@@ -59,8 +59,7 @@ using FNumber = SingleTargetBlock::FNumber;
 /*--------------------------------------------------------------------------*/
 
 static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
-static const double RAYON = 6378136.3;
-static const double M_limit = 10*3.14159265;
+static const double RAYON = 6378136.3; [ m ]
 static const auto PI = 3.14159265;
 
 /*--------------------------------------------------------------------------*/
@@ -157,9 +156,11 @@ SMSpp_insert_in_factory_cpp_0( SingleTargetSolution );
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetBlock::load( FNumber num_satellites , FNumber time_step, FNumber horizon, FNumber altValues , FNumber thetaValues ,
+void SingleTargetBlock::load( FNumber num_satellites , FNumber time_step , 
+                            FNumber horizon , FNumber altValues , FNumber thetaValues ,
                             FNumber indOrbit , FNumber aHalf ,
-                            boost::multi_array< double , 2 > CoverageLat , boost::multi_array< double , 2 > CoverageLong )
+                            boost::multi_array< double , 2 > CoverageLat , 
+                            boost::multi_array< double , 2 > CoverageLong )
 {
  // sanity checks - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -180,28 +181,17 @@ void SingleTargetBlock::load( FNumber num_satellites , FNumber time_step, FNumbe
   t = T / dt;
   alphaHalf = aHalf;
 
-  CoverageSatLat.resize(boost::extents[t][OrbitSet]);
-  CoverageSatLong.resize(boost::extents[t][OrbitSet]);
+  CoverageSatLat.resize(boost::extents[ t ][ OrbitSet ]);
+  CoverageSatLong.resize(boost::extents[ t ][ OrbitSet ]);
 
   int index1 = -1;
   //for( Index ii = 0 ; ii < altSet ; ++ii )
     for( Index j = 0 ; j < t ; ++j ) {
       for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
-        CoverageSatLat[j][jj] = CoverageLat[j][jj];
-        CoverageSatLong[j][jj] = CoverageLong[j][jj];
+        CoverageSatLat[ j ][ jj ] = CoverageLat[ j ][ jj ];
+        CoverageSatLong[ j ][ jj ] = CoverageLong[j][ jj ];
       }
     } 
-
- // allocate observability variables - - - - - - - - - - - - - - - - - - - - - 
-
- //generate_abstract_variables();
- //generate_objective();
-
- // throw Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
- // note: this is a NBModification, the "nuclear option"
-
- //if( anyone_there() )
- // add_Modification( std::make_shared< NBModification >( this ) );
 
  }  // end( SingleTargetBlock::load( memory ) )
 
@@ -212,17 +202,6 @@ void SingleTargetBlock::load( std::istream & input , char frmt )
  // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
 
  guts_of_destructor();
-
- // allocate memory - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
- // read problem data - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- 
- // allocate observability variables - - - - - - - - - - - - - - - - - - - - - 
-
- //generate_abstract_variables();
-
- // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
- // note: this is a NBModification, the "nuclear option"
 
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
