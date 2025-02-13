@@ -180,8 +180,8 @@ void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber hori
   t = T / dt;
   alphaHalf = aHalf;
 
-  CoverageSatLat.resize(boost::extents[num_targets][t][OrbitSet]);
-  CoverageSatLong.resize(boost::extents[num_targets][t][OrbitSet]);
+  CoverageSatLat.resize(boost::extents[ num_targets ][ t ][ OrbitSet ]);
+  CoverageSatLong.resize(boost::extents[ num_targets ][ t ][ OrbitSet ]);
 
   int index1 = -1;
     for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
