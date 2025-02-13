@@ -114,11 +114,21 @@ namespace SMSpp_di_unipi_it
 *   \{ T - dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
 *   \forall k \in [T]                                               (3)
 * \f]
+* \f[
+*   min \Delta_t >= \max \{ \Delta_t^1[ k ], \Delta_t^2[ k ] \}     (4)
+* \f]
+* \f[
+* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi_{c}\, 
+\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ][ m ] \} 
+\ge \theta^{\max},       \forall t\in T(dt), \forall m \in \mathcal{X}     (1)
+* \f]
 *
 * The objective function (1) minimizes the maximum revisit time for the current 
 * target Constraints (2) and (3) define \Delta_t^1[ k ] and \Delta_t^2[ k ],
 * respectively, as the revisit times before time stamp k \in [T] for the current 
-* target. 
+* target (these constraints are opportunely linearized when defining the constraint
+* of the Block). Then, the maximum revisit time is the maximum between \Delta_t^1[ k ]
+* and \Delta_t^2[ k ], see constraint (4).
 */
 
 class SingleTargetBlock : public Block

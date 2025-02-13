@@ -112,7 +112,8 @@ namespace SMSpp_di_unipi_it
 * Constraints (1) impose that, if the selected distances in longitude and latitude, 
 * \Delta lat[ c ][ t ][ m ] and \Delta long[ c ][ t ][ m ], are smaller than the 
 * threshold $\theta^{\max}$, then the target m is observed by the current satellite 
-* at time t. Constraint (2) requires that exactly one configuration is selected 
+* at time t. Constraint (1) is opportunely linearized when defining the constraints
+* of the Block. Constraint (2) requires that exactly one configuration is selected 
 * for the current satellite. Finally, constraints (3) active the current satellite 
 * in the constellation if it observes at least one target.
 */
