@@ -558,7 +558,7 @@ void SatelliteBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
  }  // end( SatelliteBlock::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- METHODS OF DCRSolution ------------------------*/
+/*-------------------------- METHODS OF SatelliteSolution ------------------*/
 /*--------------------------------------------------------------------------*/
 
 void SatelliteSolution::deserialize( const netCDF::NcGroup & group )
