@@ -458,18 +458,18 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
       LinearFunction* Funct2 = new LinearFunction( std::move( v_obs2 ));
 
       obs2_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      obs2_cnst[ i ][ j ].set_lhs( (-thetaVal-MLAT )); 
+      obs2_cnst[ i ][ j ].set_lhs(( -thetaVal-MLAT )); 
       obs2_cnst[ i ][ j ].set_function( Funct1 );
 
       obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      obs4_cnst[ i ][ j ].set_lhs( (-thetaVal-MLONG )); 
+      obs4_cnst[ i ][ j ].set_lhs(( -thetaVal-MLONG )); 
       obs4_cnst[ i ][ j ].set_function( Funct2 );
 
-      obs1_cnst[ i ][ j ].set_rhs( (-thetaVal ));
+      obs1_cnst[ i ][ j ].set_rhs(( -thetaVal ));
       obs1_cnst[ i ][ j ].set_lhs( -Inf< double >() ); 
       obs1_cnst[ i ][ j ].set_function( Funct1 );
 
-      obs3_cnst[ i ][ j ].set_rhs( (-thetaVal ));
+      obs3_cnst[ i ][ j ].set_rhs(( -thetaVal ));
       obs3_cnst[ i ][ j ].set_lhs( -Inf< double >() ); 
       obs3_cnst[ i ][ j ].set_function( Funct2 );
 
