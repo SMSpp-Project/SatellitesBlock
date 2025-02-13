@@ -83,6 +83,8 @@ namespace SMSpp_di_unipi_it
 /*
 * Let T and \Delta t_m be the time horizon and the time width between two 
 * consecutive target observations for the target m\in\mathcal X$, respectively. 
+* We indicate with [T] := \{ 1,2,...,T \} the set of time stamps. 
+* [C] is the set of possible orbital configurations.
 * We consider three sets of binary decision variables:
 *
 * (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 

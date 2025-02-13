@@ -79,8 +79,8 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple SingleTargetBlock concept.
 /*
-* Let T and \Delta t_m be the time horizon and the time width between two 
-* consecutive target observations for the target m\in\mathcal X$, respectively. 
+* Let T and be the time horizon, we indicate with [T] := \{ 1,2,...,T \} 
+* the set of time stamps. [C] is the set of possible orbital configurations.
 *
 * We consider two sets of non-negative continuous decision variables:
 *
@@ -90,8 +90,8 @@ namespace SMSpp_di_unipi_it
 *
 * We consider four sets of binary decision variables:
 *
-* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 
-* is selected for the satellite, 
+* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration 
+* c \in [ C ] is selected for the satellite, 
 * (2) \xi[ t ][ m ] \in \{ 0 , 1 \} indicating whether the satellite i observes 
 * the curent target at time t, and
 * (3) zeta[ t ] \in \{ 0 , 1 \} indicating whether the constellation observes  
@@ -99,22 +99,14 @@ namespace SMSpp_di_unipi_it
 * (4) h[ k ][ j ] \in \{ 0 , 1 \} indicating whether the constellation observes  
 * the current target in two time stamps k and j
 * 
-* Mathematically speaking, we have that the following constraints hold for each 
-* satellite.
+* The model we are going to solve reads as follows.
 *
 * \f[
-* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi_{c}\, 
-\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ][ m ] \} 
-\ge \theta^{\max},       \forall t\in T(dt), \forall m \in \mathcal{X}     (1)
-* \f]
-* \f[
-* \sum_{ c \in [C] } \pi[ c ] = 1                                          (2)
-* \f]
-* \f[
-* \xi[ t ][ m ] \leq zeta, \forall t\in T(dt), \forall m \in \mathcal{X}   (3)
+*   min \Delta_t
 * \f]
 *
-* Constraints (1) impose that
+* The objective function (1) minimizes the maximum revisit time for the current 
+* target Constraints (1) impose that
 */
 
 class SingleTargetBlock : public Block
