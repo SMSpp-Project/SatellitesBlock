@@ -327,8 +327,8 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
           MLONG = std::max(MLONG, (CoverageSatLong[ i ][ j ][ jj ]-thetaVal));
         }
 
-      v_obs1.push_back( std::make_pair( &xi[i][j], -MLAT )); 
-      v_obs2.push_back( std::make_pair( &xi[i][j], -MLONG )); 
+      v_obs1.push_back( std::make_pair( &xi[ i ][ j ], -MLAT )); 
+      v_obs2.push_back( std::make_pair( &xi[ i ][ j ], -MLONG )); 
       LinearFunction* Funct1 = new LinearFunction( std::move( v_obs1 ));
       LinearFunction* Funct2 = new LinearFunction( std::move( v_obs2 ));
 
