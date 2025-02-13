@@ -538,7 +538,19 @@ void SatelliteBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 /*--------------------------------------------------------------------------*/
 
 void SatelliteSolution::deserialize( const netCDF::NcGroup & group )
-{}
+{
+  // TO DO: implement deserialize() method for dealign with netCDF input files
+}
+
+void SatelliteSolution::serialize( netCDF::NcGroup & group ) const
+{
+  // TO DO: implement serialize() method for dealing with netCDF input files
+}
+
+void SatelliteSolution::sum( const Solution * solution , double multiplier )
+{
+  // TO DO: implement sum() method
+}
 
 void SatelliteSolution::read( const Block * block )
 {
@@ -566,17 +578,11 @@ void SatelliteSolution::write( Block * block )
 
 }
 
-void SatelliteSolution::serialize( netCDF::NcGroup & group ) const
-{}
-
 SatelliteSolution * SatelliteSolution::scale( double factor ) const
 {
   auto * sol = SatelliteSolution::clone( true );
   return( sol );
 }
-
-void SatelliteSolution::sum( const Solution * solution , double multiplier )
-{}
 
 SatelliteSolution * SatelliteSolution::clone( bool empty ) const
 {
