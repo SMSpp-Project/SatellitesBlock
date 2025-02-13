@@ -286,9 +286,27 @@ public:
   * Like load( std::istream & ), if there is any Solver attached to this
   * SingleTargetBlock then a NBModification (the "nuclear option") is issued. */
 
- void load( FNumber n , FNumber dt , FNumber T , FNumber altValues , FNumber thetaValues ,
+  /* Meaning of the parameters in load():
+  * (i)   n is the number of satellite that should be active by the constellation
+  * (ii)  dt is time stpe for the time discretization in seconds 
+  * (iii) T is the time horizon in hours
+  * (iv)  altValues is the array of the values for the altitude of the satellite orbit
+  * (v)   thetaValues is the array of the values for the theta^{\max} of the satellite
+  * (vi)  indexOrbit is the number of feasible satellite orbits (aka configuration)
+  * (vii) aHalf is the parameter aHalf for the current satellite
+  * (viii)CoverageLat is the multiarray with the difference abs(satLat - Latitude[ m ]) 
+  * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ]) 
+  */
+
+  // for the computation of the parameters, please see ConstellationBlock, where
+  // there is a load() which read an input file in an opportune style with the 
+  // parameters of the instance to be solved
+
+ void load( FNumber n , FNumber dt , FNumber T , 
+              FNumber altValues , FNumber thetaValues ,
               FNumber indexOrbit, FNumber aHalf ,
-              boost::multi_array< double , 2 > CoverageLat , boost::multi_array< double , 2 > CoverageLong );
+              boost::multi_array< double , 2 > CoverageLat , 
+              boost::multi_array< double , 2 > CoverageLong );
 
  void load( std::istream &input , char frmt = 0 ) override;
 
