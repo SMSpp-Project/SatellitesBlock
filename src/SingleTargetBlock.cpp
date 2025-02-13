@@ -697,39 +697,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( obs_cnst_xi , "obs_cnst_xi" );
 
-
-  d1A_cnst.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &d1[ ii ], 1.0));
-        v_var.push_back( std::make_pair( &h[ ii ], -1.0));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        d1A_cnst[ ii ].set_rhs( 0.0 );
-        d1A_cnst[ ii ].set_lhs( -Inf< double >() );
-        d1A_cnst[ ii ].set_function( Funct );
-    }
-  }
-
-  //add_static_constraint( d1A_cnst , "d1A_cnst" );
-  
-  d2A_cnst.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &d2[ ii ], 1.0));
-        v_var.push_back( std::make_pair( &h[ ii ], -1.0));
-	LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-	d2A_cnst[ ii ].set_rhs( 0.0 );
-	d2A_cnst[ ii ].set_lhs( -Inf< double >() );
-	d2A_cnst[ ii ].set_function( Funct );
-    }
-  }
-
-  //add_static_constraint( d2A_cnst , "d2A_cnst" );
-
   AR2 |= HasCnst;
  }  // end( SingleTargetBlock::generate_abstract_constraints )
 
