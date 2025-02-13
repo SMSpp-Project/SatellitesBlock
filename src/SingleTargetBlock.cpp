@@ -1008,7 +1008,19 @@ void SingleTargetBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 /*--------------------------------------------------------------------------*/
 
 void SingleTargetSolution::deserialize( const netCDF::NcGroup & group )
-{}
+{
+  // TO DO: implement deserialize() method for dealign with netCDF input files
+}
+
+void SingleTargetSolution::serialize( netCDF::NcGroup & group ) const
+{
+  // TO DO: implement serialize() method for dealing with netCDF input files
+}
+
+void SingleTargetSolution::sum( const Solution * solution , double multiplier )
+{
+  // TO DO: implement sum() method
+}
 
 void SingleTargetSolution::read( const Block * block )
 {
@@ -1036,17 +1048,11 @@ void SingleTargetSolution::write( Block * block )
 
 }
 
-void SingleTargetSolution::serialize( netCDF::NcGroup & group ) const
-{}
-
 SingleTargetSolution * SingleTargetSolution::scale( double factor ) const
 {
   auto * sol = SingleTargetSolution::clone( true );
   return( sol );
 }
-
-void SingleTargetSolution::sum( const Solution * solution , double multiplier )
-{}
 
 SingleTargetSolution * SingleTargetSolution::clone( bool empty ) const
 {
