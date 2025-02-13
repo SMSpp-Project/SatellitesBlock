@@ -564,41 +564,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( Deltat_max22 , "Deltat_max22" );
 
-
-  Deltat_min_k1_11.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &Deltat_k1A[ ii ], -1.0 ));
-        v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - T )));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        Deltat_min_k1_11[ ii ].set_rhs( -T );
-        Deltat_min_k1_11[ ii ].set_lhs( -T ); 
-        Deltat_min_k1_11[ ii ].set_function( Funct );
-        ii += 1;
-    }
-  }
-
-  //add_static_constraint( Deltat_min_k1_11 , "Deltat_min_k1_1" );
-
-  Deltat_min_k2_11.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &Deltat_k2A[ ii ], 1.0 ));
-        v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt )));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        Deltat_min_k2_11[ ii ].set_rhs( T );
-        Deltat_min_k2_11[ ii ].set_lhs( T ); 
-        Deltat_min_k2_11[ ii ].set_function( Funct );
-        ii += 1;
-    }
-  }
-
-  //add_static_constraint( Deltat_min_k2_11 , "Deltat_min_k2_1" );
-
   Deltat_min_k1_1.resize( t*(t-1)/2 );
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
