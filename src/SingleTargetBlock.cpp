@@ -760,7 +760,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   //add_static_constraint( d2A_cnst , "d2A_cnst" );
 
-  
   AR2 |= HasCnst;
  }  // end( SingleTargetBlock::generate_abstract_constraints )
 
