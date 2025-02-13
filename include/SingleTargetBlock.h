@@ -619,8 +619,7 @@ public:
  std::vector< FRowConstraint > obs_cnst_h;  
  std::vector< FRowConstraint > obs_cnst_xi;  
 
- std::vector< FRowConstraint > Deltat_max_dt;
- std::vector< FRowConstraint > Deltat_max_dt1;
+ std::vector< FRowConstraint > Deltat_max_dt1; // the constraint Delta t \geq dt
   
  FRealObjective c;               ///< the (linear) objective function
 
