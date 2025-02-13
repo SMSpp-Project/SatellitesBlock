@@ -254,7 +254,6 @@ public:
  void load( std::istream &input , char frmt = 0 ) override;
 
  [[nodiscard]] ColVariable * i2p_r( Index iii , Index jjj ) const {
-  ///std::cout << iii << "," << jjj << "\n";
   return( const_cast< ColVariable * >( &xi[ iii ][ jjj ] ) );
  }
 
