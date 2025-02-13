@@ -578,7 +578,7 @@ public:
  std::vector< ColVariable > d2; ///< the d2 variables
 
  boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
- boost::multi_array< ColVariable , 2 > activation; ///< the observation variables
+ boost::multi_array< ColVariable , 2 > activation; ///< the configuration activation variables
   
  std::vector< FRowConstraint > orbitSelection; /// the SingleTarget activation constraint
 
