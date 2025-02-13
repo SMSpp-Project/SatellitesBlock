@@ -187,8 +187,8 @@ void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber hori
     for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
             for( Index j = 0 ; j < t ; ++j ) {
               for( Index i = 0 ; i < num_targets ; ++i ){
-                CoverageSatLat[i][j][jj] = CoverageLat[i][j][jj];
-                CoverageSatLong[i][j][jj] = CoverageLong[i][j][jj];
+                CoverageSatLat[ i ][ j ][ jj ] = CoverageLat[ i ][ j ][ jj ];
+                CoverageSatLong[ i ][ j ][ jj ] = CoverageLong[ i ][ j ][ jj ];
               }
             } 
          }
