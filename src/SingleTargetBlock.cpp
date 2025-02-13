@@ -860,7 +860,7 @@ void SingleTargetBlock::guts_of_destructor( void )
  // clear() all Constraint to ensure that they do not bother to un-register
  // themselves from Variable that are going to be deleted anyway
 
- // clear the bound constraints
+ // clear all the (static) constraints
   
  Constraint::clear( orbitSelection ); 
 
