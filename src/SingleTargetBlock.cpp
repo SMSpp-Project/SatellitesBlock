@@ -333,8 +333,8 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   // i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites, and 
   // \forall j \in [T] where [T] := \{1,2,...,T\} and T is the time horizon 
   // (in seconds),i.e., the constellation observes the current target at time stamp j 
-  // (z[ j ] = 1) iff. there exists at least satellite that observes the target at time 
-  // stamp j (xi[ i ][ j ] = 1) 
+  // (z[ j ] = 1) iff. there exists at least satellite that observes the target at 
+  // time stamp j (xi[ i ][ j ] = 1) 
 
   activationSat_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
   for( Index i = 0 ; i < n ; ++i ){
@@ -351,11 +351,12 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   add_static_constraint( activationSat_cnst , "activationSat_cnst" );
 
   // generate the activationSat1_cnst constraints, which deactive variable z[ j ]
-  // if all variables xi[ i ][ j ] are not active: sum_{i \in [n]} xi[ i ][ j ] \geq zeta[ j ] 
-  // \forall j \in [T] where [T] := \{1,2,...,T\} and T is the time horizon (in seconds),
-  // i.e., the constellation not observe the current target at time stamp j (z[ j ] = 0) 
-  // iff. there not exists any satellite that observe the target at time stamp j 
-  // (xi[ i ][ j ] = 0 \forall i \in [n] where [n] := \{1,2,...,n\}) 
+  // if all variables xi[ i ][ j ] are not active: sum_{i \in [n]} xi[ i ][ j ] 
+  // \geq zeta[ j ] \forall j \in [t] where [t] := \{1,2,...,t\} and T is the 
+  // number of time stamps, i.e., the constellation not observe the current target 
+  // at time stamp j (z[ j ] = 0) iff. there not exists any satellite that observes 
+  // the target at time stamp j (xi[ i ][ j ] = 0 \forall i \in [n] where 
+  // [n] := \{1,2,...,n\}) 
 
   activationSat1_cnst.resize( t );
   for( Index i = 0 ; i < t ; ++i ){
@@ -371,6 +372,11 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
   add_static_constraint( activationSat1_cnst , "activationSat1_cnst" );
   
+  // generate three familiy of Linearization constraints for 
+  // h[ ii ] = z[ i ] * z[ j ], where ii is an incremental indexes for i \in [t-1] 
+  // and j = \{i+1,...,t\}, where t is the total number of time stamps
+
+  // (1) generate h_cnst_1 constraints: h[ ii ] \leq z[ i ] \forall i \in [t-1]
 
   h_cnst_1.resize( t*(t-1)/2 );
   Index ii = 0;
@@ -388,6 +394,7 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
   add_static_constraint( h_cnst_1 , "h_cnst_1" );
 
+  // (2) generate h_cnst_2 constraints: h[ ii ] \leq z[ j ] \forall j \in \{i+1,...t-1\}
 
   h_cnst_2.resize( t*(t-1)/2 );
   ii = 0;
@@ -404,6 +411,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
     }
   }
   add_static_constraint( h_cnst_2 , "h_cnst_2" );
+
+  // (3) generate h_cnst_3 constraints: h[ ii ] \geq  z[ i ] + z[ j ] -1 
+  // \forall i \in [t-1] and \forall j \in \{i+1,...t-1\}
 
   h_cnst_3.resize( t*(t-1)/2 );
   ii = 0;
