@@ -498,7 +498,7 @@ void SatelliteBlock::add_Modification( sp_Mod mod , ChnlName chnl )
 
 void SatelliteBlock::print( std::ostream  & output , char vlvl ) const
 {
- 
+  // TO DO: implement print() method for printing instance data to output file  
  }  // end( SatelliteBlock::print )
 
 /*--------------------------------------------------------------------------*/
