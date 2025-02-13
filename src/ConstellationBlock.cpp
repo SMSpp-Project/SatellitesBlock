@@ -167,7 +167,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
    } 
  }
 
- double alt = altitude[altSet-1];
+ double alt = altitude[ altSet-1 ];
  for( Index ii = 0 ; ii < altSet ; ++ii ){
    t_p[ ii ] = sqrt(MU / ( pow( RAYON + altitude[ ii ], 3 )));
    t_u[ ii ] = sqrt(MU / ( RAYON+altitude[ ii ]));
@@ -175,7 +175,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
    thetaVal[ ii ] = -aHalf + asin((( RAYON + altitude[ ii ]) / RAYON ) * sin( aHalf ));
  }
 
- double Theta_max = thetaVal[altSet-1];
+ double Theta_max = thetaVal[ altSet-1 ];
  Theta_max = Theta_min;
  double numbOfDiscretize = ceil(PI/Theta_min);
  
