@@ -169,7 +169,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  double alt = altitude[ altSet-1 ];
  for( Index ii = 0 ; ii < altSet ; ++ii ){
-   t_p[ ii ] = sqrt( MU / ( pow( RAYON + altitude[ ii ], 3 )));
+   t_p[ ii ] = sqrt( MU / ( pow( RAYON + altitude[ ii ] , 3 )));
    t_u[ ii ] = sqrt( MU / ( RAYON + altitude[ ii ]));
    t_GM[ ii ] = sqrt(( RAYON + altitude[ ii ]) / MU);
    thetaVal[ ii ] = -aHalf + asin((( RAYON + altitude[ ii ]) / RAYON ) * sin( aHalf ));
