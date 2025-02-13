@@ -516,8 +516,8 @@ public:
  std::vector< FRowConstraint > orbitSelection; /// the satellite activation constraint
 
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the activation constraints 
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat 
- boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
+ boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the (big-M linearized) observation constraints for CoverageSatLat 
+ boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the (big-M linearized) observation constraints for CoverageSatLong
 
  FRealObjective c;               ///< the (linear) objective function
 
