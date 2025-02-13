@@ -323,6 +323,14 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
     blck->generate_abstract_constraints();
 
   // generate the observability constraints  - - - - - - - - - - - - - - - 
+  /* sum_{t \in T(k, \Delta t[ m ], dt), i \in [s]} \xi[ i ][ t ][ m ] \geq 1, 
+  * \forall k \in [\lfloor T/\Delta t_m \rfloor], \forall m \in \mathcal{X} 
+  * where: T is the time horizon (here: horizon), Delta t[ m ] is the revisit 
+  * period associated with the target m (here: period[ m ]) and dt is the time
+  * step for time discretization (here: time_step) T(k, \Delta t[ m ], dt) is 
+  * the set of the time step corresponding to the interval, in which target m
+  * should be observed by the constellation.
+  */
 
    double maxPeriods = *max_element(periods.begin(), periods.end());
    observation.resize(
@@ -336,6 +344,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
       
       for( Index k = 0 ; k < satellites ; ++k ) {
          for( Index tt = j*pp ; tt < (j+1)*pp ; ++tt ) {
+            // retrieve observation variable \xi[ i ][ t ][ m ] for SatelliteBlock i
             v_var.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_r( i , tt ), 1.0 ));
          }
       }
@@ -350,7 +359,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
           v_var.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_z(), 0.0 ));
        }
 
-      // fake constraints when j >= periods[i]
+      // fake constraints when j \geq periods[i]: we simply set 0 * z[ i ] = 0 for SatelliteBlock i
       observation[i][j].set_function( new LinearFunction( std::move( v_var )));
       observation[i][j].set_rhs( 0.0 ); 
       observation[i][j].set_lhs( 0.0 );
