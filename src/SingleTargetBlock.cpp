@@ -310,6 +310,12 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   if( AR2 & HasCnst )  // the constraints are there already
     return;           // nothing to do
    
+  // generate the orbitSelection constraint, which select exctly one orbit
+  // configuration for the satellite: sum_{j \in OrbitSet} activation[ i ][ j ] == 1
+  // \forall i in [n] where [n] := \{1,2,...,n\} and n is the number of satellites  
+  // remember: activation[ i ][ j ] = 1 iff. the j-th configuration is selected 
+  // for the i-th satellite active in the constellation
+
   orbitSelection.resize( n );
   for( Index i = 0 ; i < n ; ++i ) {
     LinearFunction::v_coeff_pair orbit_var;
