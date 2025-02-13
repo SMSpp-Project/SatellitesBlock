@@ -343,7 +343,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
       LinearFunction::v_coeff_pair v_var;
       
       for( Index k = 0 ; k < satellites ; ++k ) {
-         for( Index tt = j*pp ; tt < (j+1)*pp ; ++tt ) {
+         for( Index tt = j * pp ; tt < ( j+1 ) * pp ; ++tt ) {
             // retrieve observation variable \xi[ i ][ t ][ m ] for SatelliteBlock i
             v_var.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_r( i , tt ), 1.0 ));
          }
