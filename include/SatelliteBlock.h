@@ -247,6 +247,20 @@ public:
   * Like load( std::istream & ), if there is any Solver attached to this
   * SatelliteBlock then a NBModification (the "nuclear option") is issued. */
 
+  /* Meaning of the parameters in load():
+  * (i)   n is the number of targets that should be observed by the constellation
+  * (ii)  dt is time stpe for the time discretization in seconds 
+  * (iii) T is the time horizon in hours
+  * (iv)  altValues is the array of the values for the altitude of the satellite orbit
+  * (v)   thetaValues is the array of the values for the theta^{\max} of the satellite
+  * (vi)  indexOrbit is the number of feasible satellite orbits (aka configuration)
+  * (vii) aHalf is the parameter aHalf for the current satellite
+  * (viii)CoverageLat is the multiarray with the difference abs(satLat - Latitude[ m ]) 
+  * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ]) 
+  */
+
+  // for the computation of the parameters, please see ConstellationBlock 
+
  void load( FNumber n , FNumber dt , FNumber T , FNumber altValues , FNumber thetaValues ,
               FNumber indexOrbit, FNumber aHalf ,
               boost::multi_array< double , 3 > CoverageLat , boost::multi_array< double , 3 > CoverageLong );
