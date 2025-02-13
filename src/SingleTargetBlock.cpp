@@ -665,16 +665,6 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( d2_cnst , "d2_cnst" );
-
-  d2a_cnst.resize( 1 );
-  LinearFunction::v_coeff_pair v_varz;
-  v_varz.push_back( std::make_pair( &zeta[ t-1 ], 1.0));
-  LinearFunction* Functz = new LinearFunction( std::move( v_varz ));
-  d2a_cnst[ 0 ].set_rhs( 0.0 );
-  d2a_cnst[ 0 ].set_lhs( 0.0 ); 
-  d2a_cnst[ 0 ].set_function( Functz );
-
-  //add_static_constraint( d2a_cnst , "d2a_cnst" );
   
   obs_cnst_h.resize( 1 );
   ii = 0;
