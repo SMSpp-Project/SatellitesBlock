@@ -239,8 +239,8 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( Deltat_k1 );
 
-  // b1[ j ] is a binary variable used to linearize forward times 
-  // minimum constraints (see SingleTargetBlock.h)
+  // b1[ j ] is an (indicator) binary variable used to exclude from
+  // the computation of Deltat the terms T/2 for forward times j's
   b1.resize( t-1 );
   for( auto & var : b1 )
    var.set_type( ColVariable::kBinary );
@@ -262,8 +262,8 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( Deltat_k2 );
 
-  // b2[ j ] is a binary variable used to linearize backward times 
-  // minimum constraints (see SingleTargetBlock.h)
+  // b2[ j ] is an (indicator) binary variable used to exclude from
+  // the computation of Deltat the terms T/2 for backward times j's
   b2.resize( t-1 );
   for( auto & var : b2 )
    var.set_type( ColVariable::kBinary );
@@ -307,12 +307,16 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( xi );
 
+  // d1[ ii ] is a binary variable used to linearize forward times 
+  // minimum constraints (see SingleTargetBlock.h)
   d1.resize( t * (t-1)/2 );
   for( auto & var : d1 )
    var.set_type( ColVariable::kBinary );
 
   add_static_variable( d1 );
 
+  // d2[ ii ] is a binary variable used to linearize backward times 
+  // minimum constraints (see SingleTargetBlock.h)
   d2.resize( t * (t-1)/2 );
   for( auto & var : d2 )
    var.set_type( ColVariable::kBinary );
