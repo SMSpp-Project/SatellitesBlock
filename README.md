@@ -9,13 +9,13 @@ single satellites of the constellation, linked by the observation constraints,
 imposing that each target should be observed by at least one satellite within
 the revisit time. These `Blocks` are necessary to minimize their number of
 satellites active in the constellation and able to observe the targets within
-the revisit time 
+the revisit time (see `test_Constellation`).
 
 - `MultiTargetBlock` is a collection of `SingleTarhetBlocks`, defining the
 single target to observe, linked by the configuration constraints,
 imposing that exactly one orbital configuration is selected for each satellite
 in the constellation. These `Blocks` are necessary to minimize the maximum 
-revisit time 
+revisit time per target (see `test_Targets`)
 
 ### Bibliography
 
