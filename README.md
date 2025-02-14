@@ -4,7 +4,7 @@ Implementation of a `Block` for Satellite Constellation
 Design Problem (SCDP) for the minimization of the number of satellites
 in the constellation or of the sum of the maximum revisit times per target.
 
-## Bibliography
+### Bibliography
 
 - L. Mencarelli. An MILP approach to minimize the maximum revisit time in 
 the satellite constellation design problem. working paper, 2024.
