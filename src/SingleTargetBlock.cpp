@@ -735,6 +735,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( d2_cnst , "d2_cnst" );
+
+  // generate obs_cnst_h constraint: sum_{ii \in [t-1]} h[ ii ] >= 1, which 
+  // guarantee there exists at least two time stamp in which the current target 
+  // is observed by the constellation of satellites 
   
   obs_cnst_h.resize( 1 );
   ii = 0;
@@ -752,6 +756,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( obs_cnst_h , "obs_cnst_h" );
   
+  // generate obs_cnst_xi constraints: sum_{j \in [t]} xi[ i ][ j ] >= 3
+  // \forall i \in [n], which guarantee there exists at least three time stamp 
+  // in which the current target is observed by the each satellite  
 
   obs_cnst_xi.resize( n );
   for( Index i = 0 ; i < n ; ++i ) {
@@ -781,7 +788,7 @@ void SingleTargetBlock::generate_objective( Configuration *objc )
   LinearFunction::v_coeff_pair p( 1 );
 
   // the objective is the minimization of Deltat, which represents the 
-  // maximum revisit time for the current target
+  // maximum revisit time of the constellation for the current target
 
   p[ 0 ].first = &Deltat[ 0 ];
   p[ 0 ].second = 1.0;
