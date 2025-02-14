@@ -610,6 +610,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( Deltat_max22 , "Deltat_max22" );
 
+  // generate Deltat_min_k1_1 constraints which computes Deltat_k1[ i ] 
+  // starting from h[ ii ], which is equal to one if the current target is 
+  // observed at least twice by the constellation of satellites
+
   Deltat_min_k1_1.resize( t*(t-1)/2 );
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
@@ -626,6 +630,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( Deltat_min_k1_1 , "Deltat_min_k1_1" );
+
+  // generate Deltat_min_k1_2 constraints which linearize the minimum operation 
+  // for the forward times to compute Deltat_k1[ i ]: d1[ ii ] is an indicator 
+  // variable which is equal to one for the term where the minimum is attained
 
   Deltat_min_k1_2.resize( t*(t-1)/2 );
   ii = 0;
@@ -645,6 +653,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( Deltat_min_k1_2 , "Deltat_min_k1_2" );
 
+  // generate d1_cnst constraints, which guarantee that exactly one term of 
+  // d1[ ii ]is equal to one (which is the one where the minimimum is attained) 
+  // and all the remains are equal to zero (see Deltat_min_k1_2 constraints)
+
   d1_cnst.resize( t-1 );
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
@@ -660,6 +672,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( d1_cnst , "d1_cnst" );
+
+  // generate Deltat_min_k2_1 constraints which computes Deltat_k1[ i ] 
+  // starting from h[ ii ], which is equal to one if the current target is 
+  // observed at least twice by the constellation of satellites
 
   Deltat_min_k2_1.resize( t*(t-1)/2 );
   ii = 0;
@@ -678,6 +694,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( Deltat_min_k2_1 , "Deltat_min_k2_1" );
 
+  // generate Deltat_min_k1_2 constraints which linearize the minimum operation 
+  // for the forward times to compute Deltat_k2[ i ]: d2[ ii ] is an indicator 
+  // variable which is equal to one for the term where the minimum is attained
+
   Deltat_min_k2_2.resize( t*(t-1)/2 );
   ii = 0;
   for( Index i = 0 ; i < t-1 ; ++i ) {
@@ -695,6 +715,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( Deltat_min_k2_2 , "Deltat_min_k2_2" );
+
+  // generate d2_cnst constraints, which guarantee that exactly one term of 
+  // d2[ ii ]is equal to one (which is the one where the minimimum is attained) 
+  // and all the remains are equal to zero (see Deltat_min_k2_2 constraints)
 
   d2_cnst.resize( t-1 );
   ii = 0;
