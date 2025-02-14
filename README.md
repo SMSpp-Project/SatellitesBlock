@@ -14,7 +14,7 @@ satellite constellation design problem. working paper, 2024
 
 ## Getting started
 
-These instructions will let you build `MMCFBlock` on your system.
+These instructions will let you build `SatellitesBlock` on your system.
 
 ### Requirements
 
