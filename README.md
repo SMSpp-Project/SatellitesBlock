@@ -1,6 +1,6 @@
 # SatellitesBlock
 
-Implementation of a `Block` for Satellite Constellation 
+Implementation of the `Blocks` for Satellite Constellation 
 Design Problem (SCDP) for the minimization of the number of satellites
 in the constellation or of the sum of the maximum revisit times per target.
 
