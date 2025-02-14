@@ -536,6 +536,12 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( Deltat_max_dt1 , "Deltat_max_dt1" );
 
+  // generate Deltat_max1 constraints: Deltat \leq \Deltat_k1[ i ] 
+  // - 0.5 * T * b1[ i ] \forall i \in [t-1]. These constraints exclude the 
+  // terms 0.5 * T from the computation of Deltat (the minimum revisit time) 
+  // for the forward times i's in [t-1], where t is the total number of 
+  // time steps
+
   Deltat_max1.resize( t-1 );
   for( Index i = 0 ; i < t-1 ; ++i ) {
     LinearFunction::v_coeff_pair v_var;
@@ -550,6 +556,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
 
   add_static_constraint( Deltat_max1 , "Deltat_max1" );
 
+  // generate Deltat_max11 constraints: Deltat_k1[ i ] \leq 0.5 * T * b1[ i ] 
+  // \forall i \in [t-1]. These constraints are indicator constraint which 
+  // deactive indicator binary variable b1[ i ] if  Deltat_k1[ i ] \geq 0.5 * T
+
   Deltat_max11.resize( t-1 );
   for( Index i = 0 ; i < t-1 ; ++i ) {
     LinearFunction::v_coeff_pair v_var;
@@ -562,6 +572,12 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( Deltat_max11 , "Deltat_max11" );
+
+  // generate Deltat_max1 constraints: Deltat \leq \Deltat_k2[ i ] 
+  // - 0.5 * T * b2[ i ] \forall i \in [t-1]. These constraints exclude the 
+  // terms 0.5 * T from the computation of Deltat (the minimum revisit time) 
+  // for the backward times i's in [t-1], where t is the total number of 
+  // time steps
 
   Deltat_max2.resize( t-1 );
   for( Index i = 0 ; i < t-1 ; ++i ) {
@@ -576,6 +592,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
   }
 
   add_static_constraint( Deltat_max2 , "Deltat_max2" );
+
+  // generate Deltat_max22 constraints: Deltat_k2[ i ] \leq 0.5 * T * b2[ i ] 
+  // \forall i \in [t-1]. These constraints are indicator constraint which 
+  // deactive indicator binary variable 21[ i ] if  Deltat_k2[ i ] \geq 0.5 * T
 
   Deltat_max22.resize( t-1 ); 
   for( Index i = 0 ; i < t-1 ; ++i ) {
