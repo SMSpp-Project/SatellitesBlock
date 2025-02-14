@@ -32,34 +32,6 @@ These instructions will let you build `SatellitesBlock` on your system.
 
 - [SMS++ core library](https://gitlab.com/smspp/smspp)
 
-### Build and install with CMake
-
-Configure and build the library with:
-
-```sh
-mkdir build
-cd build
-cmake ..
-cmake --build .
-```
-
-The library has the same configuration options of
-[SMS++](https://gitlab.com/smspp/smspp-project/-/wikis/Customize-the-configuration).
-Optionally, install the library in the system with:
-
-```sh
-cmake --install .
-```
-
-### Usage with CMake
-
-After the module is built, you can use it in your CMake project with:
-
-```cmake
-find_package(SatellitesBlock)
-target_link_libraries(<my_target> SMS++::SatellitesBlock)
-```
-
 ### Build and install with makefiles
 
 Carefully hand-crafted makefiles have also been developed for those unwilling
