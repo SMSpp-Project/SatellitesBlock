@@ -224,36 +224,46 @@ void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
 
   add_static_variable( Deltat );
   
+  // Deltat_k2A[ ii ] is the ii-th term in the forward minimum 
+  // constraints (see SingleTargetBlock.h)
   Deltat_k1A.resize( t * (t-1)/2 );
   for( auto & var : Deltat_k1A )
    var.set_type( ColVariable::kNonNegative );
 
   add_static_variable( Deltat_k1A );
 
+  // Delta_k1[ j ] is the maximum revisit time for forward times j's
   Deltat_k1.resize( t-1 );
   for( auto & var : Deltat_k1 )
    var.set_type( ColVariable::kNonNegative );
 
   add_static_variable( Deltat_k1 );
 
+  // b1[ j ] is a binary variable used to linearize forward times 
+  // minimum constraints (see SingleTargetBlock.h)
   b1.resize( t-1 );
   for( auto & var : b1 )
    var.set_type( ColVariable::kBinary );
 
   add_static_variable( b1 );
 
+  // Deltat_k2A[ ii ] is the ii-th term in the backward minimum 
+  // constraints (see SingleTargetBlock.h)
   Deltat_k2A.resize( t*(t-1)/2 );
   for( auto & var : Deltat_k2A )
    var.set_type( ColVariable::kNonNegative );
 
   add_static_variable( Deltat_k2A );
 
+  // Delta_k2[ j ] is the maximum revisit time for backward times j's
   Deltat_k2.resize( t-1 );
   for( auto & var : Deltat_k2 )
    var.set_type( ColVariable::kNonNegative );
 
   add_static_variable( Deltat_k2 );
 
+  // b2[ j ] is a binary variable used to linearize backward times 
+  // minimum constraints (see SingleTargetBlock.h)
   b2.resize( t-1 );
   for( auto & var : b2 )
    var.set_type( ColVariable::kBinary );
