@@ -4,6 +4,19 @@ Implementation of the `Blocks` for Satellite Constellation
 Design Problem (SCDP) for the minimization of the number of satellites
 in the constellation or of the sum of the maximum revisit times per target.
 
+- `ConstellationBlock` is a collection of `SatelliteBlocks`, defining the
+single satellites of the constellation, linked by the observation constraints,
+imposing that each target should be observed by at least one satellite within
+the revisit time. These `Blocks` are necessary to minimize their number of
+satellites active in the constellation and able to observe the targets within
+the revisit time 
+
+- `MultiTargetBlock` is a collection of `SingleTarhetBlocks`, defining the
+single target to observe, linked by the configuration constraints,
+imposing that exactly one orbital configuration is selected for each satellite
+in the constellation. These `Blocks` are necessary to minimize the maximum 
+revisit time 
+
 ### Bibliography
 
 - L. Mencarelli. An MILP approach to minimize the maximum revisit time in 
