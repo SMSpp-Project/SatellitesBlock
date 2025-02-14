@@ -32,8 +32,8 @@ cmake --install .
 After the module is built, you can use it in your CMake project with:
 
 ```cmake
-find_package(MMCFBlock)
-target_link_libraries(<my_target> SMS++::MMCFBlock)
+find_package(SatellitesBlock)
+target_link_libraries(<my_target> SMS++::SatellitesBlock)
 ```
 
 ### Build and install with makefiles
