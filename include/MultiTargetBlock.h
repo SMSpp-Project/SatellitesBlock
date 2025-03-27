@@ -219,7 +219,8 @@ class MultiTargetBlock : public Block
  FNumber horizon;      ///< the simulation horizon [seconds]
  FNumber indexOrbit;      ///< the number of possible orbital plane
 
- boost::multi_array< FRowConstraint , 3 > duplicate_pi; ///< duplicate_pi constraints; 
+ //boost::multi_array< FRowConstraint , 3 > duplicate_pi; ///< duplicate_pi constraints; 
+ boost::multi_array< FRowConstraint , 2 > duplicate_pi; ///< duplicate_pi constraints; 
   
  };  // end( class( MultiTargetBlock ) )
 
