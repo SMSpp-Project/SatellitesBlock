@@ -372,8 +372,8 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
    }
 */
 
- /* \sum_{i \in [targets]} \pi[ i ][ j ][ k ] = 1, 
-  * \forall j \in [satellites] and \forall [ k ] \in [indexOrbit]
+ /* \sum_{j \in [satellites]} \sum[ k \in [indexOrbit]} 
+  * \pi[ i ][ j ][ k ] = 1, \forall i \in [targets]
   * the configuration of each satellite find for a given target should be 
   * the same for all the targets, i.e., the satellite orbital configuration
   * should be independent from the target, but it should be associated with
@@ -382,18 +382,18 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
   * \pi[ j ][ k ] which active/deactive a satellite orbital configuration)
   */
 
-   duplicate_pi.resize( boost::multi_array_types::extent_gen()[ satellites ][ indexOrbit ] );
-   for( Index j = 0 ; j < satellites  ; ++j ) {
-      for( Index k = 0 ; k < indexOrbit  ; ++k ) {
-         LinearFunction::v_coeff_pair v_vars;
-         for( Index i = 0 ; i < targets  ; ++i ) {
-            v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_pi( j , k ), 1.0 ));
-         }
-         duplicate_pi[j][k].set_function( new LinearFunction( std::move( v_vars )));
-         duplicate_pi[j][k].set_rhs( 1.0 ); 
-         duplicate_pi[j][k].set_lhs( -Inf< double >() );
-      }
-   }
+  duplicate_pi.resize( targets );
+  for( Index i = 0 ; i < targets  ; ++i ) {
+     LinearFunction::v_coeff_pair v_vars;
+     for( Index j = 0 ; j < satellites  ; ++j ) {
+        for( Index k = 0 ; k < indexOrbit  ; ++k ) {
+        v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_pi( j , k ), 1.0 ));
+        }
+     }
+     duplicate_pi[i].set_function( new LinearFunction( std::move( v_vars )));
+     duplicate_pi[i].set_rhs( 1.0 ); 
+     duplicate_pi[i].set_lhs( 1.0 );
+  }
 
    add_static_constraint( duplicate_pi , "duplicate_pi" );
    std::cout << "Constraints generated!\n";
