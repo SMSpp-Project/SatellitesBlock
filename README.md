@@ -19,7 +19,7 @@ revisit time per target (see `test_Targets`)
 
 ### Bibliography
 
-- L. Mencarelli. An MILP approach to minimize the maximum revisit time in 
+- L. Mencarelli. A MILP approach to minimize the maximum revisit time in 
 the satellite constellation design problem. Working paper, 2025.
 - L. Mencarelli. On the Lagrangian relaxation for the 
 satellite constellation design problem. Working paper, 2025.
