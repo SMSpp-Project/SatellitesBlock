@@ -152,6 +152,13 @@ class ConstellationBlock : public Block
  void generate_abstract_constraints( Configuration * stcc = nullptr )
   override;
 
+/**@} ----------------------------------------------------------------------*/
+/*--------------------- Methods for checking the Block ---------------------*/
+/*--------------------------------------------------------------------------*/
+
+ bool is_feasible( bool useabstract = false ,
+                   Configuration * fsbc = nullptr ) override;
+
 /** @} ---------------------------------------------------------------------*/
 /*--------------- METHODS FOR PRINTING & SAVING THE ConstellationBlock -----*/
 /*--------------------------------------------------------------------------*/

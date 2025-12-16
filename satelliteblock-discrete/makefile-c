@@ -34,7 +34,7 @@
 # *INC is the -I< include directories >
 
 # define input macros for SMS++ complete makefile, then include it
-SMS++SDR = $(SATSDR)/../smspp
+SMS++SDR = $(SATSDR)/../../smspp
 include $(SMS++SDR)/lib/makefile-inc
 
 # define input macros for libMCFCl complete makefile, then include it
@@ -44,7 +44,7 @@ include $(SMS++SDR)/lib/makefile-inc
 # libMCFClDIR = $(SATSDR)/MCFClass
 # include $(libMCFClDIR)/lib/makefile-inc
 
-MILPINC = $(SATSDR)/../milpsolver/include
+MILPINC = $(SATSDR)/../../milpsolver/include
 
 # include the makefile requiring all external modules in input
 include $(SATSDR)/makefile

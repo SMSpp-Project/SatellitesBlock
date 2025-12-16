@@ -61,15 +61,15 @@ clean::
 SATSDR = ..
 include $(SATSDR)/makefile-c
 
-LAGRANGIANDR = ../../lagrangiandualsolver
-BUNDLEDR = ../../bundlesolver
+LAGRANGIANDR = ../../../lagrangiandualsolver
+BUNDLEDR = ../../../bundlesolver
 
 #LgDSLVSDR = $(LAGRANGIANDR)
 #LgDSLVODR = $(LAGRANGIANDR)/obj/
 #include $(LAGRANGIANDR)/makefile-c
 
-libNDOSDR = ../../bundlesolver/NdoFiOracle
-include ../../bundlesolver/NdoFiOracle/lib/makefile
+libNDOSDR = ../../../bundlesolver/NdoFiOracle
+include ../../../bundlesolver/NdoFiOracle/lib/makefile
 
 BNDSLVSDR = $(BUNDLEDR)
 BNDSLVODR = $(BUNDLEDR)
@@ -84,7 +84,7 @@ MOBJ =  $(SATOBJ)
 MLIB =  $(SATLIB) -L"/Library/gurobi1001/macos_universal2/lib" -lgurobi100
 
 $(DIR)/$(NAME): $(MOBJ) $(DIR)/test.o  
-	$(CC) -o $(DIR)/$(NAME) ../../milpsolver/obj/MILPSolver.o ../../milpsolver/obj/CPXMILPSolver.o ../../milpsolver/obj/GRBMILPSolver.o ../../lagrangiandualsolver/LagrangianDualSolver.o ../../bundlesolver/BundleSolver.o ../../bundlesolver/ParallelBundleSolver.o ../../primalproximalheur/PrimalProximalHeur.o ../../ppheursolver/PPHeurSolver.o $(libNDOOBJ) $^ $(MLIB) $(libNDOINC) $(BNDSLVINC) $(libOSIINC) $(libOSILIB) $(SW) -lpthread -lm 
+	$(CC) -o $(DIR)/$(NAME) ../../../milpsolver/obj/MILPSolver.o ../../../milpsolver/obj/CPXMILPSolver.o ../../../milpsolver/obj/GRBMILPSolver.o ../../../lagrangiandualsolver/LagrangianDualSolver.o ../../../bundlesolver/BundleSolver.o ../../../bundlesolver/ParallelBundleSolver.o ../../../primalproximalheur/PrimalProximalHeur.o ../../../ppheursolver/PPHeurSolver.o $(libNDOOBJ) $^ $(MLIB) $(libNDOINC) $(BNDSLVINC) $(libOSIINC) $(libOSILIB) $(SW) -lpthread -lm 
 
 # dependencies: every .o from its .C + every recursively included .h- - - - -
 
@@ -97,6 +97,6 @@ MH =    $(SATH)
 # compile command
 
 $(DIR)/test.o: $(DIR)/test.cpp $(MH) 
-	$(CC) -c $*.cpp -o $@ $(MINC) -I../../ppheursolver/ -I../../lagrangiandualsolver/ -I../../bundlesolver/ -I../../milpsolver/include/ -I../../bundlesolver/ -I$(libNDOSDR)/OPTUtils -I../../bundlesolver/NdoFiOracle/NDOSlver -I../../primalproximalheur/ -I$(libNDOINC) -I$(BNDSLVINC) $(libOSIINC) $(libOSILIB) $(libCPLEXINC) -I"/Library/gurobi1001/macos_universal2/include/" $(SW)
+	$(CC) -c $*.cpp -o $@ $(MINC) -I../../../lagrangiandualsolver/ -I../../../bundlesolver/ -I../../../milpsolver/include/ -I../../../bundlesolver/ -I$(libNDOSDR)/OPTUtils -I../../../bundlesolver/NdoFiOracle/NDOSlver -I../../../primalproximalheur/ -I../../../ppheursolver/ -I$(libNDOINC) -I$(BNDSLVINC) $(libOSIINC) $(libOSILIB) $(libCPLEXINC) -I"/Library/gurobi1001/macos_universal2/include/" $(SW)
 
 ############################ End of makefile #################################
