@@ -1,0 +1,95 @@
+TARGETS: 1
+TIME STEP: 600
+theta_min: 0.392699
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.392699
+numbOfDiscretize: 8
+alpha_half: 56.596
+theta: 0.392699
+altitude: 566897
+number Orbits: 384
+SATELLITES: 1
+thetaVal=0.392699
+Instance charged!
+Variables generated!
+Constraints generated!
+Set parameter LogToConsole to value 1
+Set parameter NumericFocus to value 3
+Set parameter TimeLimit to value 7200
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter NodeLimit to value 7199.996691
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 73510 rows, 52725 columns and 319047 nonzeros
+Model fingerprint: 0xa76a0523
+Variable types: 20879 continuous, 31846 integer (31846 binary)
+Coefficient statistics:
+  Matrix range     [1e-04, 4e+04]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 8055 rows and 20687 columns
+Presolve time: 0.95s
+Presolved: 65455 rows, 32038 columns, 246144 nonzeros
+Variable types: 0 continuous, 32038 integer (31753 binary)
+Found heuristic solution: objective 42600.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing first log only...
+
+Root relaxation presolved: 64951 rows, 31750 columns, 244779 nonzeros
+
+Concurrent spin time: 0.07s
+
+Solved with dual simplex (dual model)
+
+Root relaxation: objective 6.000000e+02, 3763 iterations, 0.30 seconds (0.39 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  600.00000    0   48 42600.0000  600.00000  98.6%     -    1s
+H    0     0                    27600.000000  600.00000  97.8%     -    2s
+H    0     0                    6000.0000000  600.00000  90.0%     -    2s
+     0     2  600.00000    0   26 6000.00000  600.00000  90.0%     -    3s
+     5     5  600.00000    3   42 6000.00000  600.00000  90.0%   609    7s
+    14     9  600.00000    5   51 6000.00000  600.00000  90.0%   319   10s
+H   35    13                    5400.0000000  600.00000  88.9%   303   11s
+    60    14  600.00000   11   33 5400.00000  600.00000  88.9%   555   24s
+    69    14  600.00000   12   29 5400.00000  600.00000  88.9%   520   28s
+   101    17 infeasible   14      5400.00000  600.00000  88.9%   396   30s
+   168    37 infeasible   19      5400.00000  600.00000  88.9%   286   35s
+H  172    37                    4800.0000000  600.00000  87.5%   285   35s
+   472   113 infeasible   30      4800.00000  600.00000  87.5%   184   42s
+   608   172  600.00000   30   30 4800.00000  600.00000  87.5%   154   48s
+   768   231  600.00000   47   24 4800.00000  600.00000  87.5%   134   51s
+  1939   293 infeasible  105      4800.00000  600.00000  87.5%  71.4   56s
+  2327   248  600.00000   41   48 4800.00000  600.00000  87.5%  64.1   62s
+  2630   305  600.00000   31   47 4800.00000  600.00000  87.5%  61.7   67s
+  2943   256 infeasible   48      4800.00000  600.00000  87.5%  59.3   70s
+  3832   414  600.00000   65   88 4800.00000  600.00000  87.5%  55.9   75s
+  4489   322 infeasible   46      4800.00000  600.00000  87.5%  53.2   82s
+  5725   305 infeasible   47      4800.00000  600.00000  87.5%  51.9   88s
+  6629   315  624.69410   54   85 4800.00000  600.00000  87.5%  48.1   90s
+  8181   169  600.00000   45   44 4800.00000  600.00000  87.5%  42.6   95s
+
+Cutting planes:
+  Learned: 340
+  Cover: 642
+  Implied bound: 202
+  Inf proof: 11
+
+Explored 9293 nodes (385255 simplex iterations) in 99.57 seconds (220.93 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 4800 5400 6000 ... 42600
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.800000000000e+03, best bound 4.800000000000e+03, gap 0.0000%
+MAXIMUM REVISIT TIME INTERVAL: 4800
+TOTAL CPU TIME: 99.5797

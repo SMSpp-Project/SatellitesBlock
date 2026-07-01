@@ -1,0 +1,20 @@
+./TARGETBlock_test inputheur2 MILPPar3.txt >> output2_ext
+./TARGETBlock_test inputheur3 MILPPar3.txt >> output3_ext
+./TARGETBlock_test inputheur4 MILPPar3.txt >> output4_ext
+./TARGETBlock_test inputheur5 MILPPar3.txt >> output5_ext
+./TARGETBlock_test inputheur6 MILPPar3.txt >> output6_ext
+./TARGETBlock_test inputheur7 MILPPar3.txt >> output7_ext
+./TARGETBlock_test inputheur8 MILPPar3.txt >> output8_ext
+./TARGETBlock_test inputheur9 MILPPar3.txt >> output9_ext
+./TARGETBlock_test inputheur10 MILPPar3.txt >> output10_ext
+./TARGETBlock_test inputheur1 BSPar.txt >> output1_lag
+./TARGETBlock_test inputheur2 BSPar.txt >> output2_lag
+./TARGETBlock_test inputheur3 BSPar.txt >> output3_lag
+./TARGETBlock_test inputheur4 BSPar.txt >> output4_lag
+./TARGETBlock_test inputheur5 BSPar.txt >> output5_lag
+./TARGETBlock_test inputheur6 BSPar.txt >> output6_lag
+./TARGETBlock_test inputheur7 BSPar.txt >> output7_lag
+./TARGETBlock_test inputheur8 BSPar.txt >> output8_lag
+./TARGETBlock_test inputheur9 BSPar.txt >> output9_lag
+./TARGETBlock_test inputheur10 BSPar.txt >> output10_lag
+

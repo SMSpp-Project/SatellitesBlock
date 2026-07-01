@@ -152,7 +152,7 @@ SMSpp_insert_in_factory_cpp_1( SatelliteBlock );
 SMSpp_insert_in_factory_cpp_0( SatelliteSolution );
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- METHODS OF SatelliteBlock --------------------------*/
+/*--------------------------- METHODS OF SatelliteBlock --------------------*/
 /*--------------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -262,6 +262,7 @@ void SatelliteBlock::generate_abstract_variables( Configuration *stvv )
 
 void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
 {
+
   //Thetamax[i] == (-alphaHalf + sum(activation_altitude[i,j]*asin(((RAYON+altitudeSet[j])/RAYON)*sin(alphaHalf)) for j=1:length(altitudeSet))))
 
   if( AR2 & HasCnst )  // the constraints are there already
@@ -504,7 +505,6 @@ bool SatelliteBlock::is_optimal( bool useabstract , Configuration *optc )
 /*--------------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
-
 
  Solution * SatelliteBlock::get_Solution( Configuration * solc , bool emptys )
 {

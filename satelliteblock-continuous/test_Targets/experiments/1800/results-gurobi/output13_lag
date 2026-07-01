@@ -1,0 +1,210 @@
+TARGETS: 7
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 3
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+Instance charged!
+Variables generated!
+Constraints generated!
+MAXIMUM REVISIT TIME INTERVAL LB: 1800
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 11.4163
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+TARGETS: 7
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 3
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 61148 rows, 42714 columns and 222420 nonzeros
+Model fingerprint: 0x22d85183
+Variable types: 16457 continuous, 26257 integer (26257 binary)
+Coefficient statistics:
+  Matrix range     [9e-04, 4e+04]
+  Objective range  [1e-01, 1e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 26940 rows and 25411 columns
+Presolve time: 0.58s
+Presolved: 34208 rows, 17303 columns, 99866 nonzeros
+Variable types: 0 continuous, 17303 integer (16790 binary)
+Found heuristic solution: objective 43020.000000
+
+Root relaxation: objective 1.800000e+03, 7622 iterations, 0.08 seconds (0.16 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1800.00000    0  498 43020.0000 1800.00000  95.8%     -    1s
+H    0     0                    32400.000000 1800.00000  94.4%     -    1s
+H    0     0                    16200.000000 1800.00000  88.9%     -    1s
+H    0     0                    10800.000000 1800.00000  83.3%     -    1s
+     0     0 1800.00000    0  675 10800.0000 1800.00000  83.3%     -    1s
+     0     0 1800.00000    0  616 10800.0000 1800.00000  83.3%     -    2s
+     0     0 1800.00000    0  396 10800.0000 1800.00000  83.3%     -    4s
+     0     0 1800.00000    0  807 10800.0000 1800.00000  83.3%     -    4s
+     0     0 1800.00000    0  441 10800.0000 1800.00000  83.3%     -    6s
+     0     0 1800.00000    0  416 10800.0000 1800.00000  83.3%     -    7s
+     0     0 1800.00000    0  733 10800.0000 1800.00000  83.3%     -    8s
+     0     0 1800.00000    0  727 10800.0000 1800.00000  83.3%     -    8s
+     0     0 1800.00000    0  608 10800.0000 1800.00000  83.3%     -   10s
+     0     0 1800.00000    0  608 10800.0000 1800.00000  83.3%     -   10s
+H    0     0                    1800.0000000 1800.00000  0.00%     -   11s
+     0     0 1800.00000    0  608 1800.00000 1800.00000  0.00%     -   11s
+
+Cutting planes:
+  Learned: 9
+  Gomory: 1
+  Cover: 105
+  Implied bound: 14
+  Clique: 22
+  MIR: 13
+  Zero half: 15
+  RLT: 155
+  Relax-and-lift: 116
+  BQP: 419
+
+Explored 1 nodes (81184 simplex iterations) in 11.38 seconds (20.26 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 1800 10800 16200 ... 43020
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.800000000000e+03, best bound 1.800000000000e+03, gap 0.0000%
+REVISIT TIME LB: 1800
+REVISIT TIME UB: 1800
+CPU TIME: 11.3821
+TOTAL CPU TIME: 22.7985
+

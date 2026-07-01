@@ -1,0 +1,99 @@
+TARGETS: 2
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 1
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 16747 rows, 11877 columns and 51729 nonzeros
+Model fingerprint: 0x9254e826
+Variable types: 4702 continuous, 7175 integer (7175 binary)
+Coefficient statistics:
+  Matrix range     [9e-04, 4e+04]
+  Objective range  [5e-01, 5e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 6996 rows and 6974 columns
+Presolve time: 0.20s
+Presolved: 9751 rows, 4903 columns, 30089 nonzeros
+Variable types: 5 continuous, 4898 integer (4728 binary)
+Found heuristic solution: objective 43110.000000
+
+Root relaxation: objective 1.800000e+03, 3268 iterations, 0.04 seconds (0.07 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1800.00000    0  334 43110.0000 1800.00000  95.8%     -    0s
+     0     0 1800.00000    0  338 43110.0000 1800.00000  95.8%     -    0s
+     0     0 1800.00000    0  351 43110.0000 1800.00000  95.8%     -    0s
+     0     0 1800.00000    0  348 43110.0000 1800.00000  95.8%     -    0s
+H    0     0                    40500.000000 1800.00000  95.6%     -    0s
+     0     0 1800.00000    0  236 40500.0000 1800.00000  95.6%     -    1s
+     0     0 1800.00000    0  217 40500.0000 1800.00000  95.6%     -    1s
+H    0     0                    24300.000000 1800.00000  92.6%     -    1s
+     0     0 1800.00000    0  126 24300.0000 1800.00000  92.6%     -    1s
+     0     0 1800.00000    0   76 24300.0000 1800.00000  92.6%     -    1s
+H    0     0                    19800.000000 1800.00000  90.9%     -    1s
+     0     0 1800.00000    0   38 19800.0000 1800.00000  90.9%     -    1s
+     0     0 1800.00000    0   35 19800.0000 1800.00000  90.9%     -    1s
+     0     0 1800.00000    0   32 19800.0000 1800.00000  90.9%     -    2s
+     0     0 1800.00000    0   25 19800.0000 1800.00000  90.9%     -    2s
+     0     0 1800.00000    0   16 19800.0000 1800.00000  90.9%     -    2s
+H    0     0                    15300.000000 1800.00000  88.2%     -    2s
+H    0     0                    14400.000000 1800.00000  87.5%     -    2s
+H    0     0                    9000.0000000 1800.00000  80.0%     -    2s
+H    0     0                    6300.0000000 1800.00000  71.4%     -    2s
+H    0     0                    5400.0000000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   37 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   39 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   31 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   25 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   21 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   31 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   31 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   31 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   36 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   39 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   33 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   27 5400.00000 1800.00000  66.7%     -    2s
+     0     0 1800.00000    0   27 5400.00000 1800.00000  66.7%     -    3s
+     0     2 1800.00000    0   27 5400.00000 1800.00000  66.7%     -    3s
+   945   342 3600.00000   29   12 5400.00000 1800.00000  66.7%  20.3    5s
+
+Cutting planes:
+  Learned: 408
+  Gomory: 8
+  Cover: 528
+  Implied bound: 906
+  Clique: 72
+  MIR: 7
+  StrongCG: 2
+  Inf proof: 11
+  Zero half: 42
+  RLT: 12
+  Relax-and-lift: 11
+  BQP: 6
+
+Explored 10498 nodes (228005 simplex iterations) in 8.04 seconds (12.19 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 9: 5400 6300 9000 ... 43110
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 5.400000000000e+03, best bound 5.400000000000e+03, gap 0.0000%
+MAXIMUM REVISIT TIME INTERVAL LB: 5400
+MAXIMUM REVISIT TIME INTERVAL UB: 5400
+TOTAL CPU TIME: 8.03719

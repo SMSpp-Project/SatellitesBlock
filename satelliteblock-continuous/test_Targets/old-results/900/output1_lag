@@ -1,0 +1,60 @@
+TARGETS: 1
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 1
+thetaVal=0.589049
+Instance charged!
+Variables generated!
+Constraints generated!
+Set parameter LogToConsole to value 1
+Set parameter NumericFocus to value 3
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Warning: parameter changes on this environment will not affect existing models.
+Set parameter NodeLimit to value 7199.996758
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 32878 rows, 23589 columns and 134319 nonzeros
+Model fingerprint: 0xc1965f2e
+Variable types: 9311 continuous, 14278 integer (14278 binary)
+Coefficient statistics:
+  Matrix range     [7e-04, 4e+04]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 3653 rows and 9266 columns
+Presolve time: 0.35s
+Presolved: 29225 rows, 14323 columns, 98050 nonzeros
+Variable types: 0 continuous, 14323 integer (14134 binary)
+Found heuristic solution: objective 42300.000000
+
+Root relaxation: objective 9.000000e+02, 3184 iterations, 0.11 seconds (0.23 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  900.00000    0  167 42300.0000  900.00000  97.9%     -    0s
+H    0     0                    5400.0000000  900.00000  83.3%     -    0s
+     0     2  900.00000    0   83 5400.00000  900.00000  83.3%     -    2s
+H    4     3                    4500.0000000  900.00000  80.0%   210    4s
+     5     4  900.00000    1    1 4500.00000  900.00000  80.0%   168    5s
+
+Explored 5 nodes (9309 simplex iterations) in 5.40 seconds (12.01 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 4500 5400 42300 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.500000000000e+03, best bound 4.500000000000e+03, gap 0.0000%
+MAXIMUM REVISIT TIME INTERVAL: 4500
+TOTAL CPU TIME: 5.40602

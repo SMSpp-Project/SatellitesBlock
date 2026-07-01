@@ -1,0 +1,86 @@
+TARGETS: 1
+TIME STEP: 400
+theta_min: 0.261799
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.261799
+numbOfDiscretize: 13
+alpha_half: 56.596
+theta: 0.261799
+altitude: 566897
+number Orbits: 1521
+SATELLITES: 1
+thetaVal=0.261799
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NumericFocus to value 3
+Set parameter NodeLimit to value 0
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 164698 rows, 118914 columns and 1126224 nonzeros
+Model fingerprint: 0x86670dc3
+Variable types: 46871 continuous, 72043 integer (72043 binary)
+Coefficient statistics:
+  Matrix range     [5e-05, 4e+04]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 17994 rows and 46664 columns (presolve time = 16s) ...
+Presolve removed 45415 rows and 62222 columns
+Presolve time: 17.42s
+Presolved: 119283 rows, 56692 columns, 658739 nonzeros
+Variable types: 0 continuous, 56692 integer (56263 binary)
+Found heuristic solution: objective 42800.000000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 0.31s
+
+Barrier statistics:
+ Dense cols : 265
+ AA' NZ     : 4.068e+06
+ Factor NZ  : 9.224e+06 (roughly 150 MB of memory)
+ Factor Ops : 1.746e+09 (less than 1 second per iteration)
+ Threads    : 6
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   3.20970632e+06 -1.79091669e+08  1.44e+06 4.43e+00  7.25e+05    19s
+   1   3.15182463e+06 -4.43588184e+08  7.80e+05 2.46e+01  3.94e+05    19s
+   2   7.62216372e+05 -4.91153080e+08  1.86e+05 1.63e-11  9.87e+04    19s
+
+Barrier performed 2 iterations in 19.01 seconds (58.24 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.41s (can be avoided by choosing Method=3)
+
+Solved with primal simplex
+
+Root relaxation: objective 4.000000e+02, 7727 iterations, 1.25 seconds (2.58 work units)
+Total elapsed time = 21.71s
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  400.00000    0   24 42800.0000  400.00000  99.1%     -   25s
+
+Cleanup yields a better solution
+
+Explored 1 nodes (37861 simplex iterations) in 25.47 seconds (94.66 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 42400 42800 
+
+Node limit reached
+Best objective 4.240000000000e+04, best bound 4.000000000000e+02, gap 99.0566%
+MAXIMUM REVISIT TIME INTERVAL: 42400
+TOTAL CPU TIME: 25.4818

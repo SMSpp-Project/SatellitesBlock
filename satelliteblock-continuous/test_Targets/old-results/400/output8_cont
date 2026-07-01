@@ -1,0 +1,103 @@
+TARGETS: 3
+TIME STEP: 400
+theta_min: 0.261799
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.261799
+numbOfDiscretize: 13
+alpha_half: 56.596
+theta: 0.261799
+altitude: 566897
+number Orbits: 1521
+SATELLITES: 1
+thetaVal=0.261799
+thetaVal=0.261799
+thetaVal=0.261799
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NumericFocus to value 3
+Set parameter NodeLimit to value 0
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 497136 rows, 356742 columns and 3384756 nonzeros
+Model fingerprint: 0xc61f0953
+Variable types: 140613 continuous, 216129 integer (216129 binary)
+Coefficient statistics:
+  Matrix range     [4e-09, 4e+04]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Warning: Model contains large matrix coefficient range
+Presolve removed 57023 rows and 143034 columns (presolve time = 5s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 10s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 15s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 20s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 25s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 30s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 35s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 40s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 45s) ...
+Presolve removed 57026 rows and 143034 columns (presolve time = 50s) ...
+Presolve removed 100966 rows and 156896 columns (presolve time = 55s) ...
+Presolve removed 134770 rows and 183180 columns
+Presolve time: 57.20s
+Presolved: 362366 rows, 173562 columns, 1782683 nonzeros
+Variable types: 0 continuous, 173562 integer (172275 binary)
+Found heuristic solution: objective 128000.00000
+
+Deterministic concurrent LP optimizer: primal simplex, dual simplex, and barrier
+Showing barrier log only...
+
+Root barrier log...
+
+Ordering time: 0.91s
+
+Barrier statistics:
+ Dense cols : 2175
+ AA' NZ     : 9.719e+06
+ Factor NZ  : 2.240e+07 (roughly 400 MB of memory)
+ Factor Ops : 5.735e+09 (less than 1 second per iteration)
+ Threads    : 6
+
+                  Objective                Residual
+Iter       Primal          Dual         Primal    Dual     Compl     Time
+   0   9.63369707e+06 -5.48768303e+08  1.11e+06 7.49e+00  7.29e+05    61s
+   1   9.35319526e+06 -1.22898939e+09  6.04e+05 1.26e+02  3.98e+05    62s
+   2   3.15695827e+06 -1.46049199e+09  2.10e+05 3.57e+01  1.45e+05    63s
+   3   8.97511896e+05 -1.46118194e+09  4.74e+04 8.05e-11  3.44e+04    65s
+   4   3.17184413e+05 -1.13586639e+09  7.28e+03 4.00e-11  6.10e+03    65s
+   5   2.39374212e+05 -8.25242220e+08  2.31e+03 3.83e-11  2.45e+03    66s
+
+Barrier performed 5 iterations in 66.03 seconds (180.81 work units)
+Barrier solve interrupted - model solved by another algorithm
+
+Concurrent spin time: 0.10s
+
+Solved with dual simplex
+
+Root relaxation: objective 1.200000e+03, 22228 iterations, 7.81 seconds (14.21 work units)
+Total elapsed time = 71.83s
+Total elapsed time = 83.39s
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1200.00000    0  108 128000.000 1200.00000  99.1%     -   94s
+
+Cleanup yields a better solution
+
+Explored 1 nodes (93756 simplex iterations) in 94.78 seconds (350.33 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 118000 128000 
+
+Node limit reached
+Best objective 1.180000000000e+05, best bound 1.200000000000e+03, gap 98.9831%
+MAXIMUM REVISIT TIME INTERVAL: 118000
+TOTAL CPU TIME: 94.7907

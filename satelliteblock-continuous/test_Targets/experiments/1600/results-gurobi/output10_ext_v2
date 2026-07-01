@@ -1,0 +1,123 @@
+TARGETS: 3
+TIME STEP: 1600
+theta_min: 1.0472
+alpha_flag=0
+numbOfDiscretize: 4
+alpha_half: 55.785
+theta: 1.0472
+altitude: 566897
+number Orbits: 64
+SATELLITES: 3
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 32643 rows, 22944 columns and 152607 nonzeros
+Model fingerprint: 0xda20179b
+Variable types: 8907 continuous, 14037 integer (14037 binary)
+Coefficient statistics:
+  Matrix range     [4e-03, 4e+04]
+  Objective range  [3e-01, 3e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 3392 rows and 8655 columns
+Presolve time: 0.31s
+Presolved: 29251 rows, 14289 columns, 104793 nonzeros
+Variable types: 0 continuous, 14289 integer (13974 binary)
+Found heuristic solution: objective 43040.000000
+Found heuristic solution: objective 35200.000000
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root relaxation: objective 1.600000e+03, 4254 iterations, 0.09 seconds (0.19 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1600.00000    0  509 35200.0000 1600.00000  95.5%     -    1s
+H    0     0                    22933.333333 1600.00000  93.0%     -    1s
+     0     0 1600.00000    0  558 22933.3333 1600.00000  93.0%     -    1s
+H    0     0                    20266.666667 1600.00000  92.1%     -    2s
+     0     0 1600.00000    0  527 20266.6667 1600.00000  92.1%     -    2s
+     0     0 1600.00000    0  405 20266.6667 1600.00000  92.1%     -    3s
+     0     0 1600.00000    0  403 20266.6667 1600.00000  92.1%     -    4s
+H    0     0                    18133.333333 1600.00000  91.2%     -    5s
+     0     0 1600.00000    0  266 18133.3333 1600.00000  91.2%     -    5s
+     0     0 1600.00000    0  309 18133.3333 1600.00000  91.2%     -    5s
+     0     0 1600.00000    0  234 18133.3333 1600.00000  91.2%     -    8s
+     0     0 1600.00000    0  239 18133.3333 1600.00000  91.2%     -    8s
+H    0     0                    12800.000000 1600.00000  87.5%     -   11s
+H    0     0                    10133.333333 1600.00000  84.2%     -   11s
+H    0     0                    9066.6666667 1600.00000  82.4%     -   11s
+     0     0 1600.00000    0  234 9066.66667 1600.00000  82.4%     -   11s
+     0     0 1600.00000    0  222 9066.66667 1600.00000  82.4%     -   12s
+H    0     0                    8000.0000000 1600.00000  80.0%     -   14s
+     0     0 1600.00000    0  197 8000.00000 1600.00000  80.0%     -   14s
+H    0     0                    6933.3333333 1600.00000  76.9%     -   15s
+H    0     0                    6400.0000000 1600.00000  75.0%     -   15s
+H    0     0                    5866.6666667 1600.00000  72.7%     -   15s
+H    0     0                    5333.3333333 1600.00000  70.0%     -   15s
+     0     0 1600.00000    0  192 5333.33333 1600.00000  70.0%     -   15s
+H    0     0                    4800.0000000 1600.00000  66.7%     -   16s
+     0     0 1600.00000    0  199 4800.00000 1600.00000  66.7%     -   17s
+H    0     0                    4266.6666667 1600.00000  62.5%     -   18s
+     0     0 1600.00000    0  199 4266.66667 1600.00000  62.5%     -   18s
+     0     0 1600.00000    0  175 4266.66667 1600.00000  62.5%     -   20s
+     0     0 1600.00000    0  135 4266.66667 1600.00000  62.5%     -   20s
+     0     0 1600.00000    0  146 4266.66667 1600.00000  62.5%     -   21s
+     0     0 1600.00000    0  185 4266.66667 1600.00000  62.5%     -   21s
+     0     0 1600.00000    0  173 4266.66667 1600.00000  62.5%     -   21s
+     0     0 1600.00000    0  238 4266.66667 1600.00000  62.5%     -   24s
+     0     0 1600.00000    0  238 4266.66667 1600.00000  62.5%     -   24s
+     0     2 1600.00000    0  238 4266.66667 1600.00000  62.5%     -   26s
+   284   443 1600.00000   31  222 4266.66667 1600.00000  62.5%   170   31s
+   703   759 1600.00000   23  161 4266.66667 1600.00000  62.5%   115   42s
+H  868   708                    3733.3333333 1600.00000  57.1%   105   42s
+   954   810 1600.00000   49  180 3733.33333 1600.00000  57.1%   106   45s
+H  979   659                    3200.0000000 1600.00000  50.0%   105   45s
+H 1697   960                    2666.6666667 1600.00000  40.0%  91.5   47s
+  2222   680 1600.00000   11  238 2666.66667 1600.00000  40.0%  85.3   50s
+  2227   683 2133.33333   57  486 2666.66667 1600.00000  40.0%  85.1   56s
+H 2228   649                    2133.3333333 1600.00000  25.0%  85.0   58s
+  2230   650 2133.33333   68  360 2133.33333 1600.00000  25.0%  85.0   60s
+  2235   654 1600.00000   17  373 2133.33333 1600.00000  25.0%  84.8   65s
+  2243   659 1600.00000   24  330 2133.33333 1600.00000  25.0%  84.5   70s
+  2376   742 1600.00000   22   38 2133.33333 1600.00000  25.0%   133   75s
+  3417   449 1600.00000   28  153 2133.33333 1600.00000  25.0%   139   80s
+  3649   353 1600.00000   22  129 2133.33333 1600.00000  25.0%   147   85s
+  3821   298 1600.00000   20  123 2133.33333 1600.00000  25.0%   154   92s
+  4091   159 1600.00000   23  165 2133.33333 1600.00000  25.0%   167   95s
+  4178   150 1600.00000   38   91 2133.33333 1600.00000  25.0%   173  100s
+* 4217   134              26    1600.0000000 1600.00000  0.00%   174  100s
+
+Cutting planes:
+  Learned: 32
+  Gomory: 1
+  Cover: 22
+  Implied bound: 130
+  Projected implied bound: 2
+  Clique: 3
+  Flow cover: 20
+  Zero half: 11
+  RLT: 9
+  Relax-and-lift: 28
+
+Explored 4266 nodes (882562 simplex iterations) in 100.68 seconds (239.13 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 1600 2133.33 2666.67 ... 6400
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.600000000000e+03, best bound 1.600000000000e+03, gap 0.0000%
+MAXIMUM REVISIT TIME INTERVAL LB: 1600
+MAXIMUM REVISIT TIME INTERVAL UB: 1600
+TOTAL CPU TIME: 100.675

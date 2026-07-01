@@ -30,7 +30,7 @@ ComputeConfig  # exact type of the ComputeConfig object
 1  # f_diff == 0 ==> all non-provided parameters are set to the default value
    # f_diff == 1 ==> all non-provided parameters are not changed
 
-3 # number of integer parameters
+4 # number of integer parameters
 
 # now all the integer parameters
 #intCutSepPar   7     # separate valid inequalities everywhere + lazy constraints
@@ -45,26 +45,36 @@ ComputeConfig  # exact type of the ComputeConfig object
 
 LogToConsole 1
 OutputFlag 1
-NumericFocus 3
-#Presolve  0
+#NumericFocus 3
+#Threads 8
+#Presolve 1
+#MIPFocus 2
+NodeMethod 0
+Method 1
+#Cuts 0
+#TuneTrials 3
+#CrossoverBasis 0
 
 # note that we could eof() the file here since the rest is all empty
 
-0 # number of double parameters
+2 # number of double parameters
 
 # now all the double parameters
 #CPX_PARAM_TILIM 1800.0
 
 #TimeLimit 100.0
-#OptimalityTol 1e-6
+OptimalityTol 1e-2
 #FeasibilityTol 1e-6
+MIPGap 1e-2
+
+#NoRelHeurTime 0
 
 #limits/time 100
 
 0 # number of string parameters
 
 # now all the string parameters
-#strOutputFile	CONST.lp
+# strOutputFile	TARGET.lp
 
 0 # number of vector-of-int parameters
 

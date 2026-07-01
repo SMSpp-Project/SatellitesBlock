@@ -1,0 +1,66 @@
+TARGETS: 2
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 1
+thetaVal=1.1781
+thetaVal=1.1781
+Instance charged!
+Variables generated!
+Constraints generated!
+MAXIMUM REVISIT TIME INTERVAL LB: 4500
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 6.81424
+SOLUTION INFEASIBLE!
+TARGETS: 2
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 1
+thetaVal=1.1781
+thetaVal=1.1781
+Instance charged!
+Variables generated!
+Constraints generated!
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+REVISIT TIME LB: 4500
+REVISIT TIME UB: 4500
+CPU TIME: 33.6431
+TOTAL CPU TIME: 40.4574
+

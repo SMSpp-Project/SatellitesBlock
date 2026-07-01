@@ -97,7 +97,7 @@ dblRelAcc  1e-7   # (1e-3) relative accuracy required to solution
 dblNZEps   1e-8    # (1e-2) stopping parameter: threshold to declare 0 the || residual ||
 dbltStar   -1  # (-1) stopping parameter: multiplied to || residual || to estimate gap
 
-dbl_penaltyFactor 1e-3
+dbl_penaltyFactor 1e+1
 
 2 # number of string parameters
 

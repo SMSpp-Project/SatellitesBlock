@@ -1,0 +1,636 @@
+TARGETS: 5
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 2
+thetaVal=0.589049
+thetaVal=0.589049
+thetaVal=0.589049
+thetaVal=0.589049
+thetaVal=0.589049
+Instance charged!
+Variables generated!
+Constraints generated!
+MAXIMUM REVISIT TIME INTERVAL LB: 2700
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 7659.13
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+TARGETS: 5
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 2
+thetaVal=0.589049
+thetaVal=0.589049
+thetaVal=0.589049
+thetaVal=0.589049
+thetaVal=0.589049
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 167568 rows, 119505 columns and 886371 nonzeros
+Model fingerprint: 0x7fd68001
+Variable types: 46555 continuous, 72950 integer (72950 binary)
+Coefficient statistics:
+  Matrix range     [2e-05, 4e+04]
+  Objective range  [2e-01, 2e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 143433 rows and 107125 columns
+Presolve time: 2.23s
+Presolved: 24135 rows, 12380 columns, 70416 nonzeros
+Variable types: 12 continuous, 12368 integer (11993 binary)
+Found heuristic solution: objective 43020.000000
+
+Root relaxation: objective 9.000000e+02, 10558 iterations, 0.11 seconds (0.21 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  900.00000    0 1453 43020.0000  900.00000  97.9%     -    3s
+H    0     0                    41760.000000  900.00000  97.8%     -    3s
+H    0     0                    41580.000000  900.00000  97.8%     -    3s
+H    0     0                    26460.000000  900.00000  96.6%     -    3s
+H    0     0                    12960.000000  900.00000  93.1%     -    4s
+     0     0  900.00000    0  871 12960.0000  900.00000  93.1%     -    4s
+     0     0  900.00000    0  644 12960.0000  900.00000  93.1%     -    5s
+H    0     0                    11880.000000  900.00000  92.4%     -    6s
+H    0     0                    11520.000000  900.00000  92.2%     -    6s
+H    0     0                    11160.000000  900.00000  91.9%     -    6s
+H    0     0                    10440.000000  900.00000  91.4%     -    6s
+     0     0  900.00000    0  212 10440.0000  900.00000  91.4%     -    6s
+     0     0  900.00000    0  280 10440.0000  900.00000  91.4%     -    7s
+H    0     0                    9540.0000000  900.00000  90.6%     -    8s
+H    0     0                    9180.0000000  900.00000  90.2%     -    8s
+     0     0  900.00000    0  251 9180.00000  900.00000  90.2%     -    9s
+H    0     0                    8820.0000000  900.00000  89.8%     -    9s
+H    0     0                    7920.0000000  900.00000  88.6%     -   11s
+H    0     0                    7740.0000000  900.00000  88.4%     -   11s
+H    0     0                    7560.0000000  900.00000  88.1%     -   11s
+     0     0  900.00000    0  300 7560.00000  900.00000  88.1%     -   11s
+     0     0  900.00000    0  236 7560.00000  900.00000  88.1%     -   11s
+H    0     0                    7380.0000000  900.00000  87.8%     -   12s
+H    0     0                    5940.0000000  900.00000  84.8%     -   12s
+H    0     0                    4680.0000000  900.00000  80.8%     -   12s
+H    0     0                    4140.0000000  900.00000  78.3%     -   12s
+     0     0  900.00000    0  220 4140.00000  900.00000  78.3%     -   12s
+     0     0  900.00000    0  171 4140.00000  900.00000  78.3%     -   12s
+     0     0  900.00000    0  300 4140.00000  900.00000  78.3%     -   13s
+     0     0  900.00000    0  308 4140.00000  900.00000  78.3%     -   13s
+     0     0  900.00000    0  307 4140.00000  900.00000  78.3%     -   13s
+     0     0  900.00000    0  237 4140.00000  900.00000  78.3%     -   15s
+     0     0  900.00000    0  212 4140.00000  900.00000  78.3%     -   15s
+     0     0  900.00000    0  269 4140.00000  900.00000  78.3%     -   15s
+     0     0  900.00000    0  266 4140.00000  900.00000  78.3%     -   15s
+     0     0  900.00000    0  311 4140.00000  900.00000  78.3%     -   17s
+     0     0  900.00000    0  284 4140.00000  900.00000  78.3%     -   17s
+     0     0  900.00000    0  304 4140.00000  900.00000  78.3%     -   17s
+     0     0  900.00000    0  286 4140.00000  900.00000  78.3%     -   17s
+     0     0  900.00000    0  240 4140.00000  900.00000  78.3%     -   18s
+     0     0  900.00000    0  239 4140.00000  900.00000  78.3%     -   18s
+     0     0  900.00000    0  229 4140.00000  900.00000  78.3%     -   18s
+     0     2  900.00000    0  229 4140.00000  900.00000  78.3%     -   19s
+    23    27  900.00000    4  434 4140.00000  900.00000  78.3%  1953   20s
+  1028   806 3420.00000   94   86 4140.00000  900.00000  78.3%   132   28s
+  1144   930 infeasible  104      4140.00000  900.00000  78.3%   124   30s
+H 1195   903                    3960.0000000  900.00000  77.3%   120   30s
+  1416  1152 3625.00000   91  205 3960.00000  900.00000  77.3%   112   35s
+  1794  1153 2880.00000   91  229 3960.00000  900.00000  77.3%   105   41s
+  1800  1157  900.00000    6  262 3960.00000  900.00000  77.3%   105   46s
+  1804  1160 3060.00000   40  307 3960.00000  900.00000  77.3%   104   50s
+  1851  1192 1800.00000   16  223 3960.00000  900.00000  77.3%  38.4   55s
+  2301  1316 3420.00000   43   93 3960.00000  900.00000  77.3%  47.1   60s
+  6413  2479 3240.00000   50  139 3960.00000 1440.00000  63.6%  51.0   65s
+ 14478  6090 2340.00000   27  216 3960.00000 1980.00000  50.0%  46.0   75s
+ 14491  7770 2880.00000   28  162 3960.00000 1980.00000  50.0%  46.1   82s
+ 21561 10567 2520.00000   29  308 3960.00000 1980.00000  50.0%  45.8   85s
+ 30036 13226 3240.00000   70  229 3960.00000 2160.00000  45.5%  43.0  112s
+ 30040 13229 2700.00000   46  283 3960.00000 2160.00000  45.5%  43.0  115s
+ 30046 13233 3240.00000   47  414 3960.00000 2160.00000  45.5%  43.0  120s
+ 30048 13234 3060.00000   49  364 3960.00000 2160.00000  45.5%  43.0  125s
+ 30050 13235 3240.00000   51  342 3960.00000 2160.00000  45.5%  43.0  130s
+ 30052 13237 2880.00000   39  349 3960.00000 2160.00000  45.5%  43.0  135s
+ 30057 13240 3240.00000   37  562 3960.00000 2160.00000  45.5%  43.0  140s
+ 30063 13244 3060.00000   43  481 3960.00000 2160.00000  45.5%  43.0  147s
+ 30067 13247 3420.00000   38  506 3960.00000 2160.00000  45.5%  43.0  152s
+ 30071 13249 3060.00000   27  746 3960.00000 2160.00000  45.5%  42.9  156s
+ 30076 13253 3240.00000   42  632 3960.00000 2160.00000  45.5%  42.9  160s
+ 30087 13260 2520.00000   31  552 3960.00000 2160.00000  45.5%  42.9  165s
+ 30096 13266 3600.00000   76  625 3960.00000 2160.00000  45.5%  42.9  170s
+ 30106 13273 3420.00000   50  593 3960.00000 2160.00000  45.5%  42.9  176s
+ 30114 13278 3240.00000   63  715 3960.00000 2160.00000  45.5%  42.9  181s
+ 30122 13283 3780.00000   37  734 3960.00000 2160.00000  45.5%  42.9  185s
+ 30147 13300 3060.00000   52  758 3960.00000 2160.00000  45.5%  42.8  190s
+ 30175 13319 3240.00000   30  586 3960.00000 2160.00000  45.5%  42.8  195s
+H30189 12659                    3780.0000000 2160.00000  42.9%  42.8  198s
+ 30195 12663 2700.00000   24  621 3780.00000 2160.00000  42.9%  42.8  200s
+H30219 12042                    3600.0000000 2160.00000  40.0%  42.7  205s
+ 30240 12056 2700.00000   46  734 3600.00000 2160.00000  40.0%  42.7  210s
+ 30260 12069 3240.00000   76  795 3600.00000 2160.00000  40.0%  42.7  215s
+ 30287 12087 2520.00000   31  726 3600.00000 2160.00000  40.0%  42.6  220s
+ 30306 12100 3420.00000   50  659 3600.00000 2160.00000  40.0%  42.6  225s
+H30312 11494                    3240.0000000 2160.00000  33.3%  42.6  226s
+ 30332 11507 3240.00000   77  646 3240.00000 2160.00000  33.3%  42.6  230s
+ 30353 11521 2340.00000   26  558 3240.00000 2160.00000  33.3%  42.6  235s
+ 30368 11531 3060.00000   37  596 3240.00000 2160.00000  33.3%  42.5  240s
+ 30391 11547 3240.00000   63  782 3240.00000 2160.00000  33.3%  42.5  245s
+ 30403 11555 2880.00000   49  882 3240.00000 2160.00000  33.3%  42.5  250s
+ 30411 11560 3240.00000   73  849 3240.00000 2160.00000  33.3%  42.5  255s
+ 30421 11567 2520.00000   26  766 3240.00000 2160.00000  33.3%  42.5  260s
+ 30465 11583 2160.00000   33  237 3240.00000 2160.00000  33.3%  65.7  265s
+ 30534 11574 2160.00000   35  230 3240.00000 2160.00000  33.3%  66.1  272s
+ 30757 11560 infeasible   39      3240.00000 2160.00000  33.3%  67.2  275s
+ 31122 11491 2700.00000   38  229 3240.00000 2160.00000  33.3%  69.4  280s
+ 32009 11169 infeasible   45      3240.00000 2160.00000  33.3%  72.4  285s
+ 33727 10619 infeasible   55      3240.00000 2520.00000  22.2%  74.5  290s
+
+Cutting planes:
+  Learned: 15
+  Gomory: 2
+  Lift-and-project: 5
+  Cover: 203
+  Implied bound: 196
+  Projected implied bound: 67
+  Clique: 73
+  MIR: 36
+  StrongCG: 12
+  Flow cover: 598
+  GUB cover: 6
+  Zero half: 92
+  RLT: 66
+  Relax-and-lift: 603
+  BQP: 10
+
+Explored 35760 nodes (2993801 simplex iterations) in 292.46 seconds (553.00 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 3240 3600 3780 ... 7740
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 3.240000000000e+03, best bound 3.240000000000e+03, gap 0.0000%
+REVISIT TIME LB: 3240
+REVISIT TIME UB: 3240
+CPU TIME: 292.462
+TOTAL CPU TIME: 7951.59
+

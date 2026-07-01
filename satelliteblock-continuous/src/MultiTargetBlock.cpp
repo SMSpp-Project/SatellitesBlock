@@ -331,7 +331,6 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
 void MultiTargetBlock::generate_abstract_variables( Configuration * stvv )
 {
-
   for( auto blck : v_Block )
     blck->generate_abstract_variables();
 

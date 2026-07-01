@@ -1,0 +1,79 @@
+TARGETS: 7
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 1
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+Instance charged!
+Variables generated!
+Constraints generated!
+MAXIMUM REVISIT TIME INTERVAL LB: 4628.57
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 184.916
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+TARGETS: 7
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 1
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+thetaVal=1.1781
+Instance charged!
+Variables generated!
+Constraints generated!
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+REVISIT TIME LB: 4628.57
+REVISIT TIME UB: 4885.71
+CPU TIME: 2.57464
+TOTAL CPU TIME: 187.49
+

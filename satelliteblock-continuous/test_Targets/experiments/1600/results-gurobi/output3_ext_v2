@@ -1,0 +1,71 @@
+TARGETS: 2
+TIME STEP: 1600
+theta_min: 1.0472
+alpha_flag=0
+numbOfDiscretize: 4
+alpha_half: 55.785
+theta: 1.0472
+altitude: 566897
+number Orbits: 64
+SATELLITES: 1
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 21109 rows, 15016 columns and 72730 nonzeros
+Model fingerprint: 0xc6a672c2
+Variable types: 5938 continuous, 9078 integer (9078 binary)
+Coefficient statistics:
+  Matrix range     [4e-03, 4e+04]
+  Objective range  [5e-01, 5e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 2467 rows and 5865 columns
+Presolve time: 0.15s
+Presolved: 18642 rows, 9151 columns, 58468 nonzeros
+Variable types: 0 continuous, 9151 integer (8941 binary)
+Found heuristic solution: objective 43040.000000
+Found heuristic solution: objective 24000.000000
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    4.8000000e+03   6.570750e+03   0.000000e+00     23s
+    2351    4.8000000e+03   0.000000e+00   0.000000e+00     23s
+
+Root relaxation: objective 4.800000e+03, 2351 iterations, 0.02 seconds (0.03 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 4800.00000    0   28 24000.0000 4800.00000  80.0%     -   23s
+     0     0 4800.00000    0   22 24000.0000 4800.00000  80.0%     -   23s
+H    0     0                    11200.000000 4800.00000  57.1%     -   23s
+     0     0 4800.00000    0   22 11200.0000 4800.00000  57.1%     -   23s
+     0     0 4800.00000    0   13 11200.0000 4800.00000  57.1%     -   25s
+H    0     0                    5600.0000000 4800.00000  14.3%     -   25s
+     0     0 4800.00000    0   38 5600.00000 4800.00000  14.3%     -   25s
+H    0     0                    4800.0000000 4800.00000  0.00%     -   25s
+     0     0 4800.00000    0   38 4800.00000 4800.00000  0.00%     -   25s
+
+Cutting planes:
+  Learned: 2
+  Cover: 1
+  MIR: 2
+  Zero half: 4
+
+Explored 1 nodes (12868 simplex iterations) in 25.35 seconds (45.93 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 4800 5600 11200 ... 43040
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.800000000000e+03, best bound 4.800000000000e+03, gap 0.0000%
+MAXIMUM REVISIT TIME INTERVAL LB: 4800
+MAXIMUM REVISIT TIME INTERVAL UB: 4800
+TOTAL CPU TIME: 25.3561

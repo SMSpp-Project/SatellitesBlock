@@ -1,0 +1,68 @@
+TARGETS: 2
+TIME STEP: 1200
+theta_min: 0.785398
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.785398
+numbOfDiscretize: 4
+alpha_half: 56.596
+theta: 0.785398
+altitude: 566897
+number Orbits: 64
+SATELLITES: 1
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NodeLimit to value 0
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 37219 rows, 26482 columns and 122878 nonzeros
+Model fingerprint: 0x19d334b0
+Variable types: 10510 continuous, 15972 integer (15972 binary)
+Coefficient statistics:
+  Matrix range     [1e-02, 4e+04]
+  Objective range  [5e-01, 5e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 4234 rows and 10392 columns
+Presolve time: 0.25s
+Presolved: 32985 rows, 16090 columns, 103860 nonzeros
+Variable types: 0 continuous, 16090 integer (15808 binary)
+Found heuristic solution: objective 22800.000000
+Deterministic concurrent LP optimizer: primal and dual simplex
+Showing first log only...
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    0.0000000e+00   5.668984e+03   1.065576e+09     83s
+Concurrent spin time: 0.00s
+
+Solved with dual simplex
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+    3246    4.8000000e+03   0.000000e+00   0.000000e+00     83s
+
+Root relaxation: objective 4.800000e+03, 3246 iterations, 0.07 seconds (0.14 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 4800.00000    0   44 22800.0000 4800.00000  78.9%     -   83s
+
+Explored 1 nodes (8303 simplex iterations) in 83.39 seconds (150.77 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 1: 22800 
+
+Node limit reached
+Best objective 2.280000000000e+04, best bound 4.800000000000e+03, gap 78.9474%
+MAXIMUM REVISIT TIME INTERVAL LB: 22800
+MAXIMUM REVISIT TIME INTERVAL UB: 22800
+TOTAL CPU TIME: 83.3863

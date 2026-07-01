@@ -1,0 +1,64 @@
+TARGETS: 6
+TIME STEP: 1200
+theta_min: 0.785398
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.785398
+numbOfDiscretize: 4
+alpha_half: 56.596
+theta: 0.785398
+altitude: 566897
+number Orbits: 64
+SATELLITES: 3
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NodeLimit to value 0
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 114261 rows, 80310 columns and 484410 nonzeros
+Model fingerprint: 0x714939a4
+Variable types: 31530 continuous, 48780 integer (48780 binary)
+Coefficient statistics:
+  Matrix range     [4e-09, 4e+04]
+  Objective range  [2e-01, 2e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [8e-01, 4e+04]
+Warning: Model contains large matrix coefficient range
+         Consider reformulating model or setting NumericFocus parameter
+         to avoid numerical issues.
+Presolve removed 16098 rows and 32584 columns
+Presolve time: 1.25s
+Presolved: 98163 rows, 47726 columns, 318476 nonzeros
+Variable types: 0 continuous, 47726 integer (46889 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing first log only...
+
+Root relaxation presolved: 96071 rows, 46319 columns, 311590 nonzeros
+
+Concurrent spin time: 0.02s
+
+Solved with dual simplex (dual model)
+
+Root relaxation: objective 1.200000e+03, 31312 iterations, 0.67 seconds (0.96 work units)
+Total elapsed time = 5.99s
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1200.00000    0  673          - 1200.00000      -     -    6s
+
+Explored 1 nodes (79990 simplex iterations) in 6.52 seconds (25.95 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Node limit reached
+Best objective -, best bound 1.200000000000e+03, gap -
+MAXIMUM REVISIT TIME INTERVAL LB: 1e+100
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 6.52828

@@ -1,0 +1,325 @@
+TARGETS: 1
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 1
+thetaVal=0.589049
+Instance charged!
+Variables generated!
+Constraints generated!
+MAXIMUM REVISIT TIME INTERVAL LB: 4500
+MAXIMUM REVISIT TIME INTERVAL UB: 4500
+TOTAL CPU TIME: 5.38317
+TARGETS: 1
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 1
+thetaVal=0.589049
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 32878 rows, 23589 columns and 134319 nonzeros
+Model fingerprint: 0x1073c86b
+Variable types: 9311 continuous, 14278 integer (14278 binary)
+Coefficient statistics:
+  Matrix range     [7e-04, 4e+04]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 29707 rows and 21919 columns
+Presolve time: 0.06s
+Presolved: 3171 rows, 1670 columns, 9280 nonzeros
+Variable types: 2 continuous, 1668 integer (1608 binary)
+Found heuristic solution: objective 43200.000000
+
+Root relaxation: objective 9.000000e+02, 2030 iterations, 0.02 seconds (0.06 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0  900.00000    0    4 43200.0000  900.00000  97.9%     -    0s
+H    0     0                    15300.000000  900.00000  94.1%     -    0s
+H    0     0                    9900.0000000  900.00000  90.9%     -    0s
+H    0     0                    4500.0000000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   52 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0    2 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   23 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   21 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   23 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   27 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   41 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0    3 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0    3 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   15 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0    3 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   13 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   18 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0    3 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   17 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   15 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   19 4500.00000  900.00000  80.0%     -    0s
+     0     0  900.00000    0   19 4500.00000  900.00000  80.0%     -    0s
+     0     2  900.00000    0   19 4500.00000  900.00000  80.0%     -    0s
+
+Cutting planes:
+  Learned: 36
+  Cover: 3
+  Implied bound: 57
+  Clique: 7
+  MIR: 2
+  Zero half: 3
+  RLT: 16
+  Relax-and-lift: 23
+  BQP: 1
+
+Explored 101 nodes (11328 simplex iterations) in 0.53 seconds (1.00 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 4500 9900 15300 43200 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 4.500000000000e+03, best bound 4.500000000000e+03, gap 0.0000%
+REVISIT TIME LB: 4500
+REVISIT TIME UB: 4500
+CPU TIME: 0.53276
+TOTAL CPU TIME: 5.91593
+

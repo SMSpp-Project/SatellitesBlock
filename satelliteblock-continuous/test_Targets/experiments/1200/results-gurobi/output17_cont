@@ -1,0 +1,63 @@
+TARGETS: 5
+TIME STEP: 1200
+theta_min: 0.785398
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.785398
+numbOfDiscretize: 4
+alpha_half: 56.596
+theta: 0.785398
+altitude: 566897
+number Orbits: 64
+SATELLITES: 1
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NodeLimit to value 0
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 93046 rows, 66109 columns and 307099 nonzeros
+Model fingerprint: 0x69e76777
+Variable types: 26275 continuous, 39834 integer (39834 binary)
+Coefficient statistics:
+  Matrix range     [4e-04, 4e+04]
+  Objective range  [2e-01, 2e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [8e-01, 4e+04]
+Presolve removed 10575 rows and 25955 columns
+Presolve time: 0.57s
+Presolved: 82471 rows, 40154 columns, 255426 nonzeros
+Variable types: 0 continuous, 40154 integer (39448 binary)
+Found heuristic solution: objective 43080.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing first log only...
+
+Root relaxation presolved: 81226 rows, 39439 columns, 252061 nonzeros
+
+Concurrent spin time: 0.01s
+
+Solved with dual simplex (primal model)
+
+Root relaxation: objective 1.200000e+03, 9820 iterations, 0.28 seconds (0.41 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1200.00000    0  157 43080.0000 1200.00000  97.2%     -    1s
+
+Cleanup yields a better solution
+
+Explored 1 nodes (26935 simplex iterations) in 1.67 seconds (4.05 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 31920 43080 
+
+Node limit reached
+Best objective 3.192000000000e+04, best bound 1.200000000000e+03, gap 96.2406%
+MAXIMUM REVISIT TIME INTERVAL LB: 31920
+MAXIMUM REVISIT TIME INTERVAL UB: 31920
+TOTAL CPU TIME: 1.67712

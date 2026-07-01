@@ -1,0 +1,380 @@
+TARGETS: 6
+TIME STEP: 1600
+theta_min: 1.0472
+alpha_flag=0
+numbOfDiscretize: 4
+alpha_half: 55.785
+theta: 1.0472
+altitude: 566897
+number Orbits: 64
+SATELLITES: 3
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+Instance charged!
+Variables generated!
+Constraints generated!
+MAXIMUM REVISIT TIME INTERVAL LB: 1777.78
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 3628.29
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+SOLUTION INFEASIBLE!
+TARGETS: 6
+TIME STEP: 1600
+theta_min: 1.0472
+alpha_flag=0
+numbOfDiscretize: 4
+alpha_half: 55.785
+theta: 1.0472
+altitude: 566897
+number Orbits: 64
+SATELLITES: 3
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+thetaVal=1.0472
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 7200
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+orbits_new: 0
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 66258 rows, 46656 columns and 307752 nonzeros
+Model fingerprint: 0x0bcda32d
+Variable types: 17814 continuous, 28842 integer (28842 binary)
+Coefficient statistics:
+  Matrix range     [2e-04, 4e+04]
+  Objective range  [2e-01, 2e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 9372 rows and 18633 columns
+Presolve time: 0.34s
+Presolved: 56886 rows, 28023 columns, 167763 nonzeros
+Variable types: 0 continuous, 28023 integer (27395 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing first log only...
+
+Root relaxation presolved: 55381 rows, 27013 columns, 163353 nonzeros
+
+Concurrent spin time: 0.09s
+
+Solved with dual simplex (dual model)
+
+Root relaxation: objective 1.600000e+03, 20134 iterations, 0.31 seconds (0.43 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1600.00000    0  522          - 1600.00000      -     -    2s
+     0     0 1600.00000    0  497          - 1600.00000      -     -    2s
+H    0     0                    35093.333333 1600.00000  95.4%     -    2s
+H    0     0                    30400.000000 1600.00000  94.7%     -    2s
+     0     0 1600.00000    0  575 30400.0000 1600.00000  94.7%     -    3s
+H    0     0                    16266.666667 1600.00000  90.2%     -    3s
+     0     0 1600.00000    0  581 16266.6667 1600.00000  90.2%     -    4s
+     0     0 1600.00000    0  596 16266.6667 1600.00000  90.2%     -    4s
+H    0     0                    15733.333333 1600.00000  89.8%     -    9s
+H    0     0                    15200.000000 1600.00000  89.5%     -    9s
+     0     0 1600.00000    0  388 15200.0000 1600.00000  89.5%     -   10s
+H    0     0                    14400.000000 1600.00000  88.9%     -   13s
+H    0     0                    10133.333333 1600.00000  84.2%     -   13s
+     0     0 1600.00000    0  404 10133.3333 1600.00000  84.2%     -   13s
+H    0     0                    9333.3333333 1600.00000  82.9%     -   16s
+     0     0 1600.00000    0  480 9333.33333 1600.00000  82.9%     -   17s
+H    0     0                    8533.3333333 1600.00000  81.2%     -   19s
+H    0     0                    8266.6666667 1600.00000  80.6%     -   19s
+H    0     0                    6933.3333333 1600.00000  76.9%     -   19s
+H    0     0                    6666.6666667 1600.00000  76.0%     -   19s
+H    0     0                    5333.3333333 1600.00000  70.0%     -   19s
+     0     0 1600.00000    0  461 5333.33333 1600.00000  70.0%     -   19s
+H    0     0                    5066.6666667 1600.00000  68.4%     -   19s
+H    0     0                    4800.0000000 1600.00000  66.7%     -   22s
+     0     0 1600.00000    0  451 4800.00000 1600.00000  66.7%     -   23s
+H    0     0                    4533.3333333 1600.00000  64.7%     -   25s
+     0     0 1600.00000    0  456 4533.33333 1600.00000  64.7%     -   25s
+     0     0 1600.00000    0  467 4533.33333 1600.00000  64.7%     -   30s
+     0     0 1600.00000    0  460 4533.33333 1600.00000  64.7%     -   30s
+     0     0 1600.00000    0  457 4533.33333 1600.00000  64.7%     -   33s
+     0     0 1600.00000    0  454 4533.33333 1600.00000  64.7%     -   34s
+     0     0 1600.00000    0  424 4533.33333 1600.00000  64.7%     -   40s
+     0     0 1600.00000    0  230 4533.33333 1600.00000  64.7%     -   45s
+     0     2 1600.00000    0  230 4533.33333 1600.00000  64.7%     -   48s
+    31    35 1600.00000    5  246 4533.33333 1600.00000  64.7%  1130   50s
+   276   352 1600.00000   22  203 4533.33333 1600.00000  64.7%   290   55s
+   920   857 3733.33333   92  217 4533.33333 1600.00000  64.7%   134   62s
+  1131   945 2133.33333    8  244 4533.33333 1600.00000  64.7%   128   80s
+H 1213   904                    4266.6666667 1600.00000  62.5%   132   80s
+  1253  1002 2133.33333   21  276 4266.66667 1600.00000  62.5%   130   88s
+H 1298   825                    3733.3333333 1600.00000  57.1%   127   88s
+  1446   799 1600.00000   64  230 3733.33333 1600.00000  57.1%   127   92s
+  1448   800 1600.00000   26 1102 3733.33333 1600.00000  57.1%   127   95s
+H 1448   759                    3466.6666667 1600.00000  53.8%   127   97s
+  1452   762 2400.00000   36  477 3466.66667 1600.00000  53.8%   127  100s
+  1457   765 2400.00000   25  283 3466.66667 1600.00000  53.8%   126  106s
+  1461   768 2933.33333   56  421 3466.66667 1600.00000  53.8%   126  111s
+  1465   771 2133.33333   15  323 3466.66667 1600.00000  53.8%   126  116s
+  1467   772 2133.33333  139  398 3466.66667 1600.00000  53.8%   125  121s
+  1470   777 1600.00000   11  332 3466.66667 1600.00000  53.8%   256  125s
+  1612   922 1600.00000   21  416 3466.66667 1600.00000  53.8%   279  130s
+H 1770   958                    3200.0000000 1600.00000  50.0%   286  133s
+  1812  1001 1600.00000   28  401 3200.00000 1600.00000  50.0%   293  137s
+H 1838   955                    2666.6666667 1600.00000  40.0%   296  137s
+H 1887  1193                    2400.0000000 1600.00000  33.3%   299  141s
+H 1982  1127                    2133.3333333 1600.00000  25.0%   302  142s
+  2383   758     cutoff   46      2133.33333 1600.00000  25.0%   269  145s
+  2891   737 1600.00000   30  320 2133.33333 1600.00000  25.0%   263  156s
+  2957   934 1600.00000   33  333 2133.33333 1600.00000  25.0%   273  175s
+  3361   815 infeasible   73      2133.33333 1600.00000  25.0%   268  183s
+  3460   854 1600.00000   36  264 2133.33333 1600.00000  25.0%   277  195s
+  3597  1584 1600.00000   43  334 2133.33333 1600.00000  25.0%   284  204s
+  5525  1570 infeasible   74      2133.33333 1600.00000  25.0%   241  223s
+  5564  1600 1600.00000   41  448 2133.33333 1600.00000  25.0%   244  227s
+  5685  1641 1866.66667   45  276 2133.33333 1600.00000  25.0%   249  232s
+* 5707   980              66    1866.6666667 1600.00000  14.3%   249  232s
+  5826   648 infeasible   28      1866.66667 1600.00000  14.3%   255  236s
+  6233   321 infeasible   37      1866.66667 1600.00000  14.3%   261  242s
+
+Cutting planes:
+  Learned: 16
+  Gomory: 4
+  Cover: 44
+  Implied bound: 72
+  Projected implied bound: 1
+  Clique: 39
+  MIR: 11
+  StrongCG: 16
+  Flow cover: 145
+  GUB cover: 12
+  Zero half: 44
+  RLT: 123
+  Relax-and-lift: 161
+  BQP: 12
+
+Explored 6903 nodes (1967624 simplex iterations) in 243.68 seconds (643.22 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 1866.67 2133.33 2400 ... 4800
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.866666666667e+03, best bound 1.866666666667e+03, gap 0.0000%
+REVISIT TIME LB: 1866.67
+REVISIT TIME UB: 1866.67
+CPU TIME: 243.678
+TOTAL CPU TIME: 3871.97
+

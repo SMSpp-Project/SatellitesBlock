@@ -68,82 +68,6 @@ static const auto FACTOR = 1.2;
 static const auto angle0 = -1.3882860164509252;
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------------- FUNCTIONS -------------------------------*/
-/*--------------------------------------------------------------------------*/
-
-static void print_UB( std::ostream & os , FNumber ub )
-{
- if( ub == Inf< FNumber >() )
-  os << "+Inf";
- else
-  os << ub;
- }
-
-/*--------------------------------------------------------------------------*/
-// returns the number of elements where two vectors differ
-
-template< typename T >
-static Index countdiff( T beg , T end , T cmp )
-{
- Index ndiff = 0;
- for( ; beg != end ; )
-  if( *(beg++) != *(cmp++) )
-   ndiff++;
-
- return( ndiff );
- }
-
-/*--------------------------------------------------------------------------*/
-// returns true if two vectors differ, one of them being given as a base
-// vector and a subset of indices
-
-template< typename T >
-static bool is_equal( std::vector< T > & vec , c_Subset & nms ,
-		      typename std::vector< T >::const_iterator cmp ,
-		      Index n_max )
-{
- for( auto nm : nms ) {
-  if( nm >= n_max )
-   throw( std::invalid_argument( "invalid name in nms" ) );
-  if( vec[ nm ] != *(cmp++) )
-   return( false );
-  }
-
- return( true );
- }
-
-/*--------------------------------------------------------------------------*/
-// returns the number of elements where two vectors differ, one of them
-// being given as a base vector and a subset of indices
-
-template< typename T >
-static Index countdiff( std::vector< T > & vec , c_Subset & nms ,
-			typename std::vector< T >::const_iterator cmp ,
-			Index n_max )
-{
- Index ndiff = 0;
- for( auto nm : nms ) {
-  if( nm >= n_max )
-   throw( std::invalid_argument( "invalid name in nms" ) );
-  if( vec[ nm ] != *(cmp++) )
-   ndiff++;
-  }
-
- return( ndiff );
- }
-
-/*--------------------------------------------------------------------------*/
-// copys one vector to a given subset of another
-
-template< typename T >
-static void copyidx( std::vector< T > & vec , c_Subset & nms ,
-		     typename std::vector< T >::const_iterator cpy )
-{
- for( auto nm : nms )
-  vec[ nm ] = *(cpy++);
- }
-
-/*--------------------------------------------------------------------------*/
 /*----------------------------- STATIC MEMBERS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
@@ -156,7 +80,7 @@ SMSpp_insert_in_factory_cpp_1( MultiTargetBlockv2 );
 SMSpp_insert_in_factory_cpp_0( MultiTargetSolution );
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- METHODS OF MultiTargetBlockv2 -----------------*/
+/*--------------------------- METHODS OF MultiTargetBlockv2 ----------------*/
 /*--------------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/

@@ -1,0 +1,70 @@
+TARGETS: 2
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 1
+thetaVal=0.589049
+thetaVal=0.589049
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NumericFocus to value 3
+Set parameter NodeLimit to value 0
+Variables generated!
+Constraints generated!
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 65972 rows, 47178 columns and 269070 nonzeros
+Model fingerprint: 0xc4d2ac6b
+Variable types: 18622 continuous, 28556 integer (28556 binary)
+Coefficient statistics:
+  Matrix range     [2e-04, 4e+04]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 7538 rows and 18670 columns
+Presolve time: 0.57s
+Presolved: 58434 rows, 28508 columns, 197543 nonzeros
+Variable types: 0 continuous, 28508 integer (28122 binary)
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing first log only...
+
+Root relaxation presolved: 57768 rows, 28126 columns, 195741 nonzeros
+
+
+Root simplex log...
+
+Iteration    Objective       Primal Inf.    Dual Inf.      Time
+       0    0.0000000e+00   2.157750e+03   5.143781e+09      9s
+Concurrent spin time: 0.02s
+
+Solved with dual simplex (dual model)
+
+Root relaxation: objective 2.700000e+03, 8130 iterations, 0.45 seconds (0.58 work units)
+Total elapsed time = 10.47s
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 2700.00000    0   25          - 2700.00000      -     -   11s
+
+Explored 1 nodes (32647 simplex iterations) in 11.40 seconds (28.12 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 0
+
+Node limit reached
+Best objective -, best bound 2.700000000000e+03, gap -
+MAXIMUM REVISIT TIME INTERVAL: 1e+100
+TOTAL CPU TIME: 11.4011

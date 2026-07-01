@@ -1,0 +1,22 @@
+24.0
+900.0
+2
+32 42
+35 134
+2
+
+TARGETS: 2
+TIME STEP: 900
+theta_min: 0.589049
+WARNING: computed alpha_lim
+alpha_flag=1
+theta_min: 0.589049
+numbOfDiscretize: 6
+alpha_half: 56.596
+theta: 0.589049
+altitude: 566897
+number Orbits: 216
+SATELLITES: 2
+MAXIMUM REVISIT TIME INTERVAL LB: 2700
+MAXIMUM REVISIT TIME INTERVAL UB: inf
+TOTAL CPU TIME: 21970.2

@@ -1,0 +1,52 @@
+TARGETS: 4
+TIME STEP: 1800
+theta_min: 1.1781
+alpha_flag=0
+numbOfDiscretize: 3
+alpha_half: 52.6063
+theta: 1.1781
+altitude: 566897
+number Orbits: 27
+SATELLITES: 2
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NodeLimit to value 0
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 34074 rows, 23946 columns and 114882 nonzeros
+Model fingerprint: 0x59720906
+Variable types: 9404 continuous, 14542 integer (14542 binary)
+Coefficient statistics:
+  Matrix range     [9e-04, 4e+04]
+  Objective range  [2e-01, 2e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 6856 rows and 10131 columns
+Presolve time: 0.29s
+Presolved: 27218 rows, 13815 columns, 84397 nonzeros
+Variable types: 0 continuous, 13815 integer (13459 binary)
+Found heuristic solution: objective 43020.000000
+
+Root relaxation: objective 1.800000e+03, 5648 iterations, 0.05 seconds (0.10 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1800.00000    0  215 43020.0000 1800.00000  95.8%     -    0s
+
+Cleanup yields a better solution
+
+Explored 1 nodes (17513 simplex iterations) in 0.81 seconds (2.19 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 36900 43020 
+
+Node limit reached
+Best objective 3.690000000000e+04, best bound 1.800000000000e+03, gap 95.1220%
+MAXIMUM REVISIT TIME INTERVAL LB: 36900
+MAXIMUM REVISIT TIME INTERVAL UB: 36900
+TOTAL CPU TIME: 0.80652

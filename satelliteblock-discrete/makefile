@@ -46,7 +46,7 @@ SATINC = -I$(SATSDR)/include
 
 SATH   = $(SATSDR)/include/SatelliteBlock.h \
 	$(SATSDR)/include/ConstellationBlock.h \
-	$(SATSDR)/include/SatelliteSolver.h \
+	$(SATSDR)/include/SatelliteSolver.h 
 
 # clean - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

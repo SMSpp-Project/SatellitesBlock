@@ -57,8 +57,7 @@
 #include <chrono>
 
 #include "BlockSolverConfig.h"
-#include "SingleTargetBlock.h"
-#include "MultiTargetBlock.h"
+#include "MultiTargetBlockv2.h"
 #include "CPXMILPSolver.h"
 #include "GRBMILPSolver.h"
 #include "MILPSolver.h"
@@ -74,8 +73,7 @@
 using namespace std;
 using namespace SMSpp_di_unipi_it;
 
-MultiTargetBlock * oCONST = nullptr;    // original MultiTargetBlock
-SingleTargetBlock * oSAT = nullptr;    // original SingleTargetBlock
+MultiTargetBlockv2 * oCONSTv2 = nullptr;    // original MultiTargetBlock
 
 /*--------------------------------------------------------------------------*/
 
@@ -90,10 +88,10 @@ int main( int argc , char **argv )
   if( ! ifile.is_open() )
    throw( std::invalid_argument( "can't open input file" ) );
 
-  oCONST = dynamic_cast< MultiTargetBlock * >( Block::new_Block( "MultiTargetBlock" ) );
-  assert( oCONST );
+  oCONSTv2 = dynamic_cast< MultiTargetBlockv2 * >( Block::new_Block( "MultiTargetBlockv2" ) );
+  assert( oCONSTv2 );
 
-  oCONST->load( file );
+  oCONSTv2->load( file );
   std::cout << "Instance charged!\n";
 
   auto bsc = dynamic_cast< BlockSolverConfig * >(Configuration::deserialize( solver ) );
@@ -102,20 +100,21 @@ int main( int argc , char **argv )
     exit( 1 );    
     }
 
-  bsc->apply( oCONST );
+  bsc->apply( oCONSTv2 );
   bsc->clear();
 
-  if( oCONST->get_registered_solvers().empty() ) {
+  if( oCONSTv2->get_registered_solvers().empty() ) {
       cerr << "Error: BlockSolverConfig did not register any Solver" << endl;
       exit( 1 );    
     }
 
-  Solver * slvr = oCONST->get_registered_solvers().front();
+  Solver * slvr = oCONSTv2->get_registered_solvers().front();
   auto c_start_chrono = std::chrono::high_resolution_clock::now();//std::clock();
   int rtrn = slvr->compute();
   auto c_end_chrono = std::chrono::high_resolution_clock::now();//std::clock();
   double time_elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(c_end_chrono - c_start_chrono).count()/1e+9;
-  std::cout << "MAXIMUM REVISIT TIME INTERVAL: " << slvr->get_lb() << "\n";
+  std::cout << "MAXIMUM REVISIT TIME INTERVAL LB: " << slvr->get_lb() << "\n";
+  std::cout << "MAXIMUM REVISIT TIME INTERVAL UB: " << slvr->get_ub() << "\n";
   std::cout << "TOTAL CPU TIME: " << time_elapsed << "\n";
 
   return 0;

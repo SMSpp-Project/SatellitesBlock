@@ -1,0 +1,61 @@
+TARGETS: 7
+TIME STEP: 1600
+theta_min: 1.0472
+alpha_flag=0
+numbOfDiscretize: 4
+alpha_half: 55.785
+theta: 1.0472
+altitude: 566897
+number Orbits: 64
+SATELLITES: 1
+Instance charged!
+Set parameter LogToConsole to value 1
+Set parameter NodeLimit to value 0
+Warning for adding constraints: zero or small (< 1e-13) coefficients, ignored
+Gurobi Optimizer version 10.0.1 build v10.0.1rc0 (mac64[arm])
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Optimize a model with 73879 rows, 52396 columns and 254327 nonzeros
+Model fingerprint: 0x7ff2abaf
+Variable types: 20783 continuous, 31613 integer (31613 binary)
+Coefficient statistics:
+  Matrix range     [5e-05, 4e+04]
+  Objective range  [1e-01, 1e-01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+04]
+Presolve removed 8679 rows and 20503 columns
+Presolve time: 0.48s
+Presolved: 65200 rows, 31893 columns, 199778 nonzeros
+Variable types: 0 continuous, 31893 integer (31158 binary)
+Found heuristic solution: objective 43040.000000
+
+Deterministic concurrent LP optimizer: primal and dual simplex (primal and dual model)
+Showing first log only...
+
+Root relaxation presolved: 63898 rows, 31144 columns, 196264 nonzeros
+
+Concurrent spin time: 0.01s
+
+Solved with dual simplex (primal model)
+
+Root relaxation: objective 1.600000e+03, 7919 iterations, 0.19 seconds (0.30 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1600.00000    0  129 43040.0000 1600.00000  96.3%     -    1s
+
+Cleanup yields a better solution
+
+Explored 1 nodes (37852 simplex iterations) in 1.98 seconds (5.64 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 19428.6 43040 
+
+Node limit reached
+Best objective 1.942857142857e+04, best bound 1.600000000000e+03, gap 91.7647%
+MAXIMUM REVISIT TIME INTERVAL LB: 19428.6
+MAXIMUM REVISIT TIME INTERVAL UB: 19428.6
+TOTAL CPU TIME: 1.98269
