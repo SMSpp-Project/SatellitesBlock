@@ -1,24 +1,58 @@
 # SatellitesBlock
 
-Implementation of different `Blocks` for the Satellite Constellation 
-Design Problem (SCDP) for the minimization of the number of satellites
-in the constellation or of the sum of the maximum revisit times per target
-in continuous and discrete cases.
+Implementation of different `Block` for the Satellite Constellation Design
+Problem (SCDP) for the minimization of the number of satellites in the
+constellation or of the sum of the maximum revisit times per target, in the
+continuous case: `SatelliteBlock`, `SingleTargetBlock`, `MultiTargetBlock`
+(with its `MultiTargetBlockv2` variant) and the `ConstellationBlock` that
+aggregates them, together with the `SatelliteSolver` heuristic.
 
 ### Bibliography
 
-- L. Mencarelli. A MILP approach to minimize the average of maximum revisit times 
-in small satellite constellation design problems. Working paper, 2025.
-- L. Mencarelli. On the Lagrangian relaxation for the 
-satellite constellation design problem. Working paper, 2025.
+- L. Mencarelli. A MILP approach to minimize the average of maximum revisit
+  times in small satellite constellation design problems. Working paper, 2025.
+- L. Mencarelli. On the Lagrangian relaxation for the satellite constellation
+  design problem. Working paper, 2025.
+
 
 ## Getting started
 
-These instructions will let you build `SatellitesBlock` on your system.
+These instructions will let you build the `SatellitesBlock` module on
+your system.
 
 ### Requirements
 
-- [SMS++ core library](https://gitlab.com/smspp/smspp)
+- The [SMS++ core library](https://gitlab.com/smspp/smspp) and its
+  requirements.
+
+### Build and install with CMake
+
+Configure and build the library with:
+
+```sh
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
+The library has the same configuration options of
+[SMS++](https://gitlab.com/smspp/smspp-project/-/wikis/Customize-the-configuration).
+
+Optionally, install the library in the system with:
+
+```sh
+cmake --install .
+```
+
+### Usage with CMake
+
+After the library is built, you can use it in your CMake project with:
+
+```cmake
+find_package(SatellitesBlock)
+target_link_libraries(<my_target> SMS++::SatellitesBlock)
+```
 
 ### Build and install with makefiles
 
@@ -29,29 +63,27 @@ directory tree constructed in the build/ folder) and therefore it is more
 convenient when having to recompile often, such as when developing/debugging
 a new module, as opposed to the compile-and-forget usage envisioned by CMake.
 
-Each executable using `SatellitesBlock` has to include a "main makefile" of the
-module, which typically is either [makefile-c](makefile-c) including all
+Each executable using `SatellitesBlock` has to include a "main makefile" of
+the module, which typically is either [makefile-c](makefile-c) including all
 necessary libraries comprised the "core SMS++" one, or
 [makefile-s](makefile-s) including all necessary libraries but not the "core
 SMS++" one (for the common case in which this is used together with other
-modules that already include them). One relevant case is the
-[tester to minimize the number of satellites and the maximum revisit time ]
-(https://gitlab.com/smspp/tests/-/tree/develop/SatellitesBlock).
-The makefiles in turn recursively include all the required other makefiles,
-hence one should only need to edit the "main makefile" for compilation type
-(C++ compiler and its options) and it all should be good to go. In case some
-of the external libraries are not at their default location, it should only be
-necessary to create the `../extlib/makefile-paths` out of the
-`extlib/makefile-default-paths-*` for your OS `*` and edit the relevant bits
-(commenting out all the rest).
+modules that already include them). These in turn recursively include all the
+required other makefiles, hence one should only need to edit the "main
+makefile" for compilation type (C++ compiler and its options) and it all
+should be good to go. In case some of the external libraries are not at their
+default location, it should only be necessary to create the
+`../extlib/makefile-paths` out of the `extlib/makefile-default-paths-*` for
+your OS `*` and edit the relevant bits (commenting out all the rest).
 
 Check the [SMS++ installation wiki](https://gitlab.com/smspp/smspp-project/-/wikis/Customize-the-configuration#location-of-required-libraries)
 for further details.
 
+
 ## Getting help
 
-If you need support, you want to submit bugs or propose a new feature, you can
-[open a new issue](https://gitlab.com/smspp/satellitesblock/-/issues/new).
+If you need support, you want to submit bugs or propose a new feature, you
+can [open a new issue](https://gitlab.com/smspp/satellitesblock/-/issues/new).
 
 
 ## Contributing
@@ -62,15 +94,13 @@ conduct, and the process for submitting merge requests to us.
 
 ## Authors
 
+### Current Lead Authors
+
 - **Luca Mencarelli**  
   Dipartimento di Informatica  
   Università di Pisa
 
 ### Contributors
-
-- **Antonio Frangioni**  
-  Dipartimento di Informatica  
-  Università di Pisa
 
 
 ## License
