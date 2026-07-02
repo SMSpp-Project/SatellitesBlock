@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*-------------------- File SingleTargetBlock.h ---------------------------*/
+/*------------------------ File SingleTargetBlock.h ------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the *concrete* class SingleTargetBlock, which implements
@@ -46,7 +46,7 @@ namespace SMSpp_di_unipi_it
  class SingleTargetSolution;  // forward declaration of SingleTargetSolution
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- SingleTargetBlock-RELATED TYPES ---------------------------*/
+/*-------------------- SingleTargetBlock-RELATED TYPES ---------------------*/
 /*--------------------------------------------------------------------------*/
 /** @defgroup SingleTargetBlock_TYPES SingleTargetBlock-related types
  *  @{ */
@@ -65,7 +65,7 @@ namespace SMSpp_di_unipi_it
  using c_Vec_SingleTargetBlock_it = c_Vec_SingleTargetBlock::iterator;
  ///< iterator for a c_Vec_SingleTargetBlock
 
-/** @}  end( group( SingleTargetBlock_TYPES ) ) */ 
+/** @}  end( group( SingleTargetBlock_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
 /*------------------------------- CLASSES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -79,47 +79,47 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple SingleTargetBlock concept.
 /*
-* Let T and be the time horizon, we indicate with [T] := \{ 1,2,...,T \} 
-* the set of time stamps. dt is the time-step for time discretization. 
+* Let T and be the time horizon, we indicate with [T] := \{ 1,2,...,T \}
+* the set of time stamps. dt is the time-step for time discretization.
 * [C] is the set of possible orbital configurations.
 *
 * We consider two sets of non-negative continuous decision variables:
 *
 * (1) \Delta_t is the maximum revisit time for the current target
-* (2) \Delta_t^1[ k ] and \Delta_t^2[ k ] are are auxiliary variables to 
+* (2) \Delta_t^1[ k ] and \Delta_t^2[ k ] are are auxiliary variables to
 * define the revisit times before time stamp k \in [T] for the current target
 *
 * We consider four sets of binary decision variables:
 *
-* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration 
-* c \in [ C ] is selected for the satellite, 
-* (2) \xi[ i ][ t ] \in \{ 0 , 1 \} indicating whether the satellite i observes 
+* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration
+* c \in [ C ] is selected for the satellite,
+* (2) \xi[ i ][ t ] \in \{ 0 , 1 \} indicating whether the satellite i observes
 * the curent target at time t, and
-* (3) zeta[ t ] \in \{ 0 , 1 \} indicating whether the constellation observes  
+* (3) zeta[ t ] \in \{ 0 , 1 \} indicating whether the constellation observes
 * the current target
-* (4) h[ k ][ j ] \in \{ 0 , 1 \} indicating whether the constellation observes  
+* (4) h[ k ][ j ] \in \{ 0 , 1 \} indicating whether the constellation observes
 * the current target in two time stamps k and j, such that k > j
-* 
+*
 * The model we are going to solve reads as follows.
 *
 * \f[
 *   min \Delta_t                                                      (1)
 * \f]
 * \f[
-*   min \Delta_t^1[ k ] = \min_{j \in [T] : j \leq k} 
-*   \{ dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
+*   min \Delta_t^1[ k ] = \min_{j \in [T] : j \leq k}
+*   \{ dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\},
 *   \forall k \in [T]                                                  (2)
 * \f]
-*   min \Delta_t^2[ k ] = \min_{j \in [T] : j \leq k} 
-*   \{ T - dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\}, 
+*   min \Delta_t^2[ k ] = \min_{j \in [T] : j \leq k}
+*   \{ T - dt * (k-j) * h[ k ][ j ], + T/2 * ( 1 - h[ k ][ j ] )\},
 *   \forall k \in [T]                                                  (3)
 * \f]
 * \f[
 *   min \Delta_t >= \max \{ \Delta_t^1[ k ], \Delta_t^2[ k ] \}        (4)
 * \f]
 * \f[
-* \xi[ i ][ t ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ i ][ c] \, 
-\Delta lat[ c ][ t ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ] \} 
+* \xi[ i ][ t ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ i ][ c] \,
+\Delta lat[ c ][ t ]}, \sum_{c\in [C]} \pi_{cc} \,\Delta long[ c ][ t ] \}
 \ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}       (5)
 * \f]
 * \f[
@@ -138,9 +138,9 @@ namespace SMSpp_di_unipi_it
 *   h[ k ][ j ] \geq z[ k ] + z[ j ] - 1 , \forall k,j \in [T] : k > j (10)
 * \f]
 *
-* The objective function (1) minimizes the maximum revisit time for the current 
+* The objective function (1) minimizes the maximum revisit time for the current
 * target Constraints (2) and (3) define \Delta_t^1[ k ] and \Delta_t^2[ k ],
-* respectively, as the revisit times before time stamp k \in [T] for the current 
+* respectively, as the revisit times before time stamp k \in [T] for the current
 * target (these constraints are opportunely linearized when defining the constraint
 * of the Block). Then, the maximum revisit time is the maximum between \Delta_t^1[ k ]
 * and \Delta_t^2[ k ], see constraint (4). Constraints (5) are the observability
@@ -151,8 +151,8 @@ namespace SMSpp_di_unipi_it
 * such that xi[ i ][ t ] = 1, meaning the constellation observes the current
 * target if there is at least a satellite observing the target. Constraints (7)
 * ensures that if  sum_{ i \in [s] } xi[ i ][ t ] = 0, then z[ t ] = 0, i.e.,
-* if no satellite in the constellation observes the target at time t, then 
-* z[ t ] is not active. Constraints (8)-(10) linearize the constraint 
+* if no satellite in the constellation observes the target at time t, then
+* z[ t ] is not active. Constraints (8)-(10) linearize the constraint
 * h[ k ][ j ] = z[ k ] * z[ j ], defining when the target is observed by the
 * constellation at two time stamp k > j.
 */
@@ -179,7 +179,7 @@ public:
  * - FONumber, the type of objective function value.
  *
  * By re-defining the types in this section, some (but not all) solution
- * algorithms may be able to work with the "smallest" choice of data type 
+ * algorithms may be able to work with the "smallest" choice of data type
  * that is capable of properly representing the data of the instances to be
  * solved. This may be relevant due to an important property of DCR problems:
  * *if all arc capacities and node deficits are integer, then there exists an
@@ -240,7 +240,7 @@ public:
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double FONumber; 
+ typedef double FONumber;
  /**< type of the objective function: has to hold sums of products of
     FNumber(s) by CNumber(s) */
 
@@ -270,7 +270,7 @@ public:
 
  explicit SingleTargetBlock( Block *father = nullptr )
   : Block( father ) , AR1(0), AR2(0), AR3(0) { }
-               
+
 
 /*--------------------------------------------------------------------------*/
  /// destructor of SingleTargetBlock: deletes the abstract representation, if any
@@ -288,21 +288,21 @@ public:
 
   /* Meaning of the parameters in load():
   * (i)   n is the number of satellite that should be active by the constellation
-  * (ii)  dt is time stpe for the time discretization in seconds 
+  * (ii)  dt is time stpe for the time discretization in seconds
   * (iii) T is the time horizon in hours
   * (iv)  altValues is the array of the values for the altitude of the satellite orbit
   * (v)   thetaValues is the array of the values for the theta^{\max} of the satellite
   * (vi)  indexOrbit is the number of feasible satellite orbits (aka configuration)
   * (vii) aHalf is the parameter aHalf for the current satellite
-  * (viii)CoverageLat is the multiarray with the difference abs(satLat - Latitude[ m ]) 
-  * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ]) 
+  * (viii)CoverageLat is the multiarray with the difference abs(satLat - Latitude[ m ])
+  * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ])
   */
 
   // for the computation of the parameters, please see ConstellationBlock, where
-  // there is a load() which read an input file in an opportune style with the 
+  // there is a load() which read an input file in an opportune style with the
   // parameters of the instance to be solved
 
- void load( FNumber target, FNumber n , FNumber dt , FNumber T , FNumber altValues , 
+ void load( FNumber target, FNumber n , FNumber dt , FNumber T , FNumber altValues ,
               FNumber thetaValues , FNumber indexOrbit, FNumber aHalf ,
               boost::multi_array< double , 2 > CoverageLat , boost::multi_array< double , 2 > CoverageLong );
 
@@ -325,7 +325,7 @@ public:
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the static constraint of the SingleTarget
  /** Method that generates the abstract constraint of the SingleTarget. */
- 
+
  void generate_abstract_constraints( Configuration *stcc = nullptr ) override;
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
@@ -337,7 +337,7 @@ public:
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SingleTargetBlock --------------*/
+/*--------- Methods for reading the data of the SingleTargetBlock ----------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the SingleTargetBlock
  *  @{ */
@@ -351,7 +351,7 @@ public:
   FNumber get_activation( Index i , Index j ) const {
     return( activation[ i ][ j ].get_value() );
   }
-  
+
 /** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
@@ -379,7 +379,7 @@ public:
   *   f_BlockConfig->f_is_feasible_Configuration->f_value;
   *
   * - otherwise, it is 0. */
- 
+
  bool is_feasible( bool useabstract = false , Configuration *fsbc = nullptr )
   override;
 
@@ -399,7 +399,7 @@ public:
   * means, one for the primal (feps) and one for the dual (ceps), like in
   * complementary_slackness(). These are found as follows:
   *
-  * - if optc is not nullptr and it is a 
+  * - if optc is not nullptr and it is a
   *   SimpleConfiguration< std::pair< CNumber , FNumber > >, then
   *   ceps = optc->f_value.first and feps = optc->f_value.second;
   *
@@ -413,7 +413,7 @@ public:
   *   assuming the latter is a SimpleConfiguration< CNumber >;
   *
   * - otherwise, ceps == feps == 0. */
- 
+
  bool is_optimal( bool useabstract = false  , Configuration *optc = nullptr )
   override;
 
@@ -431,17 +431,17 @@ public:
   }
 
   void set_zeta( c_Vec_FNumber_it fstrt ,
-		 Range rng = Range( 0 , Inf< Index >() ) );
+                 Range rng = Range( 0 , Inf< Index >() ) );
 
   void set_activation( Index i , Index j , int value ) {
       activation[ i ][ j ].set_value( value );
       activation[ i ][ j ].is_fixed( true );
     }
-  
+
  /// returns a SingleTargetSolution representing the current solution of this SingleTargetBlock
 
  Solution * get_Solution( Configuration *solc = nullptr ,
- 			  bool emptys = true ) override;
+                          bool emptys = true ) override;
 
 
 /** @} ---------------------------------------------------------------------*/
@@ -522,7 +522,7 @@ public:
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE SingleTargetBlock ---------------*/
+/*---------- METHODS FOR PRINTING & SAVING THE SingleTargetBlock -----------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for printing & saving the SingleTargetBlock
  *  @{ */
@@ -573,7 +573,7 @@ public:
 
  double f_cond_lower;            ///< conditional lower bound, can be -INF
  double f_cond_upper;            ///< conditional upper bound, can be +INF
- 
+
  std::vector< ColVariable > Deltat;   ///< the SingleTarget revisit time
  std::vector< ColVariable > Deltat_k1;   ///< the SingleTarget revisit time (1)
  std::vector< ColVariable > Deltat_k2;   ///< the SingleTarget revisit time (2)
@@ -592,7 +592,7 @@ public:
 
  std::vector< ColVariable > d1; ///< the d1 variables
  std::vector< ColVariable > d2; ///< the d2 variables
-  
+
  std::vector< FRowConstraint > orbitSelection; /// the SingleTarget activation constraint
  std::vector< FRowConstraint > theta_UB; /// the MultiTarget theta constraint
 
@@ -614,10 +614,10 @@ public:
  std::vector< FRowConstraint > Deltat_min_k2_2; ///< the Deltat_min_k2 constraints (2)
  std::vector< FRowConstraint > d2_cnst; /// the d2 activation constraint
  std::vector< FRowConstraint > d2a_cnst; /// the d2 activation constraint
-  
+
  std::vector< FRowConstraint > d1A_cnst;
  std::vector< FRowConstraint > d2A_cnst;
-  
+
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the observation constraints
  std::vector< FRowConstraint > activationSat1_cnst; ///< the observation constraints
 
@@ -625,16 +625,16 @@ public:
  std::vector< FRowConstraint > h_cnst_2; ///< the linearization of the product of two zeta's (2)
  std::vector< FRowConstraint > h_cnst_3; ///< the linearization of the product of two zeta's (3)
 
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat 
+ boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat
  boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
 
- std::vector< FRowConstraint > obs_cnst;  
- std::vector< FRowConstraint > obs_cnst_h;  
- std::vector< FRowConstraint > obs_cnst_xi;  
+ std::vector< FRowConstraint > obs_cnst;
+ std::vector< FRowConstraint > obs_cnst_h;
+ std::vector< FRowConstraint > obs_cnst_xi;
 
  std::vector< FRowConstraint > Deltat_max_dt;
  std::vector< FRowConstraint > Deltat_max_dt1;
- 
+
  FRealObjective c;               ///< the (linear) objective function
 
 /*--------------------------------------------------------------------------*/
@@ -667,7 +667,7 @@ public:
  };  // end( class( SingleTargetBlock ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SingleTargetBlockMod -----------------------*/
+/*----------------------- CLASS SingleTargetBlockMod -----------------------*/
 /*--------------------------------------------------------------------------*/
 /// derived class from Modification for modifications to a SingleTargetBlock
 /** Derived class from Modification to describe modifications to a SingleTargetBlock.
@@ -702,7 +702,7 @@ class SingleTargetBlockMod : public Modification
 
  virtual ~SingleTargetBlockMod() = default;   ///< destructor, does nothing
 
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// returns the [DCR]Block to which the SingleTargetBlockMod refers
 
@@ -736,7 +736,7 @@ class SingleTargetBlockMod : public Modification
  };  // end( class( SingleTargetBlockMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*------------------------ CLASS SingleTargetBlockRngdMod ---------------------*/
+/*--------------------- CLASS SingleTargetBlockRngdMod ---------------------*/
 /*--------------------------------------------------------------------------*/
 /// derived from SingleTargetBlockMod for "ranged" modifications
 /** Derived class from SingleTargetBlockMod to describe "ranged"
@@ -760,12 +760,12 @@ class SingleTargetBlockRngdMod : public SingleTargetBlockMod
 
  virtual ~SingleTargetBlockRngdMod() = default;   ///< destructor, does nothing
 
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the range
 
  Block::c_Range & rng( void ) const { return( f_rng ); }
- 
+
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
  protected:
@@ -787,7 +787,7 @@ class SingleTargetBlockRngdMod : public SingleTargetBlockMod
  };  // end( class( SingleTargetBlockRngdMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*------------------------ CLASS SingleTargetBlockSbstMod ---------------------*/
+/*--------------------- CLASS SingleTargetBlockSbstMod ---------------------*/
 /*--------------------------------------------------------------------------*/
 /// derived from SingleTargetBlockMod for "subset" modifications
 /** Derived class from Modification to describe "subset" modifications to a
@@ -819,7 +819,7 @@ class SingleTargetBlockSbstMod : public SingleTargetBlockMod
 
  virtual ~SingleTargetBlockSbstMod() = default;  ///< destructor, does nothing
 
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the subset
 
@@ -846,7 +846,7 @@ class SingleTargetBlockSbstMod : public SingleTargetBlockMod
  };  // end( class( SingleTargetBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SingleTargetSolution -----------------------------*/
+/*----------------------- CLASS SingleTargetSolution -----------------------*/
 /*--------------------------------------------------------------------------*/
 
 class SingleTargetSolution : public Solution {
@@ -861,7 +861,7 @@ public:
 
 friend SingleTargetBlock;  ///< make SingleTargetBlock friend
 
-/*---------------- CONSTRUCTING AND DESTRUCTING SingleTargetSolution ----------------*/
+/*----------- CONSTRUCTING AND DESTRUCTING SingleTargetSolution ------------*/
 
   explicit SingleTargetSolution( void ) { }  /// constructor, it has nothing to do
 
@@ -871,7 +871,7 @@ friend SingleTargetBlock;  ///< make SingleTargetBlock friend
 
  ~SingleTargetSolution() = default;  ///< destructor: it is virtual, and empty
 
-/*------------- METHODS DESCRIBING THE BEHAVIOR OF A SingleTargetSolution -----------*/
+/*------- METHODS DESCRIBING THE BEHAVIOR OF A SingleTargetSolution --------*/
 
   void read( const Block * block ) override final;
 
@@ -884,7 +884,7 @@ friend SingleTargetBlock;  ///< make SingleTargetBlock friend
   void sum( const Solution * solution , double multiplier ) override final;
 
   SingleTargetSolution * clone( bool empty = false ) const override final;
-  
+
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 
 //protected:
@@ -894,7 +894,7 @@ friend SingleTargetBlock;  ///< make SingleTargetBlock friend
  void print( std::ostream &output ) const override final {
    //output << "SingleTargetSolution";
  }
-  
+
 /*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
 
 //private:
@@ -902,7 +902,7 @@ friend SingleTargetBlock;  ///< make SingleTargetBlock friend
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 
 SingleTargetBlock::Vec_FNumber v_zeta;   ///< the arc flows
-  
+
 /*--------------------------------------------------------------------------*/
 
 SMSpp_insert_in_factory_h;
@@ -922,5 +922,5 @@ SMSpp_insert_in_factory_h;
 #endif  /* SingleTargetBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*------------------- End File SingleTargetBlock.h ------------------------*/
+/*---------------------- End File SingleTargetBlock.h ----------------------*/
 /*--------------------------------------------------------------------------*/

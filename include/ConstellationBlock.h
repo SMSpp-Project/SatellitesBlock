@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*---------------------------- File ConstellationBlock.h ----------------------------*/
+/*----------------------- File ConstellationBlock.h ------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the *concrete* class ConstellationBlock, which implements the
@@ -37,7 +37,7 @@
 namespace SMSpp_di_unipi_it
 {
 /*--------------------------------------------------------------------------*/
-/*----------------------- ConstellationBlock-RELATED TYPES --------------------------*/
+/*-------------------- ConstellationBlock-RELATED TYPES --------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Public Types
  *
@@ -70,18 +70,18 @@ namespace SMSpp_di_unipi_it
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple ConstellationBlock concept.
-/* ConstellationBlock is composed of some SatelliteBlocks linked by the 
-* observability constraints for the targets, indicating that each target has to 
-* be observed by at least one satellite of the constellation within the revisit 
-* time: 
+/* ConstellationBlock is composed of some SatelliteBlocks linked by the
+* observability constraints for the targets, indicating that each target has to
+* be observed by at least one satellite of the constellation within the revisit
+* time:
 * \f[
-    \sum_{\substack{t \in T(k,\Delta t_m,dt) \\ i \in \mathcal [s]}} 
-    \xi[ i ][ t ][ m ] \ge 1, \forall k \in [\lfloor T\slash\Delta t_m\rfloor], 
+    \sum_{\substack{t \in T(k,\Delta t_m,dt) \\ i \in \mathcal [s]}}
+    \xi[ i ][ t ][ m ] \ge 1, \forall k \in [\lfloor T\slash\Delta t_m\rfloor],
     \forall m \in \mathcal{X},
 * \f]
-* where \Delta t_m is the revisit time for target m \in \mathcal{X} and 
-* [s] = \{1,2,...,s\} is the set of the satellites in the constellation. Variables 
-* \xi[ i ][ t ][ m ] indicating whether the sallite i observes target m at time stamp t 
+* where \Delta t_m is the revisit time for target m \in \mathcal{X} and
+* [s] = \{1,2,...,s\} is the set of the satellites in the constellation. Variables
+* \xi[ i ][ t ][ m ] indicating whether the sallite i observes target m at time stamp t
 * (see SatelliteBlock.h).
 */
 
@@ -142,7 +142,7 @@ class ConstellationBlock : public Block
 /*--------------------------------------------------------------------------*/
  /// generate the "abstract representation" of the Variable of the Block
  /** This method generates the "abstract representation" of the Variable of
-  * the ConstellationBlock. 
+  * the ConstellationBlock.
   */
 
  void generate_abstract_variables( Configuration * stvv = nullptr ) override;
@@ -168,9 +168,9 @@ class ConstellationBlock : public Block
  /// print the ConstellationBlock on an ostream with the given verbosity
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
-  
+
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SatelliteBlock ---------*/
+/*----------- Methods for reading the data of the SatelliteBlock -----------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the ConstellationBlock
  *  @{ */
@@ -184,16 +184,16 @@ class ConstellationBlock : public Block
 
 /*--------------------------------------------------------------------------*/
 
- /// public get()-type functions for accessing the current values of the parameters 
+ /// public get()-type functions for accessing the current values of the parameters
  /// and the variables
 
   double get_thetaVar( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_thetaVar() ); }
   double get_alt( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alt() ); }
   double get_alpha( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alpha() ); }
   double get_theta( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_theta() ); }
-  double get_Lat( Index k , Index i , Index n , Index t ) const 
+  double get_Lat( Index k , Index i , Index n , Index t ) const
         { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_Delta_lat(i,n,t) ); }
-  double get_Long( Index k , Index i , Index n , Index t ) const  
+  double get_Long( Index k , Index i , Index n , Index t ) const
         { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_Delta_long(i,n,t) ); }
 
   Index get_horizon( void ) const { return( horizon ); }
@@ -255,7 +255,7 @@ class ConstellationBlock : public Block
 /*--------------------------------------------------------------------------*/
 
  ///< the static strong forcing constrs
- 
+
  int f_sense = Objective::eMin;
  unsigned char AR;
 
@@ -270,7 +270,7 @@ class ConstellationBlock : public Block
 /*--------------------------------------------------------------------------*/
 
  void guts_of_destructor( void );
- 
+
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -284,13 +284,13 @@ class ConstellationBlock : public Block
  FNumber time_step;    /// the time discretization step [seconds]
  FNumber horizon;      /// the simulation horizon [seconds]
  double thetaValF;     /// the Theta values per satellite
-   
+
  Vec_CNumber periods;      /// the number of periods per target
 
  boost::multi_array< FRowConstraint , 2 > observation; /// the observation constraints
  boost::multi_array< FRowConstraint , 2 > observation1; /// the observation1 constraints
- std::vector< FRowConstraint > thetaM;  
-  
+ std::vector< FRowConstraint > thetaM;
+
  };  // end( class( ConstellationBlock ) )
 
 /*--------------------------------------------------------------------------*/
@@ -306,6 +306,6 @@ class ConstellationBlock : public Block
 #endif  /* ConstellationBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*---------------------- End File ConstellationBlock.h ----------------------*/
+/*--------------------- End File ConstellationBlock.h ----------------------*/
 /*--------------------------------------------------------------------------*/
 

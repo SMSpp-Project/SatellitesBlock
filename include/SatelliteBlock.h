@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*-------------------- File SatelliteBlock.h ---------------------------*/
+/*------------------------- File SatelliteBlock.h --------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the *concrete* class SatelliteBlock, which implements
@@ -46,7 +46,7 @@ namespace SMSpp_di_unipi_it
  class SatelliteSolution;  // forward declaration of SatelliteSolution
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- SatelliteBlock-RELATED TYPES ---------------------------*/
+/*---------------------- SatelliteBlock-RELATED TYPES ----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @defgroup SatelliteBlock_TYPES SatelliteBlock-related types
  *  @{ */
@@ -65,7 +65,7 @@ namespace SMSpp_di_unipi_it
  using c_Vec_SatelliteBlock_it = c_Vec_SatelliteBlock::iterator;
  ///< iterator for a c_Vec_SatelliteBlock
 
-/** @}  end( group( SatelliteBlock_TYPES ) ) */ 
+/** @}  end( group( SatelliteBlock_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
 /*------------------------------- CLASSES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -80,25 +80,25 @@ namespace SMSpp_di_unipi_it
 
 /// Implementation of a simple SatelliteBlock concept.
 /*
-* Let T and \Delta t_m be the time horizon and the time width between two 
-* consecutive target observations for the target m\in\mathcal X$, respectively. 
-* We indicate with [T] := \{ 1,2,...,T \} the set of time stamps. 
+* Let T and \Delta t_m be the time horizon and the time width between two
+* consecutive target observations for the target m\in\mathcal X$, respectively.
+* We indicate with [T] := \{ 1,2,...,T \} the set of time stamps.
 * [C] is the set of possible orbital configurations.
 * We consider three sets of binary decision variables:
 *
-* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c 
-* is selected for the satellite, 
-* (2) \xi[ t ][ m ] \in \{ 0 , 1 \} indicating whether the satellite observes the 
+* (1) \pi[ c ] \in \{ 0 , 1 \}, c \in [C], indicating which orbit configuration c
+* is selected for the satellite,
+* (2) \xi[ t ][ m ] \in \{ 0 , 1 \} indicating whether the satellite observes the
 * target m at time t, and
-* (3) zeta \in \{ 0 , 1 \} indicating whether the current satellite is active in 
+* (3) zeta \in \{ 0 , 1 \} indicating whether the current satellite is active in
 * the constellation
-* 
-* Mathematically speaking, we have that the following constraints hold for each 
+*
+* Mathematically speaking, we have that the following constraints hold for each
 * satellite.
 *
 * \f[
-* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ c ]\, 
-\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi[ c ] \,\Delta long[ c ][ t ][ m ] \} 
+* \xi[ t ][ m ]=0 \Longrightarrow \max \{ \sum_{c\in [C]} \pi[ c ]\,
+\Delta lat[ c ][ t ][ m ]}, \sum_{c\in [C]} \pi[ c ] \,\Delta long[ c ][ t ][ m ] \}
 \ge \theta^{\max}, \forall t\in T(dt), \forall m \in \mathcal{X}           (1)
 * \f]
 * \f[
@@ -108,12 +108,12 @@ namespace SMSpp_di_unipi_it
 * \xi[ t ][ m ] \leq zeta, \forall t\in T(dt), \forall m \in \mathcal{X}   (3)
 * \f]
 *
-* Constraints (1) impose that, if the selected distances in longitude and latitude, 
-* \Delta lat[ c ][ t ][ m ] and \Delta long[ c ][ t ][ m ], are smaller than the 
-* threshold $\theta^{\max}$, then the target m is observed by the current satellite 
+* Constraints (1) impose that, if the selected distances in longitude and latitude,
+* \Delta lat[ c ][ t ][ m ] and \Delta long[ c ][ t ][ m ], are smaller than the
+* threshold $\theta^{\max}$, then the target m is observed by the current satellite
 * at time t. Constraint (1) is opportunely linearized when defining the constraints
-* of the current Block. Constraint (2) requires that exactly one configuration is 
-* selected for the current satellite. Finally, constraints (3) active the current 
+* of the current Block. Constraint (2) requires that exactly one configuration is
+* selected for the current satellite. Finally, constraints (3) active the current
 * satellite in the constellation if it observes at least one target.
 */
 
@@ -139,7 +139,7 @@ public:
  * - FONumber, the type of objective function value.
  *
  * By re-defining the types in this section, some (but not all) solution
- * algorithms may be able to work with the "smallest" choice of data type 
+ * algorithms may be able to work with the "smallest" choice of data type
  * that is capable of properly representing the data of the instances to be
  * solved. This may be relevant due to an important property of DCR problems:
  * *if all arc capacities and node deficits are integer, then there exists an
@@ -200,7 +200,7 @@ public:
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double FONumber; 
+ typedef double FONumber;
  /**< type of the objective function: has to hold sums of products of
     FNumber(s) by CNumber(s) */
 
@@ -230,7 +230,7 @@ public:
 
  explicit SatelliteBlock( Block *father = nullptr )
   : Block( father ) , AR1(0), AR2(0), AR3(0) { }
-               
+
 
 /*--------------------------------------------------------------------------*/
  /// destructor of SatelliteBlock: deletes the abstract representation, if any
@@ -248,23 +248,23 @@ public:
 
   /* Meaning of the parameters in load():
   * (i)   n is the number of targets that should be observed by the constellation
-  * (ii)  dt is time stpe for the time discretization in seconds 
+  * (ii)  dt is time stpe for the time discretization in seconds
   * (iii) T is the time horizon in hours
   * (iv)  altValues is the array of the values for the altitude of the satellite orbit
   * (v)   thetaValues is the array of the values for the theta^{\max} of the satellite
   * (vi)  indexOrbit is the number of feasible satellite orbits (aka configuration)
   * (vii) aHalf is the parameter aHalf for the current satellite
-  * (viii)CoverageLat is the multiarray with the difference abs(satLat - Latitude[ m ]) 
-  * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ]) 
+  * (viii)CoverageLat is the multiarray with the difference abs(satLat - Latitude[ m ])
+  * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ])
   */
 
   // for the computation of the parameters, please see ConstellationBlock, where
-  // there is a load() which read an input file in an opportune style with the 
+  // there is a load() which read an input file in an opportune style with the
   // parameters of the instance to be solved
 
  void load( FNumber n , FNumber dt , FNumber T , FNumber altValues , FNumber thetaValues ,
               FNumber indexOrbit, FNumber aHalf ,
-              boost::multi_array< double , 3 > CoverageLat , boost::multi_array< double , 3 > CoverageLong , 
+              boost::multi_array< double , 3 > CoverageLat , boost::multi_array< double , 3 > CoverageLong ,
               std::vector< double > periods_tgt );
 
  void load( std::istream &input , char frmt = 0 ) override;
@@ -291,7 +291,7 @@ public:
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the static constraint of the SatelliteBlock
  /** Method that generates the abstract constraint of the Satellite. */
- 
+
  void generate_abstract_constraints( Configuration *stcc = nullptr ) override;
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
@@ -303,7 +303,7 @@ public:
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SatelliteBlock ---------*/
+/*----------- Methods for reading the data of the SatelliteBlock -----------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the SatelliteBlock
  *  @{ */
@@ -313,7 +313,7 @@ public:
  [[nodiscard]] int get_objective_sense( void ) const override {
   return( Objective::eMin );
   }
-  
+
 /** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
@@ -341,7 +341,7 @@ public:
   *   f_BlockConfig->f_is_feasible_Configuration->f_value;
   *
   * - otherwise, it is 0. */
- 
+
  bool is_feasible( bool useabstract = false , Configuration *fsbc = nullptr )
   override;
 
@@ -361,7 +361,7 @@ public:
   * means, one for the primal (feps) and one for the dual (ceps), like in
   * complementary_slackness(). These are found as follows:
   *
-  * - if optc is not nullptr and it is a 
+  * - if optc is not nullptr and it is a
   *   SimpleConfiguration< std::pair< CNumber , FNumber > >, then
   *   ceps = optc->f_value.first and feps = optc->f_value.second;
   *
@@ -375,7 +375,7 @@ public:
   *   assuming the latter is a SimpleConfiguration< CNumber >;
   *
   * - otherwise, ceps == feps == 0. */
- 
+
  bool is_optimal( bool useabstract = false  , Configuration *optc = nullptr )
   override;
 
@@ -393,7 +393,7 @@ public:
   }
 
   void set_zeta( c_Vec_FNumber_it fstrt ,
-		 Range rng = Range( 0 , Inf< Index >() ) );
+                 Range rng = Range( 0 , Inf< Index >() ) );
 
   FNumber get_xi( Index n , Index t ) const {
     return( xi[ n ][ t ].get_value() );
@@ -448,7 +448,7 @@ public:
  /// returns a SatelliteSolution representing the current solution of this SatelliteBlock
 
  Solution * get_Solution( Configuration *solc = nullptr ,
- 			  bool emptys = true ) override;
+                          bool emptys = true ) override;
 
 
 /** @} ---------------------------------------------------------------------*/
@@ -529,7 +529,7 @@ public:
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE SatelliteBlock ---------------*/
+/*------------ METHODS FOR PRINTING & SAVING THE SatelliteBlock ------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for printing & saving the SatelliteBlock
  *  @{ */
@@ -583,21 +583,21 @@ public:
  double f_cond_upper;            ///< conditional upper bound, can be +INF
 
  std::vector< ColVariable > thetaVar;           ///< vector of satellite theta values
- 
+
  boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
  std::vector< ColVariable > zeta;   ///< the satellite activation variables
- 
+
  std::vector< ColVariable > activation; ///< the observation variables
- 
+
  std::vector< FRowConstraint > orbitSelection; /// the satellite activation constraint
 
  std::vector< FRowConstraint > thetaUB; /// the theta upper bound constraint
  std::vector< FRowConstraint > thetaLB; /// the theta upper bound constraint
 
- std::vector< FRowConstraint > activationSat_cnst_1; /// the theta upper bound constraints 
+ std::vector< FRowConstraint > activationSat_cnst_1; /// the theta upper bound constraints
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the activation constraints
 
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the (big-M linearized) observation constraints for CoverageSatLat 
+ boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the (big-M linearized) observation constraints for CoverageSatLat
  boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the (big-M linearized) observation constraints for CoverageSatLong
 
  FRealObjective c;               ///< the (linear) objective function
@@ -667,7 +667,7 @@ class SatelliteBlockMod : public Modification
 
  virtual ~SatelliteBlockMod() = default;   ///< destructor, does nothing
 
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// returns the [DCR]Block to which the SatelliteBlockMod refers
 
@@ -725,12 +725,12 @@ class SatelliteBlockRngdMod : public SatelliteBlockMod
 
  virtual ~SatelliteBlockRngdMod() = default;   ///< destructor, does nothing
 
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the range
 
  Block::c_Range & rng( void ) const { return( f_rng ); }
- 
+
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
  protected:
@@ -784,7 +784,7 @@ class SatelliteBlockSbstMod : public SatelliteBlockMod
 
  virtual ~SatelliteBlockSbstMod() = default;  ///< destructor, does nothing
 
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the subset
 
@@ -811,7 +811,7 @@ class SatelliteBlockSbstMod : public SatelliteBlockMod
  };  // end( class( SatelliteBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteSolution -----------------------------*/
+/*------------------------ CLASS SatelliteSolution -------------------------*/
 /*--------------------------------------------------------------------------*/
 
 class SatelliteSolution : public Solution {
@@ -826,7 +826,7 @@ public:
 
 friend SatelliteBlock;  ///< make SatelliteBlock friend
 
-/*---------------- CONSTRUCTING AND DESTRUCTING SatelliteSolution ----------------*/
+/*------------- CONSTRUCTING AND DESTRUCTING SatelliteSolution -------------*/
 
   explicit SatelliteSolution( void ) { }  /// constructor, it has nothing to do
 
@@ -836,7 +836,7 @@ friend SatelliteBlock;  ///< make SatelliteBlock friend
 
  ~SatelliteSolution() = default;  ///< destructor: it is virtual, and empty
 
-/*------------- METHODS DESCRIBING THE BEHAVIOR OF A SatelliteSolution -----------*/
+/*--------- METHODS DESCRIBING THE BEHAVIOR OF A SatelliteSolution ---------*/
 
   void read( const Block * block ) override final;
 
@@ -849,7 +849,7 @@ friend SatelliteBlock;  ///< make SatelliteBlock friend
   void sum( const Solution * solution , double multiplier ) override final;
 
   SatelliteSolution * clone( bool empty = false ) const override final;
-  
+
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 
 //protected:
@@ -859,7 +859,7 @@ friend SatelliteBlock;  ///< make SatelliteBlock friend
  void print( std::ostream &output ) const override final {
    //output << "SatelliteSolution";
  }
-  
+
 /*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
 
 //private:
@@ -867,7 +867,7 @@ friend SatelliteBlock;  ///< make SatelliteBlock friend
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 
 SatelliteBlock::Vec_FNumber v_zeta;   ///< the arc flows
-  
+
 /*--------------------------------------------------------------------------*/
 
 SMSpp_insert_in_factory_h;
@@ -887,5 +887,5 @@ SMSpp_insert_in_factory_h;
 #endif  /* SatelliteBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*------------------- End File SatelliteBlock.h ------------------------*/
+/*----------------------- End File SatelliteBlock.h ------------------------*/
 /*--------------------------------------------------------------------------*/

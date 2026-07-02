@@ -19,7 +19,7 @@
 #                    $(SBkH)    = the .h files to include                    #
 #                  $(SBkINC)  = the -I$( source directory )                  #
 #                                                                            #
-#                              Luca Mencarelli                               #
+#                             Antonio Frangioni                              #
 #                         Dipartimento di Informatica                        #
 #                             Universita' di Pisa                            #
 #                                                                            #

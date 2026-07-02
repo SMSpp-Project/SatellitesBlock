@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*------------------ File SatelliteSolver.h ---------------------*/
+/*------------------------- File SatelliteSolver.h -------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the SatelliteSolver class, implementing a
@@ -38,10 +38,10 @@
 /// namespace for the Structured Modeling System++ (SMS++)
 namespace SMSpp_di_unipi_it
 {
-  
+
  //using namespace MCFClass_di_unipi_it;
  //using Index = Block::Index;
- 
+
  //class SatelliteSolverState;  // forward declaration of SatelliteSolverState
 
 /*--------------------------------------------------------------------------*/
@@ -51,7 +51,7 @@ namespace SMSpp_di_unipi_it
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteSolver --------------*/
+/*------------------------- CLASS SatelliteSolver --------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -72,7 +72,7 @@ public:
  *  @{ */
 
 /** @} ---------------------------------------------------------------------*/
-/*----------------- CONSTRUCTING AND DESTRUCTING SatelliteSolver */
+/*-------------- CONSTRUCTING AND DESTRUCTING SatelliteSolver --------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Constructing and destructing SatelliteSolver
  *  @{ */
@@ -110,7 +110,7 @@ public:
    auto SATB = dynamic_cast< SatelliteBlock * >( f_Block );
    if( ! SATB )
     throw( std::invalid_argument(
-		         "SatelliteSolver:set_Block: block must be a SatelliteBlock" ) );
+                         "SatelliteSolver:set_Block: block must be a SatelliteBlock" ) );
 
    bool owned = SATB->is_owned_by( f_id );
    if( ( ! owned ) && ( !SATB->read_lock() ) )
@@ -131,10 +131,10 @@ public:
 /** @} ---------------------------------------------------------------------*/
 /*--------------------- METHODS FOR SOLVING THE Block ----------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Solving the Satellite 
+/** @name Solving the Satellite
  *  @{ */
 
- /// (try to) solve the Satellite 
+ /// (try to) solve the Satellite
 
  int compute( bool changedvars = true ) override
  {
@@ -142,12 +142,12 @@ public:
   lock();  // first of all, acquire self-lock
 
   if( ! f_Block )           // there is no [SatelliteBlock] to solve
-   return( kBlockLocked );  // return error 
+   return( kBlockLocked );  // return error
 
   bool owned = f_Block->is_owned_by( f_id );       // check if already locked
   if( ( ! owned ) && ( ! f_Block->read_lock() ) )  // if not try to read_lock
    return( kBlockLocked );                         // return error on failure
-  
+
   if( ! owned )             // if the [Satellite]Block was actually read_locked
    f_Block->read_unlock();  // read_unlock it
 
@@ -161,7 +161,7 @@ public:
   auto theta = SATB->get_theta();
 
   xi_new.resize( boost::extents[ n ][ t ] );
-  
+
   zeta = 0.0;
 
   auto tot_periods = 0;
@@ -209,21 +209,21 @@ public:
   objective_opt = 0.0;
 
   int flag = 0;
-  
+
   for(int j = 0; j < n; ++j)
     for(int k = 0; k < t; ++k)
       xi_new[ j ][ k ] = 0;
 
-  boost::multi_array< double , 2 > xi_new1; 
+  boost::multi_array< double , 2 > xi_new1;
   xi_new1.resize( boost::extents[ n ][ t ] );
 
-  boost::multi_array< double , 2 > xi_sum1p; 
+  boost::multi_array< double , 2 > xi_sum1p;
   xi_sum1p.resize( boost::extents[ n ][ max_period ] );
 
-  boost::multi_array< double , 2 > xi_sump1; 
+  boost::multi_array< double , 2 > xi_sump1;
   xi_sump1.resize( boost::extents[ n ][ max_period ] );
 
-  double pp; 
+  double pp;
 
   double objective_opt1 = 0.0;
   zeta = 1.0;
@@ -261,11 +261,11 @@ public:
           flag = 1;
         }
   }
-  
+
   objective_opt = std::min(lambdaz + objective_opt1 + lambda3*theta, 0.0);
 
-  unlock();                  // unlock the mutex    
-  
+  unlock();                  // unlock the mutex
+
   return( kOK );
  }
 
@@ -274,25 +274,25 @@ public:
 /*--------------------------------------------------------------------------*/
 /** @name Accessing the found solutions (if any)
  *  @{ */
- 
+
 /*--------------------------------------------------------------------------*/
 
- OFValue get_lb( void ) override {  
+ OFValue get_lb( void ) override {
 
   if( orbit_opt == -1)
     objective_opt = 0.0;
-  
+
   return( objective_opt );
  }
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
- OFValue get_ub( void ) override { 
+ OFValue get_ub( void ) override {
 
   if( orbit_opt == -1)
     objective_opt = 0.0;
- 
-  return( objective_opt );  
+
+  return( objective_opt );
 }
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
@@ -316,7 +316,7 @@ bool has_var_solution( void ) override {
   auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc );
   if( tsolc && ( tsolc->f_value == 2 ) )
    return;
-  
+
   auto SATB = static_cast< SatelliteBlock * >( f_Block );
   auto t = SATB->get_t();
   auto n = SATB->get_n();
@@ -360,7 +360,7 @@ bool has_var_solution( void ) override {
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-  
+
   void process_outstanding_Modification( void ) {
 
     bool reload = false;
@@ -370,18 +370,18 @@ bool has_var_solution( void ) override {
        // try to acquire lock, spin on failure
       while( f_mod_lock.test_and_set( std::memory_order_acquire ) )
        ;
-     
+
       // process all the Modifications
       for( auto mod : v_mod )
         if( auto tmod = dynamic_cast< C05FunctionModLinRngd * >( mod.get() ) ) {
           reload = true;  // a reset must be done
           break;          // ignore all the remaining Modifications
         }
-     
+
       v_mod.clear();  // all Modifications tackled, clear the list
-     
+
       f_mod_lock.clear( std::memory_order_release );  // release lock
-     
+
       if( reload ){
 
         auto SATB = dynamic_cast< SatelliteBlock * >( f_Block );
@@ -418,10 +418,10 @@ protected:
   double objective_opt;
   double sum_lambda;
   double xi_sum;
-  
-  int orbit_opt; 
 
-  boost::multi_array< double , 2 > xi_new; 
+  int orbit_opt;
+
+  boost::multi_array< double , 2 > xi_new;
   boost::multi_array< double , 2 > lambda1;
   boost::multi_array< double , 2 > lambda2;
   boost::multi_array< double , 2 > lambda11;
@@ -451,7 +451,7 @@ private:
 #endif  /* SatelliteSolver.h included */
 
 /*--------------------------------------------------------------------------*/
-/*---------------- End File SatelliteSolver.h -------------------*/
+/*----------------------- End File SatelliteSolver.h -----------------------*/
 /*--------------------------------------------------------------------------*/
 
 

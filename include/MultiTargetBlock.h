@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*---------------------------- File MultiTargetBlock.h ----------------------------*/
+/*------------------------ File MultiTargetBlock.h -------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Header file for the *concrete* class MultiTargetBlock, which implements the
@@ -37,7 +37,7 @@
 namespace SMSpp_di_unipi_it
 {
 /*--------------------------------------------------------------------------*/
-/*----------------------- MultiTargetBlock-RELATED TYPES --------------------------*/
+/*--------------------- MultiTargetBlock-RELATED TYPES ---------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Public Types
  *
@@ -70,15 +70,15 @@ namespace SMSpp_di_unipi_it
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple MultiTargetBlock concept.
-/* MultiTargetBlock is composed of some SingleBlocks linked by the 
-* configuration constraints for the satellites, indicating that each satellite 
+/* MultiTargetBlock is composed of some SingleBlocks linked by the
+* configuration constraints for the satellites, indicating that each satellite
 must have a unique orbital configuration
 * \f[
     \sum_{i \in [C]} pi[ i ][ c ] = 1, \forall i \in [s],
 * \f]
-* where [s] = \{1,2,...,s\} is the set of the satellites in the constellation. 
-* Variables pi[ i ][ c ] indicating whether the sallite i is in orbital 
-configuration c (the possible configuration are pre-computed when loading the 
+* where [s] = \{1,2,...,s\} is the set of the satellites in the constellation.
+* Variables pi[ i ][ c ] indicating whether the sallite i is in orbital
+configuration c (the possible configuration are pre-computed when loading the
 problem instance, see SingleTargetBlock.h).
 */
 
@@ -122,7 +122,7 @@ class MultiTargetBlock : public Block
  *  @{ */
 
  /// loads the instance from the given file in the given format
- /** Loads a SCDP instance using filename as the "base filename". 
+ /** Loads a SCDP instance using filename as the "base filename".
  * If there is any Solver attached to this MultiTargetBlock then a NBModification
  * (the "nuclear option") is issued. */
 
@@ -150,7 +150,7 @@ class MultiTargetBlock : public Block
   override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE MultiTargetBlock --------------*/
+/*----------- METHODS FOR PRINTING & SAVING THE MultiTargetBlock -----------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for printing & saving the MultiTargetBlock
  *  @{ */
@@ -165,9 +165,9 @@ class MultiTargetBlock : public Block
   */
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
-  
+
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SingleTargetBlock ---------*/
+/*--------- Methods for reading the data of the SingleTargetBlock ----------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the MultiTargetBlock
  *  @{ */
@@ -224,7 +224,7 @@ class MultiTargetBlock : public Block
 /*--------------------------------------------------------------------------*/
 
  ///< the static strong forcing constrs
- 
+
  int f_sense = Objective::eMin;
 
 /*--------------------------------------------------------------------------*/
@@ -238,7 +238,7 @@ class MultiTargetBlock : public Block
 /*--------------------------------------------------------------------------*/
 
  void guts_of_destructor( void );
- 
+
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -253,10 +253,10 @@ class MultiTargetBlock : public Block
  FNumber horizon;      ///< the simulation horizon [seconds]
  FNumber indexOrbit;      ///< the number of possible orbital plane
 
- boost::multi_array< FRowConstraint , 3 > duplicate_pi; ///< duplicate_pi constraints; 
- boost::multi_array< FRowConstraint , 2 > duplicate_theta; ///< duplicate_theta constraints; 
- //boost::multi_array< FRowConstraint , 2 > duplicate_pi; ///< duplicate_pi constraints; 
-  
+ boost::multi_array< FRowConstraint , 3 > duplicate_pi; ///< duplicate_pi constraints;
+ boost::multi_array< FRowConstraint , 2 > duplicate_theta; ///< duplicate_theta constraints;
+ //boost::multi_array< FRowConstraint , 2 > duplicate_pi; ///< duplicate_pi constraints;
+
  };  // end( class( MultiTargetBlock ) )
 
 /*--------------------------------------------------------------------------*/
@@ -272,6 +272,6 @@ class MultiTargetBlock : public Block
 #endif  /* MultiTargetBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*---------------------- End File MultiTargetBlock.h ----------------------*/
+/*---------------------- End File MultiTargetBlock.h -----------------------*/
 /*--------------------------------------------------------------------------*/
 

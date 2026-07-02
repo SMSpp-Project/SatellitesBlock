@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*--------------------- File Satellite.cpp ------------------------*/
+/*--------------------------- File Satellite.cpp ---------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Implementation of the SatelliteBlock class.
@@ -95,8 +95,8 @@ static Index countdiff( T beg , T end , T cmp )
 
 template< typename T >
 static bool is_equal( std::vector< T > & vec , c_Subset & nms ,
-		      typename std::vector< T >::const_iterator cmp ,
-		      Index n_max )
+                      typename std::vector< T >::const_iterator cmp ,
+                      Index n_max )
 {
  for( auto nm : nms ) {
   if( nm >= n_max )
@@ -114,8 +114,8 @@ static bool is_equal( std::vector< T > & vec , c_Subset & nms ,
 
 template< typename T >
 static Index countdiff( std::vector< T > & vec , c_Subset & nms ,
-			typename std::vector< T >::const_iterator cmp ,
-			Index n_max )
+                        typename std::vector< T >::const_iterator cmp ,
+                        Index n_max )
 {
  Index ndiff = 0;
  for( auto nm : nms ) {
@@ -133,7 +133,7 @@ static Index countdiff( std::vector< T > & vec , c_Subset & nms ,
 
 template< typename T >
 static void copyidx( std::vector< T > & vec , c_Subset & nms ,
-		     typename std::vector< T >::const_iterator cpy )
+                     typename std::vector< T >::const_iterator cpy )
 {
  for( auto nm : nms )
   vec[ nm ] = *(cpy++);
@@ -167,14 +167,14 @@ void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber hori
  // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
 
   guts_of_destructor();
-		   
+
  // copy over problem data - - - - - - - - - - - - - - - - - - - - - - - - - -
 
   n = num_targets;
   OrbitSet = indOrbit;
 
   thetaVal = thetaValues;
-  
+
   dt = time_step;
   T = horizon;
   t = T / dt;
@@ -194,7 +194,7 @@ void SatelliteBlock::load( FNumber num_targets , FNumber time_step, FNumber hori
                 CoverageSatLong[i][j][jj] = CoverageLong[i][j][jj];
                 //std::cout << CoverageSatLong[i][j][jj] << std::endl;
               }
-            } 
+            }
          }
 
  // throw Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -274,7 +274,7 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   var_theta1.push_back( std::make_pair( &zeta[ 0 ], -thetaVal ));
   LinearFunction* FunctTheta1 = new LinearFunction( std::move( var_theta1 ));
   thetaUB[ 0 ].set_rhs( 0.0 );
-  thetaUB[ 0 ].set_lhs( -Inf< double >() ); 
+  thetaUB[ 0 ].set_lhs( -Inf< double >() );
   thetaUB[ 0 ].set_function( FunctTheta1 );
 
   add_static_constraint( thetaUB );
@@ -285,14 +285,14 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   var_theta2.push_back( std::make_pair( &zeta[ 0 ], -thetaVal/20 ));
   LinearFunction* FunctTheta2 = new LinearFunction( std::move( var_theta2 ));
   thetaLB[ 0 ].set_rhs( Inf< double >() );
-  thetaLB[ 0 ].set_lhs( 0.0 ); 
+  thetaLB[ 0 ].set_lhs( 0.0 );
   thetaLB[ 0 ].set_function( FunctTheta2 );
 
   add_static_constraint( thetaLB );
 
   // generate the orbitSelection constraint, which select exctly one orbit
   // configuration for the satellite: sum_{j \in OrbitSet} activation[ j ] == 1
-  // remember: activation[ j ] = 1 iff. the j-th configuration is selected 
+  // remember: activation[ j ] = 1 iff. the j-th configuration is selected
 
   orbitSelection.resize( 1 );
   LinearFunction::v_coeff_pair orbit_var;
@@ -302,7 +302,7 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   orbit_var.push_back( std::make_pair( &zeta[ 0 ], -1.0 ));
   LinearFunction* FunctAnm = new LinearFunction( std::move( orbit_var ));
   orbitSelection[ 0 ].set_rhs( 0.0 );
-  orbitSelection[ 0 ].set_lhs( 0.0 ); 
+  orbitSelection[ 0 ].set_lhs( 0.0 );
   orbitSelection[ 0 ].set_function( FunctAnm );
 
   add_static_constraint( orbitSelection );
@@ -312,7 +312,7 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   // zeta \leq xi[ i ][ j ], for all targets i's and time steps j's
   // remember: zeta = 1 iff. the current satellite is active in the constellation
   // and xi[ i ][ j ] = 1 iff. satellite observe target i at time step j
-  
+
   activationSat_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
   for( Index i = 0 ; i < n ; ++i ){
     for( Index j = 0 ; j < t ; ++j ){
@@ -321,7 +321,7 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
       v_var.push_back( std::make_pair( &zeta[ 0 ] ,  1.0 ));
       LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
       activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      activationSat_cnst[ i ][ j ].set_lhs( 0.0 ); 
+      activationSat_cnst[ i ][ j ].set_lhs( 0.0 );
       activationSat_cnst[ i ][ j ].set_function( FunctSat );
     }
   }
@@ -340,26 +340,26 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
   activationSat_cnst_1[ 0 ].set_rhs( 0.0 );
   activationSat_cnst_1[ 0 ].set_lhs( -Inf< double >() );
   activationSat_cnst_1[ 0 ].set_function( FunctSat_1 );
-  
+
   add_static_constraint( activationSat_cnst_1 );
-  
+
   // generate observability (linearize) constraints via big-M approac
   // these constraints traslate the fact that a target is observed by
-  // the current satellite, i.e., xi[ i ][ j ] = 1, if the (scaled) 
+  // the current satellite, i.e., xi[ i ][ j ] = 1, if the (scaled)
   // distance between the projection of the satellite position onto
   // the Earth surface and the position of the target is smaller than
   // a threshold theta^{\max} with respect to Latitude and Longitude.
 
-  // theta^{\max} + (1 - xi[ i ][ j ]) * MLAT \geq 
+  // theta^{\max} + (1 - xi[ i ][ j ]) * MLAT \geq
   // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLat[ i ][ j ][ jj ]
-  // for all targets m's and time steps j's   
-
-  // theta^{\max} + (1 - xi[ i ][ j ]) * MLONG \geq 
-  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ] 
   // for all targets m's and time steps j's
-  
-  // MLAT and MLONG are two big-M parameters automatically computed 
-  // such that their numerical values are the smallest to guarantee 
+
+  // theta^{\max} + (1 - xi[ i ][ j ]) * MLONG \geq
+  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ]
+  // for all targets m's and time steps j's
+
+  // MLAT and MLONG are two big-M parameters automatically computed
+  // such that their numerical values are the smallest to guarantee
   // that constraint are valid (redundant when xi[ i ][ j ] = 0)
 
   obs2_cnst.resize(
@@ -371,7 +371,7 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
 
   double MLAT = PI;
   double MLONG = 2*PI;
-  
+
   for( Index i = 0 ; i < n ; ++i )
   {
     for( Index j = 0 ; j < t ; ++j )
@@ -381,31 +381,31 @@ void SatelliteBlock::generate_abstract_constraints( Configuration *stcc )
       LinearFunction::v_coeff_pair v_obs1, v_obs2;
         for( Index jj = 0 ; jj < OrbitSet ; ++jj )
         {
-          v_obs1.push_back( std::make_pair( &activation[ jj ], 
-                                -CoverageSatLat[ i ][ j ][ jj ])); 
-          v_obs2.push_back( std::make_pair( &activation[ jj ], 
-                                -CoverageSatLong[ i ][ j ][ jj ])); 
+          v_obs1.push_back( std::make_pair( &activation[ jj ],
+                                -CoverageSatLat[ i ][ j ][ jj ]));
+          v_obs2.push_back( std::make_pair( &activation[ jj ],
+                                -CoverageSatLong[ i ][ j ][ jj ]));
           //MLAT = std::max(MLAT, (CoverageSatLat[ i ][ j ][ jj ]-thetaVal));
           //MLONG = std::max(MLONG, (CoverageSatLong[ i ][ j ][ jj ]-thetaVal));
           MLAT = std::max(MLAT, (CoverageSatLat[ i ][ j ][ jj ]));
           MLONG = std::max(MLONG, (CoverageSatLong[ i ][ j ][ jj ]));
         }
 
-      v_obs1.push_back( std::make_pair( &xi[i][j], -MLAT )); 
-      v_obs2.push_back( std::make_pair( &xi[i][j], -MLONG )); 
+      v_obs1.push_back( std::make_pair( &xi[i][j], -MLAT ));
+      v_obs2.push_back( std::make_pair( &xi[i][j], -MLONG ));
 
-      v_obs1.push_back( std::make_pair( &thetaVar[0], 1.0 )); 
-      v_obs2.push_back( std::make_pair( &thetaVar[0], 1.0 )); 
+      v_obs1.push_back( std::make_pair( &thetaVar[0], 1.0 ));
+      v_obs2.push_back( std::make_pair( &thetaVar[0], 1.0 ));
 
       LinearFunction* Funct1 = new LinearFunction( std::move( v_obs1 ));
       LinearFunction* Funct2 = new LinearFunction( std::move( v_obs2 ));
 
       obs2_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      obs2_cnst[ i ][ j ].set_lhs( -MLAT ); 
+      obs2_cnst[ i ][ j ].set_lhs( -MLAT );
       obs2_cnst[ i ][ j ].set_function( Funct1 );
 
       obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      obs4_cnst[ i ][ j ].set_lhs( -MLONG ); 
+      obs4_cnst[ i ][ j ].set_lhs( -MLONG );
       obs4_cnst[ i ][ j ].set_function( Funct2 );
     }
   }
@@ -428,7 +428,7 @@ void SatelliteBlock::generate_objective( Configuration *objc )
 
   p[ 0 ].first = &zeta[ 0 ];
   p[ 0 ].second = 1.0;
-  
+
   c.set_function( new LinearFunction( std::move( p ) , 0 ) , eNoMod );
   set_objective( & c , eNoMod );
 
@@ -463,7 +463,7 @@ bool SatelliteBlock::is_optimal( bool useabstract , Configuration *optc )
  if( optc ) {
   if( auto toptc =
       dynamic_cast< SimpleConfiguration< std::pair< CNumber , FNumber > > * >(
-								    optc ) ) {
+                                                                    optc ) ) {
    ceps = toptc->f_value.first;
    feps = toptc->f_value.second;
    }
@@ -508,19 +508,19 @@ bool SatelliteBlock::is_optimal( bool useabstract , Configuration *optc )
 
  Solution * SatelliteBlock::get_Solution( Configuration * solc , bool emptys )
 {
-   
+
  int wsol = 0;
  if( ( ! solc ) && f_BlockConfig )
   solc = f_BlockConfig->f_solution_Configuration;
 
  if( auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc ) )
   wsol = tsolc->f_value;
- 
+
  auto *sol = new SatelliteSolution();
 
  if( ! emptys )
   sol->read( this );
- 
+
  return( sol );
 
  }  // end( SatelliteBlock::get_Solution )
@@ -561,7 +561,7 @@ void SatelliteBlock::add_Modification( sp_Mod mod , ChnlName chnl )
 
 void SatelliteBlock::print( std::ostream  & output , char vlvl ) const
 {
- 
+
  }  // end( SatelliteBlock::print )
 
 /*--------------------------------------------------------------------------*/
@@ -656,7 +656,7 @@ void SatelliteSolution::read( const Block * block )
   }
 }
 
-void SatelliteSolution::write( Block * block ) 
+void SatelliteSolution::write( Block * block )
 {
 
  auto SATB = dynamic_cast<SatelliteBlock * >( block );
@@ -692,7 +692,7 @@ SatelliteSolution * SatelliteSolution::clone( bool empty ) const
  else {
   sol->v_zeta = v_zeta;
   }
- 
+
  return( sol );
 }
 

@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*------------------------- File ConstellationBlock.cpp ---------------------*/
+/*---------------------- File ConstellationBlock.cpp -----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Implementation of the ConstellationBlock class.
@@ -65,14 +65,14 @@ static const auto angle0 = -1.3882860164509252;
 /*--------------------------------------------------------------------------*/
 
 void  ConstellationBlock::load( std::istream & input , char frmt ){
-   // TO DO: implement load() method for loading instance data 
+   // TO DO: implement load() method for loading instance data
    // from input file (for the file format, see next load() method)
 }
 
 void ConstellationBlock::load( const std::string & input , char frmt )
 {
 
- /* The structure of the input file to load the instance data should be the 
+ /* The structure of the input file to load the instance data should be the
  * following (see, as example, input file in testConstellation directory):
  *
  * < time horizon (in hours) >
@@ -83,7 +83,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  * < number of revisit period of the target m > < latitude of the target m > < longitude of the target m >
  * < maximum number of satellites active in the constellation >
  *
- */ 
+ */
 
  // ensure starting from clean slate
  guts_of_destructor();
@@ -94,7 +94,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  horizon *= 3600.0;
  iFile >> time_step;
  iFile >> targets;
-  
+
 
  std::cout << "TARGETS: " << targets << "\n";
  std::cout << "TIME STEP: " << time_step << "\n";
@@ -110,10 +110,10 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  for( Index i = 0 ; i < horizon/3600.0 ; ++i ){
    j++;
-	altitudeSetVal = cbrt( ( MU* pow((horizon)/j,2.0) ) / (4.0*pow(PI,2.0))) - RAYON;
-	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
+        altitudeSetVal = cbrt( ( MU* pow((horizon)/j,2.0) ) / (4.0*pow(PI,2.0))) - RAYON;
+        if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
-		indexLen++;
+                indexLen++;
    }
  }
 
@@ -126,12 +126,12 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  for( Index i = 0 ; i < horizon/3600.0 ; ++i )
  {
    j++;
-	altitudeSetVal = cbrt( ( MU * pow((horizon)/j, 2.0) ) / (4.0*pow(PI, 2.0) )) - RAYON;
+        altitudeSetVal = cbrt( ( MU * pow((horizon)/j, 2.0) ) / (4.0*pow(PI, 2.0) )) - RAYON;
    //std::cout << altitudeSetVal << "\n";
-	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
+        if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
-		altitude[indexLen] = altitudeSetVal;
-		periodSat[indexLen] = horizon/j;
+                altitude[indexLen] = altitudeSetVal;
+                periodSat[indexLen] = horizon/j;
       indexLen++;
    }
  }
@@ -168,7 +168,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
       aHalf = asin((RAYON/(RAYON+altitude[ ii ])));
       std::cout << "WARNING: computed alpha_lim\n";
       break;
-   } 
+   }
  }
 
  double alt = altitude[altSet-1];
@@ -183,7 +183,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  std::cout << "theta_min: " << Theta_min << "\n";
  Theta_max = Theta_min;
  double numbOfDiscretize = ceil(PI/Theta_min);
- 
+
  std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
 
  FNumber incSet = numbOfDiscretize;
@@ -211,9 +211,9 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  Vec_CNumber meanAnomaly = x;
 
  double thetaValFinal = Theta_min;
- double altitudeFinal = altitude[indexLen-1]; 
+ double altitudeFinal = altitude[indexLen-1];
  ///double altitudeFinal = altitude[0];
- 
+
  //std::cout << "theta_min: " << Theta_min << "\n";
  std::cout << "alpha_half: " << aHalf*180/PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
@@ -247,7 +247,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  int satellites1 = satellites;
 
  for(Index isat = 0; isat < satellites; ++isat){
- 
+
  int ialt = std::floor(satellites/3);
  int ii = 0;
  if( isat < ialt )
@@ -263,37 +263,37 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  indexOrbit1 = 0;
  thetaValF = thetaValFinal/3.0;
  std::cout << thetaValF << std::endl;
-    for( Index jj = 0 ; jj < incSet ; ++jj ) 
+    for( Index jj = 0 ; jj < incSet ; ++jj )
     {
-       for( Index k = 0 ; k < ascSet ; ++k ) 
+       for( Index k = 0 ; k < ascSet ; ++k )
        {
          for( Index l = 0 ; l < anmSet ; ++l )
           {
             index1 += 1;
             indexOrbit1 = 0;
-            for( Index j = 0 ; j < t ; ++j ) 
+            for( Index j = 0 ; j < t ; ++j )
             {
-             // formula to compute the latitude of the projection of the position 
+             // formula to compute the latitude of the projection of the position
              // of satellite onto the Earth surface corresponding to a given configuration
-             lat_Sat = asin(((sin(inclination[jj])*(altitude[ii]+RAYON)*sin(meanAnomaly[l]))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON)) 
-		                        + ((sin(inclination[jj])*t_u[ii]*cos(meanAnomaly[l]))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]));
-             
-             // formula to compute the longitude of the projection of the position 
-             // of satellite onto the Earth surface corresponding to a given configuration                  
-             long_Sat = fmod(-(angle0 + (WE*((j)*time_step))) + 
-		                        atan2((((sin(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) + (cos(nodeAscendant[k])*cos(inclination[jj])*
-		                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))	+ ((-(sin(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
-		                        + (cos(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]),
-		                        ((((cos(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) - (sin(nodeAscendant[k])*cos(inclination[jj])*
-		                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))* cos(t_p[ii]*(j*time_step))/(altitude[ii]+RAYON)) + ((-(cos(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
-		                        -(sin(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin((t_p[ii]*(j*time_step)))*t_GM[ii]))), (2*PI));
-             if( long_Sat <= 0 )
-			      long_Sat += 2*PI;
+             lat_Sat = asin(((sin(inclination[jj])*(altitude[ii]+RAYON)*sin(meanAnomaly[l]))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))
+                                        + ((sin(inclination[jj])*t_u[ii]*cos(meanAnomaly[l]))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]));
 
-	     for( Index i = 0 ; i < targets ; ++i ) 
+             // formula to compute the longitude of the projection of the position
+             // of satellite onto the Earth surface corresponding to a given configuration
+             long_Sat = fmod(-(angle0 + (WE*((j)*time_step))) +
+                                        atan2((((sin(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) + (cos(nodeAscendant[k])*cos(inclination[jj])*
+                                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))   + ((-(sin(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
+                                        + (cos(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]),
+                                        ((((cos(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) - (sin(nodeAscendant[k])*cos(inclination[jj])*
+                                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))* cos(t_p[ii]*(j*time_step))/(altitude[ii]+RAYON)) + ((-(cos(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
+                                        -(sin(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin((t_p[ii]*(j*time_step)))*t_GM[ii]))), (2*PI));
+             if( long_Sat <= 0 )
+                              long_Sat += 2*PI;
+
+             for( Index i = 0 ; i < targets ; ++i )
              {
                 // compute the (geodedical) difference between the latitude of the target and the lat_Sat
-                CoverageSatLat1[ i ][ j ][ index1 ] = 
+                CoverageSatLat1[ i ][ j ][ index1 ] =
                         std::abs(2 * asin( 0.5 * sqrt(1 - cos(Latitude[i]-lat_Sat))));
                 CoverageSatLong1[ i ][ j ][ index1 ] = std::abs(2 * asin( 0.5 * sqrt(cos(Latitude[i]) * cos(Latitude[i]) * (1 - cos(Longitude[i] - long_Sat))))) * cos(Latitude[i]);
                 // compute the scaled (geodedical) difference between the latitude of the target and the long_Sat
@@ -303,12 +303,12 @@ void ConstellationBlock::load( const std::string & input , char frmt )
                   indexOrbit1 += 1;
              }
             }
-            // the orbital configuration that do not observe any satellite in any time-step 
+            // the orbital configuration that do not observe any satellite in any time-step
             // are discarded so that the solution space is maintened reasonably "small"
             if (indexOrbit1>=1){
-               for( Index j = 0 ; j < t ; ++j ) 
+               for( Index j = 0 ; j < t ; ++j )
                {
-                  for( Index i = 0 ; i < targets ; ++i ) 
+                  for( Index i = 0 ; i < targets ; ++i )
                   {
                   CoverageSatLat[ i ][ j ][ indexOrbit ] = CoverageSatLat1[ i ][ j ][ index1 ];
                   CoverageSatLong[ i ][ j ][ indexOrbit ] = CoverageSatLong1[ i ][ j ][ index1 ];
@@ -329,7 +329,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  //std::cout << satellites1 << std::endl;
  //satellites = satellites1;
-    
+
  // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
  // note: this is a NBModification, the "nuclear option"
 
@@ -369,13 +369,13 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 
    add_static_constraint( thetaM , "thetaM" );
 
-   
+
   // generate the observability constraints  - - - - - - - - - - - - - - -
- /* sum_{t \in T(k, \Delta t[ m ], dt), i \in [s]} \xi[ i ][ t ][ m ] \geq 1, 
-  * \forall k \in [\lfloor T/\Delta t_m \rfloor], \forall m \in \mathcal{X} 
-  * where: T is the time horizon (here: horizon), Delta t[ m ] is the revisit 
+ /* sum_{t \in T(k, \Delta t[ m ], dt), i \in [s]} \xi[ i ][ t ][ m ] \geq 1,
+  * \forall k \in [\lfloor T/\Delta t_m \rfloor], \forall m \in \mathcal{X}
+  * where: T is the time horizon (here: horizon), Delta t[ m ] is the revisit
   * period associated with the target m (here: period[ m ]) and dt is the time
-  * step for time discretization (here: time_step) T(k, \Delta t[ m ], dt) is 
+  * step for time discretization (here: time_step) T(k, \Delta t[ m ], dt) is
   * the set of the time step corresponding to the interval, in which target m
   * should be observed by the constellation.
   */
@@ -389,7 +389,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
     pp = horizon/time_step/periods[i];
     for( Index j = 0 ; j < periods[i] ; ++j ) {
       LinearFunction::v_coeff_pair v_var;
-      
+
       for( Index k = 0 ; k < satellites ; ++k ) {
          for( Index tt = j*pp ; tt < (j+1)*pp ; ++tt ) {
             // retrieve observation variable \xi[ i ][ t ][ m ] for SatelliteBlock i
@@ -397,21 +397,21 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
          }
       }
       observation[i][j].set_function( new LinearFunction( std::move( v_var )));
-      observation[i][j].set_rhs( Inf< double >() ); 
+      observation[i][j].set_rhs( Inf< double >() );
       observation[i][j].set_lhs( 1.0 );
     }
 
     for( Index j = periods[i] ; j < maxPeriods ; ++j ) {
        LinearFunction::v_coeff_pair v_var;
-      
+
        for( Index k = 0 ; k < satellites ; ++k ) {
           v_var.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_z(), 0.0 ));
        }
 
-      // fake constraints when j \geq periods[ i ]: we simply set 0 * z[ i ] == 0 
+      // fake constraints when j \geq periods[ i ]: we simply set 0 * z[ i ] == 0
       // for SatelliteBlock i \in [s], where s is the total number of the satellite
       observation[i][j].set_function( new LinearFunction( std::move( v_var )));
-      observation[i][j].set_rhs( 0.0 ); 
+      observation[i][j].set_rhs( 0.0 );
       observation[i][j].set_lhs( 0.0 );
     }
 
@@ -425,13 +425,13 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
    boost::multi_array< FRowConstraint , 2 >::extent_gen()[ targets ][ t ]);
 
    for( Index i = 0 ; i < targets ; ++i ){
-      for( Index j = 0 ; j < t ; ++j ){         
+      for( Index j = 0 ; j < t ; ++j ){
          LinearFunction::v_coeff_pair v_var1;
          for( Index k = 0 ; k < satellites ; ++k )
             v_var1.push_back( std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_r(i,j), 1.0 ));
 
          observation1[i][j].set_function( new LinearFunction( std::move( v_var1 )));
-         observation1[i][j].set_rhs( 1.0 );//Inf< double >() 
+         observation1[i][j].set_rhs( 1.0 );//Inf< double >()
          observation1[i][j].set_lhs( -Inf< double >()  );
       }
    }
@@ -475,7 +475,7 @@ bool ConstellationBlock::is_feasible( bool useabstract , Configuration * fsbc )
   // if the given Configuration is not valid, try the one from the BlockConfig
   extract_parameters( f_BlockConfig->f_is_feasible_Configuration );
 
- return( 
+ return(
   // Constraints: notice that the ZOConstraints are not checked, since the
   // corresponding check is made on the ColVariable
   RowConstraint::is_feasible( thetaM , tol , rel_viol )

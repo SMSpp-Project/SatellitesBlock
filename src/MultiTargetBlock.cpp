@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*------------------------- File MultiTargetBlock.cpp ---------------------*/
+/*----------------------- File MultiTargetBlock.cpp ------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Implementation of the MultiTargetBlock class.
@@ -78,7 +78,7 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  iFile >> horizon;
  horizon *= 3600.0;
  iFile >> time_step;
- iFile >> targets;  
+ iFile >> targets;
 
  std::cout << "TARGETS: " << targets << "\n";
  std::cout << "TIME STEP: " << time_step << "\n";
@@ -94,10 +94,10 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
  for( Index i = 0 ; i < horizon/3600.0 ; ++i ){
    j++;
-	altitudeSetVal = cbrt( ( MU* pow((horizon)/j,2.0) ) / (4.0*pow(PI,2.0))) - RAYON;
-	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
+        altitudeSetVal = cbrt( ( MU* pow((horizon)/j,2.0) ) / (4.0*pow(PI,2.0))) - RAYON;
+        if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
-		indexLen++;
+                indexLen++;
    }
  }
 
@@ -110,12 +110,12 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  for( Index i = 0 ; i < horizon/3600.0 ; ++i )
  {
    j++;
-	altitudeSetVal = cbrt( ( MU * pow((horizon)/j, 2.0) ) / (4.0*pow(PI, 2.0) )) - RAYON;
+        altitudeSetVal = cbrt( ( MU * pow((horizon)/j, 2.0) ) / (4.0*pow(PI, 2.0) )) - RAYON;
    //std::cout << altitudeSetVal << "\n";
-	if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
+        if ( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 )
    {
-		altitude[indexLen] = altitudeSetVal;
-		periodSat[indexLen] = horizon/j;
+                altitude[indexLen] = altitudeSetVal;
+                periodSat[indexLen] = horizon/j;
       indexLen++;
    }
  }
@@ -146,14 +146,14 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  double aHalf = atan(sin(Theta_min)/((RAYON+altitude[indexLen-1])/RAYON - cos(Theta_min)));
 
  int alpha_lim_flag = 0;
- 
+
  for( Index ii = 0 ; ii < altSet ; ++ii ){
    if(((RAYON+altitude[ ii ])/RAYON)*sin(aHalf) > 1){
       aHalf = asin((RAYON/(RAYON+altitude[ ii ])));
       std::cout << "WARNING: computed alpha_lim\n";
       alpha_lim_flag = 1;
       break;
-   } 
+   }
  }
 
  double alt = altitude[altSet-1];
@@ -167,19 +167,19 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
  //double Theta_max = thetaVal[altSet-1];
  std::cout << "alpha_flag=" << alpha_lim_flag << "\n";
- 
+
  /***********************/
  if (alpha_lim_flag == 1) {
    /////Theta_min = thetaVal[altSet-1];//*1.2;
    std::cout << "theta_min: " << Theta_min << "\n";
  }
  /***********************/
- 
+
  //Theta_max = Theta_min;
  double numbOfDiscretize = ceil(PI/Theta_min);
- 
+
  std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
- 
+
  FNumber incSet = numbOfDiscretize;
  FNumber ascSet = numbOfDiscretize;
  FNumber anmSet = numbOfDiscretize;
@@ -205,9 +205,9 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  Vec_CNumber meanAnomaly = x;
 
  double thetaValFinal = Theta_min;
- double altitudeFinal = altitude[indexLen-1]; 
+ double altitudeFinal = altitude[indexLen-1];
  //double altitudeFinal = altitude[0];
- 
+
  //std::cout << "theta_min: " << Theta_min << "\n";
  std::cout << "alpha_half: " << aHalf*180/PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
@@ -226,49 +226,49 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  //for( Index ii = 0 ; ii < altSet ; ++ii )
  //{
  int ii = indexLen-1;
- //int ii = 0; 
+ //int ii = 0;
  int index1 = -1;
  indexOrbit = 0;
  int addOrbit = 0;
  int indexOrbit1 = 0;
-    for( Index jj = 0 ; jj < incSet ; ++jj ) 
+    for( Index jj = 0 ; jj < incSet ; ++jj )
     {
-       for( Index k = 0 ; k < ascSet ; ++k ) 
+       for( Index k = 0 ; k < ascSet ; ++k )
        {
          for( Index l = 0 ; l < anmSet ; ++l )
           {
             index1 += 1;
             indexOrbit1 = 0;
-            for( Index j = 0 ; j < t ; ++j ) 
+            for( Index j = 0 ; j < t ; ++j )
             {
-             lat_Sat = asin(((sin(inclination[jj])*(altitude[ii]+RAYON)*sin(meanAnomaly[l]))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON)) 
-		                        + ((sin(inclination[jj])*t_u[ii]*cos(meanAnomaly[l]))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]));
-             
-             long_Sat = fmod(-(angle0 + (WE*((j)*time_step))) + 
-		                        atan2((((sin(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) + (cos(nodeAscendant[k])*cos(inclination[jj])*
-		                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))	+ ((-(sin(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
-		                        + (cos(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]),
-		                        ((((cos(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) - (sin(nodeAscendant[k])*cos(inclination[jj])*
-		                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))* cos(t_p[ii]*(j*time_step))/(altitude[ii]+RAYON)) + ((-(cos(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
-		                        -(sin(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin((t_p[ii]*(j*time_step)))*t_GM[ii]))), (2*PI));
+             lat_Sat = asin(((sin(inclination[jj])*(altitude[ii]+RAYON)*sin(meanAnomaly[l]))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))
+                                        + ((sin(inclination[jj])*t_u[ii]*cos(meanAnomaly[l]))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]));
+
+             long_Sat = fmod(-(angle0 + (WE*((j)*time_step))) +
+                                        atan2((((sin(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) + (cos(nodeAscendant[k])*cos(inclination[jj])*
+                                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))*cos(t_p[ii]*((j)*time_step))/(altitude[ii]+RAYON))   + ((-(sin(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
+                                        + (cos(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin(t_p[ii]*((j)*time_step))*t_GM[ii]),
+                                        ((((cos(nodeAscendant[k])*(altitude[ii]+RAYON)*cos(meanAnomaly[l])) - (sin(nodeAscendant[k])*cos(inclination[jj])*
+                                        (altitude[ii]+RAYON)*sin(meanAnomaly[l])))* cos(t_p[ii]*(j*time_step))/(altitude[ii]+RAYON)) + ((-(cos(nodeAscendant[k])*t_u[ii]*sin(meanAnomaly[l]))
+                                        -(sin(nodeAscendant[k])*cos(inclination[jj])*t_u[ii]*cos(meanAnomaly[l])))*sin((t_p[ii]*(j*time_step)))*t_GM[ii]))), (2*PI));
              if( long_Sat <= 0 )
-			      long_Sat += 2*PI;
+                              long_Sat += 2*PI;
         /*
-	     for( Index i = 0 ; i < targets ; ++i )                                                                                                                                                        
-             {                                                                                                                                                                                              
-                CoverageSatLat[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat);                                                                                                                      
-                CoverageSatLong[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]);
-	     }}
-	     indexOrbit += 1;
-	     */
-	     for( Index i = 0 ; i < targets ; ++i ) 
+             for( Index i = 0 ; i < targets ; ++i )
              {
-                CoverageSatLat1[ i ][ j ][ index1 ] = 
-		  //        std::abs(2 * asin( 0.5 * sqrt(1 - cos(Latitude[i]-lat_Sat))));
-                std::abs(Latitude[i] - lat_Sat); 
-                CoverageSatLong1[ i ][ j ][ index1 ] = 
-		  //        std::abs(2 * asin( 0.5 * sqrt(cos(Latitude[i]) * cos(Latitude[i]) * (1 - cos(Longitude[i] - long_Sat))))) * cos(Latitude[i]);
-                std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]); 
+                CoverageSatLat[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat);
+                CoverageSatLong[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]);
+             }}
+             indexOrbit += 1;
+             */
+             for( Index i = 0 ; i < targets ; ++i )
+             {
+                CoverageSatLat1[ i ][ j ][ index1 ] =
+                  //        std::abs(2 * asin( 0.5 * sqrt(1 - cos(Latitude[i]-lat_Sat))));
+                std::abs(Latitude[i] - lat_Sat);
+                CoverageSatLong1[ i ][ j ][ index1 ] =
+                  //        std::abs(2 * asin( 0.5 * sqrt(cos(Latitude[i]) * cos(Latitude[i]) * (1 - cos(Longitude[i] - long_Sat))))) * cos(Latitude[i]);
+                std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]);
                 if(cos(Latitude[i]) < 0)
                   std::cout << "ERROR!" << "\n";
                   //std::cout << CoverageSatLat1[ i ][ j ][ index1 ] << " " << CoverageSatLong1[ i ][ j ][ index1 ] << std::endl;
@@ -280,9 +280,9 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
              }
             }
             if (indexOrbit1>=1){
-               for( Index j = 0 ; j < t ; ++j ) 
+               for( Index j = 0 ; j < t ; ++j )
                {
-                  for( Index i = 0 ; i < targets ; ++i ) 
+                  for( Index i = 0 ; i < targets ; ++i )
                   {
                   CoverageSatLat[ i ][ j ][ indexOrbit ] = CoverageSatLat1[ i ][ j ][ index1 ];
                   CoverageSatLong[ i ][ j ][ indexOrbit ] = CoverageSatLong1[ i ][ j ][ index1 ];
@@ -290,7 +290,7 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
                }
                indexOrbit += 1;
             }
-            
+
           }
        }
     }
@@ -301,13 +301,13 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
  v_Block.resize( targets );
  std::cout << "SATELLITES: " << satellites << "\n";
-  
+
  for( Index i = 0 ; i < targets ; ++i ){
    boost::multi_array< double , 2 > CoverageSatLatThis(boost::extents[t][indexOrbit]);
    boost::multi_array< double , 2 > CoverageSatLongThis(boost::extents[t][indexOrbit]);
-   
+
    for( Index j = 0 ; j < t ; ++j )  {
-      for( Index k = 0 ; k < indexOrbit ; ++k ) { 
+      for( Index k = 0 ; k < indexOrbit ; ++k ) {
          CoverageSatLatThis[ j ][ k ] = CoverageSatLat[ i ][ j ][ k ];
          CoverageSatLongThis[ j ][ k ] = CoverageSatLong[ i ][ j ][ k ];
       }
@@ -356,7 +356,7 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
             v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_pi( j , k ), 1.0 ));
             v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i+1 ] )->i2p_pi( j , k ), -1.0 ));
             duplicate_pi[i][j][k].set_function( new LinearFunction( std::move( v_vars )));
-            duplicate_pi[i][j][k].set_rhs( 0.0 ); 
+            duplicate_pi[i][j][k].set_rhs( 0.0 );
             duplicate_pi[i][j][k].set_lhs( 0.0 );
          }
       }
@@ -371,7 +371,7 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
          v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_theta( j ), 1.0 ));
          v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i+1 ] )->i2p_theta( j ), -1.0 ));
          duplicate_theta[i][j].set_function( new LinearFunction( std::move( v_vars )));
-         duplicate_theta[i][j].set_rhs( 0.0 ); 
+         duplicate_theta[i][j].set_rhs( 0.0 );
          duplicate_theta[i][j].set_lhs( 0.0 );
       }
    }
@@ -387,12 +387,12 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
             v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_pi( j , k ), 1.0 ));
          }
          duplicate_pi[j][k].set_function( new LinearFunction( std::move( v_vars )));
-         duplicate_pi[j][k].set_rhs( 1.0 ); 
+         duplicate_pi[j][k].set_rhs( 1.0 );
          duplicate_pi[j][k].set_lhs( -Inf< double >() );
       }
    }
 */
-   
+
 
    std::cout << "Constraints generated!\n";
 
@@ -437,5 +437,5 @@ void MultiTargetBlock::guts_of_destructor( void )
  }  // end( guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/
-/*---------------------- End File MultiTargetBlock.cpp -------------------*/
+/*--------------------- End File MultiTargetBlock.cpp ----------------------*/
 /*--------------------------------------------------------------------------*/

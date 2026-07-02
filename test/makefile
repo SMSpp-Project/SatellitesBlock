@@ -4,7 +4,7 @@
 #                                                                            #
 #   makefile of test (for SatellitesBlock)                                   #
 #                                                                            #
-#                              Luca Mencarelli                               #
+#                                Donato Meoli                                #
 #                         Dipartimento di Informatica                        #
 #                             Universita' di Pisa                            #
 #                                                                            #
