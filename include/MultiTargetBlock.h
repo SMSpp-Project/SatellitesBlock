@@ -16,7 +16,7 @@
 /*--------------------------------------------------------------------------*/
 
 #ifndef __MultiTargetBlock
- #define __MultiTargetBlock  /* self-identification: #endif at the end of the file */
+#define __MultiTargetBlock /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
@@ -34,8 +34,7 @@
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it
-{
+namespace SMSpp_di_unipi_it {
 /*--------------------------------------------------------------------------*/
 /*--------------------- MultiTargetBlock-RELATED TYPES ---------------------*/
 /*--------------------------------------------------------------------------*/
@@ -45,17 +44,17 @@ namespace SMSpp_di_unipi_it
  *
  *  @{ */
 
- using CNumber = SingleTargetBlock::CNumber;
- using c_RHSValue = RowConstraint::c_RHSValue;
- using Vec_CNumber = SingleTargetBlock::Vec_CNumber;
- using FNumber = SingleTargetBlock::FNumber;
- using Vec_FNumber = SingleTargetBlock::Vec_FNumber;
+using CNumber = SingleTargetBlock::CNumber;
+using c_RHSValue = RowConstraint::c_RHSValue;
+using Vec_CNumber = SingleTargetBlock::Vec_CNumber;
+using FNumber = SingleTargetBlock::FNumber;
+using Vec_FNumber = SingleTargetBlock::Vec_FNumber;
 
- using FMultiVector = std::vector< Vec_FNumber >;
- using CMultiVector = std::vector< Vec_CNumber >;
- using MultiSubset = std::vector< Block::Subset >;
+using FMultiVector = std::vector< Vec_FNumber >;
+using CMultiVector = std::vector< Vec_CNumber >;
+using MultiSubset = std::vector< Block::Subset >;
 
- using Vec_Bool = std::vector< bool >;
+using Vec_Bool = std::vector< bool >;
 
 /** @}  end( types ) */
 /*--------------------------------------------------------------------------*/
@@ -88,37 +87,36 @@ class MultiTargetBlock : public Block
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- public:
-
+public:
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- enum MCFType { kMCF , kSPT };
+ enum MCFType { kMCF, kSPT };
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 /*---------------------------- CONSTRUCTOR ---------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Constructor and Destructor
+ /** @name Constructor and Destructor
  *  @{ */
 
  /// constructor of MultiTargetBlock
  /** Constructor of MultiTargetBlock. It accepts a pointer to the father
   * Block, which can be of any type. */
 
- MultiTargetBlock( Block *father = nullptr ) : Block( father ) { }
+ MultiTargetBlock( Block * father = nullptr ) : Block( father ) {}
 
 /*--------------------------------------------------------------------------*/
  /// destructor of MultiTargetBlock
 
  virtual ~MultiTargetBlock() { guts_of_destructor(); }
 
-/*@} -----------------------------------------------------------------------*/
+ /*@} -----------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Other initializations
+ /** @name Other initializations
  *  @{ */
 
  /// loads the instance from the given file in the given format
@@ -146,13 +144,13 @@ class MultiTargetBlock : public Block
 
 /*--------------------------------------------------------------------------*/
 
- void generate_abstract_constraints( Configuration * stcc = nullptr )
-  override;
+ void generate_abstract_constraints(
+  Configuration * stcc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*----------- METHODS FOR PRINTING & SAVING THE MultiTargetBlock -----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the MultiTargetBlock
+ /** @name Methods for printing & saving the MultiTargetBlock
  *  @{ */
 
  /// print the MultiTargetBlock on an ostream with the given verbosity
@@ -166,49 +164,50 @@ class MultiTargetBlock : public Block
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------- Methods for reading the data of the SingleTargetBlock ----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the MultiTargetBlock
+ /** @name Methods for reading the data of the MultiTargetBlock
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
  /// getting the current sense of the Objective, which is minimization
 
- int get_objective_sense( void ) const override final {
-  return( f_sense );
-  }
+ int get_objective_sense( void ) const override final { return ( f_sense ); }
 
-  Index get_horizon( void ) const { return( horizon ); }
+ Index get_horizon( void ) const { return ( horizon ); }
 
-  Index get_timeStep( void ) const { return( time_step ); }
+ Index get_timeStep( void ) const { return ( time_step ); }
 
-  Index get_numSat( void ) const { return( satellites ); }
+ Index get_numSat( void ) const { return ( satellites ); }
 
-  Index get_numTarget( void ) const { return( targets ); }
+ Index get_numTarget( void ) const { return ( targets ); }
 
-  Index get_numTime( void ) const { return( horizon / time_step ); }
+ Index get_numTime( void ) const { return ( horizon / time_step ); }
 
-  Index get_numOrbits( void ) const { return( indexOrbit ); }
+ Index get_numOrbits( void ) const { return ( indexOrbit ); }
 
- double get_activations( Index k , Index i , Index j ) const {
-    return( static_cast< SingleTargetBlock * >( v_Block[ k ] )->get_activation( i , j ) );
-  }
+ double get_activations( Index k , Index i , Index j ) const
+ {
+  return ( static_cast< SingleTargetBlock * >( v_Block[ k ] )
+            ->get_activation( i , j ) );
+ }
 
-  void set_activations( Index k , Index i , Index j , int value ) {
-    return( static_cast< SingleTargetBlock * >( v_Block[ k ] )->set_activation( i , j , value ) );
-  }
+ void set_activations( Index k , Index i , Index j , int value )
+ {
+  return ( static_cast< SingleTargetBlock * >( v_Block[ k ] )
+            ->set_activation( i , j , value ) );
+ }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- protected:
-
+protected:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Protected methods for inserting and extracting
+ /** @name Protected methods for inserting and extracting
  *  @{ */
 
 
@@ -219,7 +218,7 @@ class MultiTargetBlock : public Block
 
  //void CmnIntlz( void );
 
-/* @} ----------------------------------------------------------------------*/
+ /* @} ----------------------------------------------------------------------*/
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
@@ -231,8 +230,7 @@ class MultiTargetBlock : public Block
 /*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- private:
-
+private:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -243,35 +241,36 @@ class MultiTargetBlock : public Block
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- SMSpp_insert_in_factory_h;  // insert it in the Block factory
+ SMSpp_insert_in_factory_h; // insert it in the Block factory
 
 /*--------------------------------------------------------------------------*/
 
- FNumber satellites;   ///< the number of satellites in the MultiTarget
- FNumber targets;      ///< the number of targets
- FNumber time_step;    ///< the time discretization step [seconds]
- FNumber horizon;      ///< the simulation horizon [seconds]
- FNumber indexOrbit;      ///< the number of possible orbital plane
+ FNumber satellites; ///< the number of satellites in the MultiTarget
+ FNumber targets; ///< the number of targets
+ FNumber time_step; ///< the time discretization step [seconds]
+ FNumber horizon; ///< the simulation horizon [seconds]
+ FNumber indexOrbit; ///< the number of possible orbital plane
 
- boost::multi_array< FRowConstraint , 3 > duplicate_pi; ///< duplicate_pi constraints;
- boost::multi_array< FRowConstraint , 2 > duplicate_theta; ///< duplicate_theta constraints;
+ boost::multi_array< FRowConstraint, 3 >
+  duplicate_pi; ///< duplicate_pi constraints;
+ boost::multi_array< FRowConstraint, 2 >
+  duplicate_theta; ///< duplicate_theta constraints;
  //boost::multi_array< FRowConstraint , 2 > duplicate_pi; ///< duplicate_pi constraints;
 
- };  // end( class( MultiTargetBlock ) )
+}; // end( class( MultiTargetBlock ) )
 
 /*--------------------------------------------------------------------------*/
 
 /*@}  end( group( MultiTargetBlock_CLASSES ) ) ---------------------------*/
 /*--------------------------------------------------------------------------*/
 
- }  // end( namespace SMSpp_di_unipi_it )
+} // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* MultiTargetBlock.h included */
+#endif /* MultiTargetBlock.h included */
 
 /*--------------------------------------------------------------------------*/
 /*---------------------- End File MultiTargetBlock.h -----------------------*/
 /*--------------------------------------------------------------------------*/
-

@@ -27,12 +27,12 @@
 /*--------------------------------------------------------------------------*/
 
 #ifndef NDEBUG
- #define CHECK_DS 0
- /* Perform long and costly checks on the data structures representing the
+#define CHECK_DS 0
+/* Perform long and costly checks on the data structures representing the
   * abstract and the physical representations agree. */
 #else
- #define CHECK_DS 0
- // never change this
+#define CHECK_DS 0
+// never change this
 #endif
 
 /*--------------------------------------------------------------------------*/
@@ -62,7 +62,7 @@ using FNumber = SingleTargetBlock::FNumber;
 
 static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
 static const double RAYON = 6378136.3;
-static const double M_limit = 10*3.14159265;
+static const double M_limit = 10 * 3.14159265;
 static const auto PI = 3.14159265;
 
 /*--------------------------------------------------------------------------*/
@@ -75,71 +75,70 @@ static void print_UB( std::ostream & os , FNumber ub )
   os << "+Inf";
  else
   os << ub;
- }
+}
 
 /*--------------------------------------------------------------------------*/
 // returns the number of elements where two vectors differ
 
-template< typename T >
-static Index countdiff( T beg , T end , T cmp )
+template < typename T > static Index countdiff( T beg , T end , T cmp )
 {
  Index ndiff = 0;
- for( ; beg != end ; )
-  if( *(beg++) != *(cmp++) )
+ for( ; beg != end ;)
+  if( *( beg++ ) != *( cmp++ ) )
    ndiff++;
 
- return( ndiff );
- }
+ return ( ndiff );
+}
 
 /*--------------------------------------------------------------------------*/
 // returns true if two vectors differ, one of them being given as a base
 // vector and a subset of indices
 
-template< typename T >
+template < typename T >
 static bool is_equal( std::vector< T > & vec , c_Subset & nms ,
-                      typename std::vector< T >::const_iterator cmp ,
+                      typename std::vector< T >::const_iterator cmp,
                       Index n_max )
 {
  for( auto nm : nms ) {
   if( nm >= n_max )
    throw( std::invalid_argument( "invalid name in nms" ) );
-  if( vec[ nm ] != *(cmp++) )
-   return( false );
-  }
-
- return( true );
+  if( vec[ nm ] != *( cmp++ ) )
+   return ( false );
  }
+
+ return ( true );
+}
 
 /*--------------------------------------------------------------------------*/
 // returns the number of elements where two vectors differ, one of them
 // being given as a base vector and a subset of indices
 
-template< typename T >
+template < typename T >
 static Index countdiff( std::vector< T > & vec , c_Subset & nms ,
-                        typename std::vector< T >::const_iterator cmp ,
+                        typename std::vector< T >::const_iterator cmp,
                         Index n_max )
 {
  Index ndiff = 0;
  for( auto nm : nms ) {
   if( nm >= n_max )
    throw( std::invalid_argument( "invalid name in nms" ) );
-  if( vec[ nm ] != *(cmp++) )
+  if( vec[ nm ] != *( cmp++ ) )
    ndiff++;
-  }
-
- return( ndiff );
  }
+
+ return ( ndiff );
+}
 
 /*--------------------------------------------------------------------------*/
 // copys one vector to a given subset of another
 
-template< typename T >
+template < typename T >
 static void copyidx( std::vector< T > & vec , c_Subset & nms ,
                      typename std::vector< T >::const_iterator cpy )
 {
  for( auto nm : nms )
-  vec[ nm ] = *(cpy++);
- }
+  vec[ nm ] = *( cpy++ );
+}
 
 /*--------------------------------------------------------------------------*/
 /*----------------------------- STATIC MEMBERS -----------------------------*/
@@ -159,42 +158,45 @@ SMSpp_insert_in_factory_cpp_0( SingleTargetSolution );
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetBlock::load( FNumber num_targets , FNumber num_satellites , FNumber time_step, FNumber horizon,
-                            FNumber altValues , FNumber thetaValues , FNumber indOrbit , FNumber aHalf ,
-                            boost::multi_array< double , 2 > CoverageLat , boost::multi_array< double , 2 > CoverageLong )
+void SingleTargetBlock::load( FNumber num_targets , FNumber num_satellites ,
+                              FNumber time_step, FNumber horizon,
+                              FNumber altValues, FNumber thetaValues,
+                              FNumber indOrbit, FNumber aHalf,
+                              boost::multi_array< double, 2 > CoverageLat,
+                              boost::multi_array< double, 2 > CoverageLong )
 {
  // sanity checks - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
  // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
 
-  guts_of_destructor();
+ guts_of_destructor();
 
  // copy over problem data - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-  n = num_satellites;
-  OrbitSet = indOrbit;
+ n = num_satellites;
+ OrbitSet = indOrbit;
 
-  targets = num_targets;
+ targets = num_targets;
 
-  thetaVal = thetaValues;
-  std::cout << "thetaVal=" << thetaValues << "\n";
+ thetaVal = thetaValues;
+ std::cout << "thetaVal=" << thetaValues << "\n";
 
-  dt = time_step;
-  T = horizon;
-  t = T / dt;
-  alphaHalf = aHalf;
+ dt = time_step;
+ T = horizon;
+ t = T / dt;
+ alphaHalf = aHalf;
 
-  CoverageSatLat.resize(boost::extents[t][OrbitSet]);
-  CoverageSatLong.resize(boost::extents[t][OrbitSet]);
+ CoverageSatLat.resize( boost::extents[ t ][ OrbitSet ] );
+ CoverageSatLong.resize( boost::extents[ t ][ OrbitSet ] );
 
-  int index1 = -1;
-  //for( Index ii = 0 ; ii < altSet ; ++ii )
-    for( Index j = 0 ; j < t ; ++j ) {
-      for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
-        CoverageSatLat[j][jj] = CoverageLat[j][jj];
-        CoverageSatLong[j][jj] = CoverageLong[j][jj];
-      }
-    }
+ int index1 = -1;
+ //for( Index ii = 0 ; ii < altSet ; ++ii )
+ for( Index j = 0 ; j < t ; ++j ) {
+  for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
+   CoverageSatLat[ j ][ jj ] = CoverageLat[ j ][ jj ];
+   CoverageSatLong[ j ][ jj ] = CoverageLong[ j ][ jj ];
+  }
+ }
 
  // allocate observability variables - - - - - - - - - - - - - - - - - - - - -
 
@@ -207,7 +209,7 @@ void SingleTargetBlock::load( FNumber num_targets , FNumber num_satellites , FNu
  //if( anyone_there() )
  // add_Modification( std::make_shared< NBModification >( this ) );
 
- }  // end( SingleTargetBlock::load( memory ) )
+} // end( SingleTargetBlock::load( memory ) )
 
 /*--------------------------------------------------------------------------*/
 
@@ -231,743 +233,735 @@ void SingleTargetBlock::load( std::istream & input , char frmt )
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
 
- }  // end( SingleTargetBlock::load( istream ) )
+} // end( SingleTargetBlock::load( istream ) )
 
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetBlock::generate_abstract_variables( Configuration *stvv )
+void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
 {
+ if( AR3 & HasVar ) // the variables are there already
+  return; // nothing to do
 
-  if( AR3 & HasVar )  // the variables are there already
-    return;           // nothing to do
+ theta.resize( n );
+ for( auto & var : theta )
+  var.set_type( ColVariable::kNonNegative );
 
-  theta.resize( n );
-  for( auto & var : theta )
-   var.set_type( ColVariable::kNonNegative );
+ add_static_variable( theta );
 
-  add_static_variable( theta );
+ // Deltat is the maximum revisit time (the objective to minimize)
+ Deltat.resize( 1 );
+ for( auto & var : Deltat )
+  var.set_type( ColVariable::kNonNegative );
 
-  // Deltat is the maximum revisit time (the objective to minimize)
-  Deltat.resize( 1 );
-  for( auto & var : Deltat )
-   var.set_type( ColVariable::kNonNegative );
+ add_static_variable( Deltat );
 
-  add_static_variable( Deltat );
+ // Deltat_k1A[ ii ] is the ii-th term in the forward minimum
+ // constraints (see SingleTargetBlock.h)
+ Deltat_k1A.resize( t * ( t - 1 ) / 2 );
+ for( auto & var : Deltat_k1A )
+  var.set_type( ColVariable::kNonNegative );
 
-  // Deltat_k1A[ ii ] is the ii-th term in the forward minimum
-  // constraints (see SingleTargetBlock.h)
-  Deltat_k1A.resize( t * (t-1)/2 );
-  for( auto & var : Deltat_k1A )
-   var.set_type( ColVariable::kNonNegative );
+ add_static_variable( Deltat_k1A );
 
-  add_static_variable( Deltat_k1A );
+ // Delta_k1[ j ] is the maximum revisit time for forward times j's
+ Deltat_k1.resize( t - 1 );
+ for( auto & var : Deltat_k1 )
+  var.set_type( ColVariable::kNonNegative );
 
-  // Delta_k1[ j ] is the maximum revisit time for forward times j's
-  Deltat_k1.resize( t-1 );
-  for( auto & var : Deltat_k1 )
-   var.set_type( ColVariable::kNonNegative );
+ add_static_variable( Deltat_k1 );
 
-  add_static_variable( Deltat_k1 );
+ // b1[ j ] is an (indicator) binary variable used to exclude from
+ // the computation of Deltat the terms T/2 for forward times j's
+ b1.resize( t - 1 );
+ for( auto & var : b1 )
+  var.set_type( ColVariable::kBinary );
 
-  // b1[ j ] is an (indicator) binary variable used to exclude from
-  // the computation of Deltat the terms T/2 for forward times j's
-  b1.resize( t-1 );
-  for( auto & var : b1 )
-   var.set_type( ColVariable::kBinary );
+ add_static_variable( b1 );
 
-  add_static_variable( b1 );
+ // Deltat_k2A[ ii ] is the ii-th term in the forward minimum
+ // constraints (see SingleTargetBlock.h)
+ Deltat_k2A.resize( t * ( t - 1 ) / 2 );
+ for( auto & var : Deltat_k2A )
+  var.set_type( ColVariable::kNonNegative );
 
-  // Deltat_k2A[ ii ] is the ii-th term in the forward minimum
-  // constraints (see SingleTargetBlock.h)
-  Deltat_k2A.resize( t*(t-1)/2 );
-  for( auto & var : Deltat_k2A )
-   var.set_type( ColVariable::kNonNegative );
+ add_static_variable( Deltat_k2A );
 
-  add_static_variable( Deltat_k2A );
+ // Delta_k2[ j ] is the maximum revisit time for backward times j's
+ Deltat_k2.resize( t - 1 );
+ for( auto & var : Deltat_k2 )
+  var.set_type( ColVariable::kNonNegative );
 
-  // Delta_k2[ j ] is the maximum revisit time for backward times j's
-  Deltat_k2.resize( t-1 );
-  for( auto & var : Deltat_k2 )
-   var.set_type( ColVariable::kNonNegative );
+ add_static_variable( Deltat_k2 );
 
-  add_static_variable( Deltat_k2 );
+ // b2[ j ] is an (indicator) binary variable used to exclude from
+ // the computation of Deltat the terms T/2 for backward times j's
+ b2.resize( t - 1 );
+ for( auto & var : b2 )
+  var.set_type( ColVariable::kBinary );
 
-  // b2[ j ] is an (indicator) binary variable used to exclude from
-  // the computation of Deltat the terms T/2 for backward times j's
-  b2.resize( t-1 );
-  for( auto & var : b2 )
-   var.set_type( ColVariable::kBinary );
+ add_static_variable( b2 );
 
-  add_static_variable( b2 );
+ // z[ j ] is the (binary) variable indicating whether the constellation
+ // observes the current target at time stamp j
+ zeta.resize( t );
+ for( auto & var : zeta )
+  var.set_type( ColVariable::kBinary );
 
-  // z[ j ] is the (binary) variable indicating whether the constellation
-  // observes the current target at time stamp j
-  zeta.resize( t );
-  for( auto & var : zeta )
-   var.set_type( ColVariable::kBinary );
+ add_static_variable( zeta );
 
-  add_static_variable( zeta );
+ // activation[ i ][ jj ] is the (binary) variable indicating whether
+ // satellitei is in orbital configuration jj (OrbitSet is the max number
+ // of orbital configuration, see MultiTargetBlock.cpp)
+ activation.resize( boost::extents[ n ][ OrbitSet ] );
+ for( Index i = 0 ; i < n ; ++i )
+  for( Index j = 0 ; j < OrbitSet ; ++j )
+   activation[ i ][ j ].set_type( ColVariable::kBinary );
 
-  // activation[ i ][ jj ] is the (binary) variable indicating whether
-  // satellitei is in orbital configuration jj (OrbitSet is the max number
-  // of orbital configuration, see MultiTargetBlock.cpp)
-  activation.resize( boost::extents[ n ][ OrbitSet ] );
-  for( Index i = 0 ; i < n ; ++i )
-    for( Index j = 0 ; j < OrbitSet ; ++j )
-      activation[ i ][ j ].set_type( ColVariable::kBinary );
+ add_static_variable( activation );
 
-  add_static_variable( activation );
+ // h[ ii ] is the (binary) variable indicating whether the constellation
+ // observes the current target both at time stamps i and j with
+ // j > i; ii is an incremental index in {1,2,\dots, t * (t-1)/2},
+ // where t is the total number of time stamps
+ h.resize( t * ( t - 1 ) / 2 );
+ for( auto & var : h )
+  var.set_type( ColVariable::kBinary );
 
-  // h[ ii ] is the (binary) variable indicating whether the constellation
-  // observes the current target both at time stamps i and j with
-  // j > i; ii is an incremental index in {1,2,\dots, t * (t-1)/2},
-  // where t is the total number of time stamps
-  h.resize( t * (t-1)/2 );
-  for( auto & var : h )
-   var.set_type( ColVariable::kBinary );
+ add_static_variable( h );
 
-  add_static_variable( h );
+ // xi[ i ][ j ] is the (binary) indicating whether the satellite i
+ // observes the current target at time stamp j
+ xi.resize( boost::extents[ n ][ t ] );
+ for( Index i = 0 ; i < n ; ++i )
+  for( Index j = 0 ; j < t ; ++j )
+   xi[ i ][ j ].set_type( ColVariable::kBinary );
 
-  // xi[ i ][ j ] is the (binary) indicating whether the satellite i
-  // observes the current target at time stamp j
-  xi.resize( boost::extents[ n ][ t ] );
-  for( Index i = 0 ; i < n ; ++i )
-    for( Index j = 0 ; j < t ; ++j )
-      xi[ i ][ j ].set_type( ColVariable::kBinary );
+ add_static_variable( xi );
 
-  add_static_variable( xi );
+ // d1[ ii ] is a binary variable used to linearize forward times
+ // minimum constraints (see SingleTargetBlock.h)
+ d1.resize( t * ( t - 1 ) / 2 );
+ for( auto & var : d1 )
+  var.set_type( ColVariable::kBinary );
 
-  // d1[ ii ] is a binary variable used to linearize forward times
-  // minimum constraints (see SingleTargetBlock.h)
-  d1.resize( t * (t-1)/2 );
-  for( auto & var : d1 )
-   var.set_type( ColVariable::kBinary );
+ add_static_variable( d1 );
 
-  add_static_variable( d1 );
+ // d2[ ii ] is a binary variable used to linearize backward times
+ // minimum constraints (see SingleTargetBlock.h)
+ d2.resize( t * ( t - 1 ) / 2 );
+ for( auto & var : d2 )
+  var.set_type( ColVariable::kBinary );
 
-  // d2[ ii ] is a binary variable used to linearize backward times
-  // minimum constraints (see SingleTargetBlock.h)
-  d2.resize( t * (t-1)/2 );
-  for( auto & var : d2 )
-   var.set_type( ColVariable::kBinary );
+ add_static_variable( d2 );
 
-  add_static_variable( d2 );
+ AR3 |= HasVar;
 
-  AR3 |= HasVar;
-
- }  // end( SingleTargetBlock::generate_abstract_variables )
+} // end( SingleTargetBlock::generate_abstract_variables )
 
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetBlock::generate_abstract_constraints( Configuration *stcc )
+void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
 {
+ if( AR2 & HasCnst ) // the constraints are there already
+  return; // nothing to do
 
-  if( AR2 & HasCnst )  // the constraints are there already
-    return;           // nothing to do
+ // generate the orbitSelection constraint, which select exctly one orbit
+ // configuration for the satellite: sum_{j \in OrbitSet} activation[ i ][ j ] == 1
+ // \forall i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites
+ // remember: activation[ i ][ j ] = 1 iff. the j-th configuration is selected
+ // for the i-th satellite active in the constellation
 
-  // generate the orbitSelection constraint, which select exctly one orbit
-  // configuration for the satellite: sum_{j \in OrbitSet} activation[ i ][ j ] == 1
-  // \forall i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites
-  // remember: activation[ i ][ j ] = 1 iff. the j-th configuration is selected
-  // for the i-th satellite active in the constellation
+ orbitSelection.resize( n );
+ for( Index i = 0 ; i < n ; ++i ) {
+  LinearFunction::v_coeff_pair orbit_var;
+  for( Index j = 0 ; j < OrbitSet ; ++j )
+   orbit_var.push_back( std::make_pair( &activation[ i ][ j ] , 1.0 ) );
+  LinearFunction * FunctAnm = new LinearFunction( std::move( orbit_var ) );
+  orbitSelection[ i ].set_rhs( 1.0 );
+  orbitSelection[ i ].set_lhs( 1.0 );
+  orbitSelection[ i ].set_function( FunctAnm );
+ }
 
-  orbitSelection.resize( n );
-  for( Index i = 0 ; i < n ; ++i ) {
-    LinearFunction::v_coeff_pair orbit_var;
-    for( Index j = 0 ; j < OrbitSet ; ++j )
-      orbit_var.push_back( std::make_pair( &activation[ i ][ j ], 1.0 ));
-    LinearFunction* FunctAnm = new LinearFunction( std::move( orbit_var ));
-    orbitSelection[ i ].set_rhs( 1.0 );
-    orbitSelection[ i ].set_lhs( 1.0 );
-    orbitSelection[ i ].set_function( FunctAnm );
+ add_static_constraint( orbitSelection , "orbitSelection" );
+
+ // generate the activationSat_cnst constraints, which active variable z[ j ]
+ // if one variable xi[ i ][ j ] is active: xi[ i ][ j ] \leq zeta[ j ] \forall
+ // i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites, and
+ // \forall j \in [T] where [T] := \{1,2,...,T\} and T is the time horizon
+ // (in seconds),i.e., the constellation observes the current target at time stamp j
+ // (z[ j ] = 1) iff. there exists at least satellite that observes the target at
+ // time stamp j (xi[ i ][ j ] = 1)
+
+ activationSat_cnst.resize(
+  boost::multi_array_types::extent_gen()[ n ][ t ] );
+ for( Index i = 0 ; i < n ; ++i ) {
+  for( Index j = 0 ; j < t ; ++j ) {
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &xi[ i ][ j ] , -1.0 ) );
+   v_var.push_back( std::make_pair( &zeta[ j ] , 1.0 ) );
+   LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
+   activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() );
+   activationSat_cnst[ i ][ j ].set_lhs( 0.0 );
+   activationSat_cnst[ i ][ j ].set_function( FunctSat );
   }
+ }
+ add_static_constraint( activationSat_cnst , "activationSat_cnst" );
 
-  add_static_constraint( orbitSelection , "orbitSelection" );
+ // generate the activationSat1_cnst constraints, which deactive variable z[ j ]
+ // if all variables xi[ i ][ j ] are not active: sum_{i \in [n]} xi[ i ][ j ]
+ // \geq zeta[ j ] \forall j \in [t] where [t] := \{1,2,...,t\} and T is the
+ // number of time stamps, i.e., the constellation not observe the current target
+ // at time stamp j (z[ j ] = 0) iff. there not exists any satellite that observes
+ // the target at time stamp j (xi[ i ][ j ] = 0 \forall i \in [n] where
+ // [n] := \{1,2,...,n\})
 
-  // generate the activationSat_cnst constraints, which active variable z[ j ]
-  // if one variable xi[ i ][ j ] is active: xi[ i ][ j ] \leq zeta[ j ] \forall
-  // i \in [n] where [n] := \{1,2,...,n\} and n is the number of satellites, and
-  // \forall j \in [T] where [T] := \{1,2,...,T\} and T is the time horizon
-  // (in seconds),i.e., the constellation observes the current target at time stamp j
-  // (z[ j ] = 1) iff. there exists at least satellite that observes the target at
-  // time stamp j (xi[ i ][ j ] = 1)
-
-  activationSat_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
-  for( Index i = 0 ; i < n ; ++i ){
-    for( Index j = 0 ; j < t ; ++j ){
-      LinearFunction::v_coeff_pair v_var;
-      v_var.push_back( std::make_pair( &xi[ i ][ j ], -1.0 ));
-      v_var.push_back( std::make_pair( &zeta[ j ] ,  1.0 ));
-      LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
-      activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      activationSat_cnst[ i ][ j ].set_lhs( 0.0 );
-      activationSat_cnst[ i ][ j ].set_function( FunctSat );
-    }
+ activationSat1_cnst.resize( t );
+ for( Index i = 0 ; i < t ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  for( Index j = 0 ; j < n ; ++j ) {
+   v_var.push_back( std::make_pair( &xi[ j ][ i ] , 1.0 ) );
   }
-  add_static_constraint( activationSat_cnst , "activationSat_cnst" );
+  v_var.push_back( std::make_pair( &zeta[ i ] , -1.0 ) );
+  LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
+  activationSat1_cnst[ i ].set_rhs( Inf< double >() );
+  activationSat1_cnst[ i ].set_lhs( 0.0 );
+  activationSat1_cnst[ i ].set_function( FunctSat );
+ }
+ add_static_constraint( activationSat1_cnst , "activationSat1_cnst" );
 
-  // generate the activationSat1_cnst constraints, which deactive variable z[ j ]
-  // if all variables xi[ i ][ j ] are not active: sum_{i \in [n]} xi[ i ][ j ]
-  // \geq zeta[ j ] \forall j \in [t] where [t] := \{1,2,...,t\} and T is the
-  // number of time stamps, i.e., the constellation not observe the current target
-  // at time stamp j (z[ j ] = 0) iff. there not exists any satellite that observes
-  // the target at time stamp j (xi[ i ][ j ] = 0 \forall i \in [n] where
-  // [n] := \{1,2,...,n\})
+ // generate three familiy of Linearization constraints for
+ // h[ ii ] = z[ i ] * z[ j ], where ii is an incremental indexes for i \in [t-1]
+ // and j = \{i+1,...,t\}, where t is the total number of time stamps
 
-  activationSat1_cnst.resize( t );
-  for( Index i = 0 ; i < t ; ++i ){
-    LinearFunction::v_coeff_pair v_var;
-    for( Index j = 0 ; j < n ; ++j ){
-      v_var.push_back( std::make_pair( &xi[ j ][ i ], 1.0 ));
-    }
-    v_var.push_back( std::make_pair( &zeta[ i ] ,  -1.0 ));
-    LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
-    activationSat1_cnst[ i ].set_rhs( Inf< double >() );
-    activationSat1_cnst[ i ].set_lhs( 0.0 );
-    activationSat1_cnst[ i ].set_function( FunctSat );
+ // (1) generate h_cnst_1 constraints: h[ ii ] \leq z[ i ] \forall i \in [t-1]
+
+ h_cnst_1.resize( t * ( t - 1 ) / 2 );
+ Index ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ) {
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &h[ ii ] , -1.0 ) );
+   v_var.push_back( std::make_pair( &zeta[ i ] , 1.0 ) );
+   LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
+   h_cnst_1[ ii ].set_rhs( Inf< double >() );
+   h_cnst_1[ ii ].set_lhs( 0.0 );
+   h_cnst_1[ ii ].set_function( FunctSat );
+   ii += 1;
   }
-  add_static_constraint( activationSat1_cnst , "activationSat1_cnst" );
+ }
+ add_static_constraint( h_cnst_1 , "h_cnst_1" );
 
-  // generate three familiy of Linearization constraints for
-  // h[ ii ] = z[ i ] * z[ j ], where ii is an incremental indexes for i \in [t-1]
-  // and j = \{i+1,...,t\}, where t is the total number of time stamps
+ // (2) generate h_cnst_2 constraints: h[ ii ] \leq z[ j ] \forall j \in \{i+1,...t-1\}
 
-  // (1) generate h_cnst_1 constraints: h[ ii ] \leq z[ i ] \forall i \in [t-1]
-
-  h_cnst_1.resize( t*(t-1)/2 );
-  Index ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ){
-    for( Index j = i+1 ; j < t ; ++j ){
-      //if ( j > i ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &h[ ii ], -1.0 ));
-        v_var.push_back( std::make_pair( &zeta[ i ] ,  1.0 ));
-        LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
-        h_cnst_1[ ii ].set_rhs( Inf< double >() );
-        h_cnst_1[ ii ].set_lhs( 0.0 );
-        h_cnst_1[ ii ].set_function( FunctSat );
-        ii += 1;
-    }
+ h_cnst_2.resize( t * ( t - 1 ) / 2 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ) {
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &h[ ii ] , -1.0 ) );
+   v_var.push_back( std::make_pair( &zeta[ j ] , 1.0 ) );
+   LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
+   h_cnst_2[ ii ].set_rhs( Inf< double >() );
+   h_cnst_2[ ii ].set_lhs( 0.0 );
+   h_cnst_2[ ii ].set_function( FunctSat );
+   ii += 1;
   }
-  add_static_constraint( h_cnst_1 , "h_cnst_1" );
+ }
+ add_static_constraint( h_cnst_2 , "h_cnst_2" );
 
-  // (2) generate h_cnst_2 constraints: h[ ii ] \leq z[ j ] \forall j \in \{i+1,...t-1\}
+ // (3) generate h_cnst_3 constraints: h[ ii ] \geq  z[ i ] + z[ j ] -1
+ // \forall i \in [t-1] and \forall j \in \{i+1,...t-1\}
 
-  h_cnst_2.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ){
-    for( Index j = i+1 ; j < t ; ++j ){
-      //if ( j > i ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &h[ ii ], -1.0 ));
-        v_var.push_back( std::make_pair( &zeta[ j ] ,  1.0 ));
-        LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
-        h_cnst_2[ ii ].set_rhs( Inf< double >() );
-        h_cnst_2[ ii ].set_lhs( 0.0 );
-        h_cnst_2[ ii ].set_function( FunctSat );
-        ii += 1;
-    }
+ h_cnst_3.resize( t * ( t - 1 ) / 2 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ) {
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &h[ ii ] , 1.0 ) );
+   v_var.push_back( std::make_pair( &zeta[ i ] , -1.0 ) );
+   v_var.push_back( std::make_pair( &zeta[ j ] , -1.0 ) );
+   LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
+   h_cnst_3[ ii ].set_rhs( Inf< double >() );
+   h_cnst_3[ ii ].set_lhs( -1.0 );
+   h_cnst_3[ ii ].set_function( FunctSat );
+   ii += 1;
   }
-  add_static_constraint( h_cnst_2 , "h_cnst_2" );
+ }
+ add_static_constraint( h_cnst_3 , "h_cnst_3" );
 
-  // (3) generate h_cnst_3 constraints: h[ ii ] \geq  z[ i ] + z[ j ] -1
-  // \forall i \in [t-1] and \forall j \in \{i+1,...t-1\}
+ // generate observability (linearize) constraints via big-M approac
+ // these constraints traslate the fact that a target is observed by
+ // the current satellite, i.e., xi[ i ][ j ] = 1, if the (scaled)
+ // distance between the projection of the satellite position onto
+ // the Earth surface and the position of the target is smaller than
+ // a threshold theta^{\max} with respect to Latitude and Longitude.
 
-  h_cnst_3.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ){
-    for( Index j = i+1 ; j < t ; ++j ){
-      //if ( j > i ) {
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &h[ ii ], 1.0 ));
-        v_var.push_back( std::make_pair( &zeta[ i ] ,  -1.0 ));
-        v_var.push_back( std::make_pair( &zeta[ j ] ,  -1.0 ));
-        LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
-        h_cnst_3[ ii ].set_rhs( Inf< double >() );
-        h_cnst_3[ ii ].set_lhs( -1.0 );
-        h_cnst_3[ ii ].set_function( FunctSat );
-        ii += 1;
-    }
+ // theta^{\max} + (1 - xi[ i ][ j ]) * MLAT \geq
+ // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLat[ i ][ j ][ jj ]
+ // for all targets m's and time steps j's
+
+ // theta^{\max} + (1 - xi[ i ][ j ]) * MLONG \geq
+ // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ]
+ // for all targets m's and time steps j's
+
+ // MLAT and MLONG are two big-M parameters automatically computed
+ // such that their numerical values are the smallest to guarantee
+ // that constraint are valid (redundant when xi[ i ][ j ] = 0)
+
+ obs2_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
+ obs4_cnst.resize( boost::multi_array_types::extent_gen()[ n ][ t ] );
+
+ double MLAT = PI;
+ double MLONG = 2 * PI;
+
+ for( Index i = 0 ; i < n ; ++i ) {
+  for( Index j = 0 ; j < t ; ++j ) {
+   MLAT = 0.0;
+   MLONG = 0.0;
+   LinearFunction::v_coeff_pair v_obs1, v_obs2;
+   for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
+    v_obs1.push_back(
+     std::make_pair( &activation[ i ][ jj ] , -CoverageSatLat[ j ][ jj ] ) );
+    v_obs2.push_back(
+     std::make_pair( &activation[ i ][ jj ] , -CoverageSatLong[ j ][ jj ] ) );
+    MLAT = std::max( MLAT , ( CoverageSatLat[ j ][ jj ] ) );
+    MLONG = std::max( MLONG , ( CoverageSatLong[ j ][ jj ] ) );
+   }
+
+   v_obs1.push_back( std::make_pair( &xi[ i ][ j ] , -MLAT ) );
+   v_obs2.push_back( std::make_pair( &xi[ i ][ j ] , -MLONG ) );
+
+   v_obs1.push_back( std::make_pair( &theta[ i ] , 1.0 ) );
+   v_obs2.push_back( std::make_pair( &theta[ i ] , 1.0 ) );
+
+   LinearFunction * Funct1 = new LinearFunction( std::move( v_obs1 ) );
+   LinearFunction * Funct2 = new LinearFunction( std::move( v_obs2 ) );
+
+   obs2_cnst[ i ][ j ].set_rhs( Inf< double >() );
+   obs2_cnst[ i ][ j ].set_lhs( ( -MLAT ) );
+   obs2_cnst[ i ][ j ].set_function( Funct1 );
+
+   obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
+   obs4_cnst[ i ][ j ].set_lhs( ( -MLONG ) );
+   obs4_cnst[ i ][ j ].set_function( Funct2 );
   }
-  add_static_constraint( h_cnst_3 , "h_cnst_3" );
+ }
 
-  // generate observability (linearize) constraints via big-M approac
-  // these constraints traslate the fact that a target is observed by
-  // the current satellite, i.e., xi[ i ][ j ] = 1, if the (scaled)
-  // distance between the projection of the satellite position onto
-  // the Earth surface and the position of the target is smaller than
-  // a threshold theta^{\max} with respect to Latitude and Longitude.
+ add_static_constraint( obs2_cnst );
+ add_static_constraint( obs4_cnst );
 
-  // theta^{\max} + (1 - xi[ i ][ j ]) * MLAT \geq
-  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLat[ i ][ j ][ jj ]
-  // for all targets m's and time steps j's
+ theta_UB.resize( n );
+ for( Index i = 0 ; i < n ; ++i ) {
+  LinearFunction::v_coeff_pair v_var_theta;
+  v_var_theta.push_back( std::make_pair( &theta[ i ] , 1.0 ) );
+  LinearFunction * Funct_theta =
+   new LinearFunction( std::move( v_var_theta ) );
+  theta_UB[ i ].set_rhs( thetaVal );
+  theta_UB[ i ].set_lhs( -Inf< double >() );
+  theta_UB[ i ].set_function( Funct_theta );
+ }
 
-  // theta^{\max} + (1 - xi[ i ][ j ]) * MLONG \geq
-  // sum_{jj \in OrbitSet} activation[ jj ] * CoverageSatLong[ i ][ j ][ jj ]
-  // for all targets m's and time steps j's
+ add_static_constraint( theta_UB , "theta_UB" );
 
-  // MLAT and MLONG are two big-M parameters automatically computed
-  // such that their numerical values are the smallest to guarantee
-  // that constraint are valid (redundant when xi[ i ][ j ] = 0)
+ // generate the Deltat_max_dt1 constraints: Deltat \geq dt, indicating
+ // that the maximum revisit time Deltat for the current target should
+ // be greather than the single time step dt.
 
-  obs2_cnst.resize(
-    boost::multi_array_types::
-    extent_gen()[ n ][ t ] );
-  obs4_cnst.resize(
-    boost::multi_array_types::
-    extent_gen()[ n ][ t ] );
+ Deltat_max_dt1.resize( 1 );
+ LinearFunction::v_coeff_pair v_vart1;
+ v_vart1.push_back( std::make_pair( &Deltat[ 0 ] , 1.0 ) );
+ LinearFunction * Functt1 = new LinearFunction( std::move( v_vart1 ) );
+ Deltat_max_dt1[ 0 ].set_rhs( Inf< double >() );
+ Deltat_max_dt1[ 0 ].set_lhs( dt );
+ Deltat_max_dt1[ 0 ].set_function( Functt1 );
 
-  double MLAT = PI;
-  double MLONG = 2*PI;
+ add_static_constraint( Deltat_max_dt1 , "Deltat_max_dt1" );
 
-  for( Index i = 0 ; i < n ; ++i )
-  {
-    for( Index j = 0 ; j < t ; ++j )
-    {
-      MLAT = 0.0;
-      MLONG = 0.0;
-      LinearFunction::v_coeff_pair v_obs1, v_obs2;
-        for( Index jj = 0 ; jj < OrbitSet ; ++jj )
-        {
-          v_obs1.push_back( std::make_pair( &activation[ i ] [ jj ],
-                                -CoverageSatLat[ j ][ jj ]));
-          v_obs2.push_back( std::make_pair( &activation[ i ][ jj ],
-                                -CoverageSatLong[ j ][ jj ]));
-          MLAT = std::max(MLAT, (CoverageSatLat[ j ][ jj ]));
-          MLONG = std::max(MLONG, (CoverageSatLong[ j ][ jj ]));
-        }
+ // generate Deltat_max1 constraints: Deltat \leq \Deltat_k1[ i ]
+ // - 0.5 * T * b1[ i ] \forall i \in [t-1]. These constraints exclude the
+ // terms 0.5 * T from the computation of Deltat (the minimum revisit time)
+ // for the forward times i's in [t-1], where t is the total number of
+ // time steps
 
-      v_obs1.push_back( std::make_pair( &xi[i][j], -MLAT ));
-      v_obs2.push_back( std::make_pair( &xi[i][j], -MLONG ));
+ Deltat_max1.resize( t - 1 );
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  v_var.push_back( std::make_pair( &Deltat[ 0 ] , 1.0 ) );
+  v_var.push_back( std::make_pair( &Deltat_k1[ i ] , -1.0 ) );
+  v_var.push_back( std::make_pair( &b1[ i ] , 0.5 * T ) );
+  LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+  Deltat_max1[ i ].set_rhs( Inf< double >() );
+  Deltat_max1[ i ].set_lhs( 0.0 );
+  Deltat_max1[ i ].set_function( Funct );
+ }
 
-      v_obs1.push_back( std::make_pair( &theta[i], 1.0 ));
-      v_obs2.push_back( std::make_pair( &theta[i], 1.0 ));
+ add_static_constraint( Deltat_max1 , "Deltat_max1" );
 
-      LinearFunction* Funct1 = new LinearFunction( std::move( v_obs1 ));
-      LinearFunction* Funct2 = new LinearFunction( std::move( v_obs2 ));
+ // generate Deltat_max11 constraints: Deltat_k1[ i ] \leq 0.5 * T * b1[ i ]
+ // \forall i \in [t-1]. These constraints are indicator constraint which
+ // deactive indicator binary variable b1[ i ] if  Deltat_k1[ i ] \geq 0.5 * T
 
-      obs2_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      obs2_cnst[ i ][ j ].set_lhs( (-MLAT ));
-      obs2_cnst[ i ][ j ].set_function( Funct1 );
+ Deltat_max11.resize( t - 1 );
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  v_var.push_back( std::make_pair( &Deltat_k1[ i ] , 1.0 ) );
+  v_var.push_back( std::make_pair( &b1[ i ] , -0.5 * T ) );
+  LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+  Deltat_max11[ i ].set_rhs( Inf< double >() );
+  Deltat_max11[ i ].set_lhs( 0.0 );
+  Deltat_max11[ i ].set_function( Funct );
+ }
 
-      obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
-      obs4_cnst[ i ][ j ].set_lhs( (-MLONG ));
-      obs4_cnst[ i ][ j ].set_function( Funct2 );
-    }
+ add_static_constraint( Deltat_max11 , "Deltat_max11" );
+
+ // generate Deltat_max2 constraints: Deltat \leq \Deltat_k2[ i ]
+ // - 0.5 * T * b2[ i ] \forall i \in [t-1]. These constraints exclude the
+ // terms 0.5 * T from the computation of Deltat (the minimum revisit time)
+ // for the backward times i's in [t-1], where t is the total number of
+ // time steps
+
+ Deltat_max2.resize( t - 1 );
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  v_var.push_back( std::make_pair( &Deltat[ 0 ] , 1.0 ) );
+  v_var.push_back( std::make_pair( &Deltat_k2[ i ] , -1.0 ) );
+  v_var.push_back( std::make_pair( &b2[ i ] , 0.5 * T ) );
+  LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+  Deltat_max2[ i ].set_rhs( Inf< double >() );
+  Deltat_max2[ i ].set_lhs( 0.0 );
+  Deltat_max2[ i ].set_function( Funct );
+ }
+
+ add_static_constraint( Deltat_max2 , "Deltat_max2" );
+
+ // generate Deltat_max22 constraints: Deltat_k2[ i ] \leq 0.5 * T * b2[ i ]
+ // \forall i \in [t-1]. These constraints are indicator constraint which
+ // deactive indicator binary variable 21[ i ] if  Deltat_k2[ i ] \geq 0.5 * T
+
+ Deltat_max22.resize( t - 1 );
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  v_var.push_back( std::make_pair( &Deltat_k2[ i ] , 1.0 ) );
+  v_var.push_back( std::make_pair( &b2[ i ] , -0.5 * T ) );
+  LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+  Deltat_max22[ i ].set_rhs( Inf< double >() );
+  Deltat_max22[ i ].set_lhs( 0.0 );
+  Deltat_max22[ i ].set_function( Funct );
+ }
+
+ add_static_constraint( Deltat_max22 , "Deltat_max22" );
+
+ // generate Deltat_min_k1_1 constraints which computes Deltat_k1[ i ]
+ // starting from h[ ii ], which is equal to one if the current target is
+ // observed at least twice by the constellation of satellites
+
+ Deltat_min_k1_1.resize( t * ( t - 1 ) / 2 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ){
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &Deltat_k1[ i ] , -1.0 ) );
+   v_var.push_back(
+    std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
+   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+   Deltat_min_k1_1[ ii ].set_rhs( Inf< double >() );
+   Deltat_min_k1_1[ ii ].set_lhs( -0.5 * T );
+   Deltat_min_k1_1[ ii ].set_function( Funct );
+   ii += 1;
   }
+ }
 
-  add_static_constraint( obs2_cnst );
-  add_static_constraint( obs4_cnst );
+ add_static_constraint( Deltat_min_k1_1 , "Deltat_min_k1_1" );
 
-  theta_UB.resize( n );
-  for( Index i = 0 ; i < n ; ++i ){
-    LinearFunction::v_coeff_pair v_var_theta;
-    v_var_theta.push_back( std::make_pair( &theta[ i ], 1.0 ));
-    LinearFunction* Funct_theta = new LinearFunction( std::move( v_var_theta ));
-    theta_UB[ i ].set_rhs( thetaVal );
-    theta_UB[ i ].set_lhs( -Inf< double >() );
-    theta_UB[ i ].set_function( Funct_theta );
+ // generate Deltat_min_k1_2 constraints which linearize the minimum operation
+ // for the forward times to compute Deltat_k1[ i ]: d1[ ii ] is an indicator
+ // variable which is equal to one for the term where the minimum is attained
+
+ Deltat_min_k1_2.resize( t * ( t - 1 ) / 2 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ){
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &Deltat_k1[ i ] , -1.0 ) );
+   v_var.push_back(
+    std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
+   v_var.push_back( std::make_pair( &d1[ ii ] , 0.5 * T ) );
+   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+   Deltat_min_k1_2[ ii ].set_rhs( 0.0 );
+   Deltat_min_k1_2[ ii ].set_lhs( -Inf< double >() );
+   Deltat_min_k1_2[ ii ].set_function( Funct );
+   ii += 1;
   }
+ }
 
-  add_static_constraint( theta_UB , "theta_UB" );
+ add_static_constraint( Deltat_min_k1_2 , "Deltat_min_k1_2" );
 
-  // generate the Deltat_max_dt1 constraints: Deltat \geq dt, indicating
-  // that the maximum revisit time Deltat for the current target should
-  // be greather than the single time step dt.
+ // generate d1_cnst constraints, which guarantee that exactly one term of
+ // d1[ ii ]is equal to one (which is the one where the minimimum is attained)
+ // and all the remains are equal to zero (see Deltat_min_k1_2 constraints)
 
-  Deltat_max_dt1.resize( 1 );
-  LinearFunction::v_coeff_pair v_vart1;
-  v_vart1.push_back( std::make_pair( &Deltat[ 0 ], 1.0 ));
-  LinearFunction* Functt1 = new LinearFunction( std::move( v_vart1 ));
-  Deltat_max_dt1[ 0 ].set_rhs( Inf< double >() );
-  Deltat_max_dt1[ 0 ].set_lhs( dt );
-  Deltat_max_dt1[ 0 ].set_function( Functt1 );
-
-  add_static_constraint( Deltat_max_dt1 , "Deltat_max_dt1" );
-
-  // generate Deltat_max1 constraints: Deltat \leq \Deltat_k1[ i ]
-  // - 0.5 * T * b1[ i ] \forall i \in [t-1]. These constraints exclude the
-  // terms 0.5 * T from the computation of Deltat (the minimum revisit time)
-  // for the forward times i's in [t-1], where t is the total number of
-  // time steps
-
-  Deltat_max1.resize( t-1 );
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    LinearFunction::v_coeff_pair v_var;
-    v_var.push_back( std::make_pair( &Deltat[ 0 ], 1.0 ));
-    v_var.push_back( std::make_pair( &Deltat_k1[ i ], -1.0 ));
-    v_var.push_back( std::make_pair( &b1[ i ], 0.5*T ));
-    LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-    Deltat_max1[ i ].set_rhs( Inf< double >() );
-    Deltat_max1[ i ].set_lhs( 0.0 );
-    Deltat_max1[ i ].set_function( Funct );
+ d1_cnst.resize( t - 1 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   v_var.push_back( std::make_pair( &d1[ ii ] , 1.0 ) );
+   ii += 1;
   }
+  LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+  d1_cnst[ i ].set_rhs( 1.0 );
+  d1_cnst[ i ].set_lhs( 1.0 );
+  d1_cnst[ i ].set_function( Funct );
+ }
 
-  add_static_constraint( Deltat_max1 , "Deltat_max1" );
+ add_static_constraint( d1_cnst , "d1_cnst" );
 
-  // generate Deltat_max11 constraints: Deltat_k1[ i ] \leq 0.5 * T * b1[ i ]
-  // \forall i \in [t-1]. These constraints are indicator constraint which
-  // deactive indicator binary variable b1[ i ] if  Deltat_k1[ i ] \geq 0.5 * T
+ // generate Deltat_min_k2_1 constraints which computes Deltat_k1[ i ]
+ // starting from h[ ii ], which is equal to one if the current target is
+ // observed at least twice by the constellation of satellites
 
-  Deltat_max11.resize( t-1 );
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    LinearFunction::v_coeff_pair v_var;
-    v_var.push_back( std::make_pair( &Deltat_k1[ i ], 1.0 ));
-    v_var.push_back( std::make_pair( &b1[ i ], -0.5*T ));
-    LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-    Deltat_max11[ i ].set_rhs( Inf< double >() );
-    Deltat_max11[ i ].set_lhs( 0.0 );
-    Deltat_max11[ i ].set_function( Funct );
+ Deltat_min_k2_1.resize( t * ( t - 1 ) / 2 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ){
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &Deltat_k2[ i ] , 1.0 ) );
+   v_var.push_back(
+    std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
+   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+   Deltat_min_k2_1[ ii ].set_rhs( 0.5 * T );
+   Deltat_min_k2_1[ ii ].set_lhs( -Inf< double >() );
+   Deltat_min_k2_1[ ii ].set_function( Funct );
+   ii += 1;
   }
+ }
 
-  add_static_constraint( Deltat_max11 , "Deltat_max11" );
+ add_static_constraint( Deltat_min_k2_1 , "Deltat_min_k2_1" );
 
-  // generate Deltat_max2 constraints: Deltat \leq \Deltat_k2[ i ]
-  // - 0.5 * T * b2[ i ] \forall i \in [t-1]. These constraints exclude the
-  // terms 0.5 * T from the computation of Deltat (the minimum revisit time)
-  // for the backward times i's in [t-1], where t is the total number of
-  // time steps
+ // generate Deltat_min_k2_2 constraints which linearize the minimum operation
+ // for the forward times to compute Deltat_k2[ i ]: d2[ ii ] is an indicator
+ // variable which is equal to one for the term where the minimum is attained
 
-  Deltat_max2.resize( t-1 );
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    LinearFunction::v_coeff_pair v_var;
-    v_var.push_back( std::make_pair( &Deltat[ 0 ], 1.0 ));
-    v_var.push_back( std::make_pair( &Deltat_k2[ i ], -1.0 ));
-    v_var.push_back( std::make_pair( &b2[ i ], 0.5*T ));
-    LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-    Deltat_max2[ i ].set_rhs( Inf< double >() );
-    Deltat_max2[ i ].set_lhs( 0.0 );
-    Deltat_max2[ i ].set_function( Funct );
+ Deltat_min_k2_2.resize( t * ( t - 1 ) / 2 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   //if ( j > i ){
+   LinearFunction::v_coeff_pair v_var;
+   v_var.push_back( std::make_pair( &Deltat_k2[ i ] , 1.0 ) );
+   v_var.push_back(
+    std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
+   v_var.push_back( std::make_pair( &d2[ ii ] , -0.5 * T ) );
+   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+   Deltat_min_k2_2[ ii ].set_rhs( Inf< double >() );
+   Deltat_min_k2_2[ ii ].set_lhs( 0.0 );
+   Deltat_min_k2_2[ ii ].set_function( Funct );
+   ii += 1;
   }
+ }
 
-  add_static_constraint( Deltat_max2 , "Deltat_max2" );
+ add_static_constraint( Deltat_min_k2_2 , "Deltat_min_k2_2" );
 
-  // generate Deltat_max22 constraints: Deltat_k2[ i ] \leq 0.5 * T * b2[ i ]
-  // \forall i \in [t-1]. These constraints are indicator constraint which
-  // deactive indicator binary variable 21[ i ] if  Deltat_k2[ i ] \geq 0.5 * T
+ // generate d2_cnst constraints, which guarantee that exactly one term of
+ // d2[ ii ]is equal to one (which is the one where the minimimum is attained)
+ // and all the remains are equal to zero (see Deltat_min_k2_2 constraints)
 
-  Deltat_max22.resize( t-1 );
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    LinearFunction::v_coeff_pair v_var;
-    v_var.push_back( std::make_pair( &Deltat_k2[ i ], 1.0 ));
-    v_var.push_back( std::make_pair( &b2[ i ], -0.5*T ));
-    LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-    Deltat_max22[ i ].set_rhs( Inf< double >() );
-    Deltat_max22[ i ].set_lhs( 0.0 );
-    Deltat_max22[ i ].set_function( Funct );
+ d2_cnst.resize( t - 1 );
+ ii = 0;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  LinearFunction::v_coeff_pair v_var;
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   v_var.push_back( std::make_pair( &d2[ ii ] , 1.0 ) );
+   ii += 1;
   }
+  LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
+  d2_cnst[ i ].set_rhs( 1.0 );
+  d2_cnst[ i ].set_lhs( 1.0 );
+  d2_cnst[ i ].set_function( Funct );
+ }
 
-  add_static_constraint( Deltat_max22 , "Deltat_max22" );
+ add_static_constraint( d2_cnst , "d2_cnst" );
 
-  // generate Deltat_min_k1_1 constraints which computes Deltat_k1[ i ]
-  // starting from h[ ii ], which is equal to one if the current target is
-  // observed at least twice by the constellation of satellites
+ // generate obs_cnst_h constraint: sum_{ii \in [t-1]} h[ ii ] >= 1, which
+ // guarantee there exists at least two time stamp in which the current target
+ // is observed by the constellation of satellites
 
-  Deltat_min_k1_1.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &Deltat_k1[ i ], -1.0 ));
-        v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T )));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        Deltat_min_k1_1[ ii ].set_rhs( Inf< double >() );
-        Deltat_min_k1_1[ ii ].set_lhs( -0.5*T );
-        Deltat_min_k1_1[ ii ].set_function( Funct );
-        ii += 1;
-    }
+ obs_cnst_h.resize( 1 );
+ ii = 0;
+ LinearFunction::v_coeff_pair v_var1;
+ for( Index i = 0 ; i < t - 1 ; ++i ) {
+  for( Index j = i + 1 ; j < t ; ++j ) {
+   v_var1.push_back( std::make_pair( &h[ ii ] , 1.0 ) );
+   ii += 1;
   }
+ }
+ LinearFunction * FunctA = new LinearFunction( std::move( v_var1 ) );
+ obs_cnst_h[ 0 ].set_rhs( Inf< double >() );
+ obs_cnst_h[ 0 ].set_lhs( 1.0 );
+ obs_cnst_h[ 0 ].set_function( FunctA );
 
-  add_static_constraint( Deltat_min_k1_1 , "Deltat_min_k1_1" );
+ add_static_constraint( obs_cnst_h , "obs_cnst_h" );
 
-  // generate Deltat_min_k1_2 constraints which linearize the minimum operation
-  // for the forward times to compute Deltat_k1[ i ]: d1[ ii ] is an indicator
-  // variable which is equal to one for the term where the minimum is attained
+ // generate obs_cnst_xi constraints: sum_{j \in [t]} xi[ i ][ j ] >= 3
+ // \forall i \in [n], which guarantee there exists at least three time stamp
+ // in which the current target is observed by the each satellite
 
-  Deltat_min_k1_2.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &Deltat_k1[ i ], -1.0 ));
-        v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T )));
-        v_var.push_back( std::make_pair( &d1[ ii ], 0.5*T));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        Deltat_min_k1_2[ ii ].set_rhs( 0.0 );
-        Deltat_min_k1_2[ ii ].set_lhs( -Inf< double >() );
-        Deltat_min_k1_2[ ii ].set_function( Funct );
-        ii += 1;
-    }
+ obs_cnst_xi.resize( n );
+ for( Index i = 0 ; i < n ; ++i ) {
+  LinearFunction::v_coeff_pair v_varxi;
+  for( Index j = 0 ; j < t ; ++j ) {
+   v_varxi.push_back( std::make_pair( &xi[ i ][ j ] , 1.0 ) );
   }
+  LinearFunction * FunctB = new LinearFunction( std::move( v_varxi ) );
+  obs_cnst_xi[ i ].set_rhs( Inf< double >() );
+  obs_cnst_xi[ i ].set_lhs( 3.0 );
+  obs_cnst_xi[ i ].set_function( FunctB );
+ }
 
-  add_static_constraint( Deltat_min_k1_2 , "Deltat_min_k1_2" );
+ add_static_constraint( obs_cnst_xi , "obs_cnst_xi" );
 
-  // generate d1_cnst constraints, which guarantee that exactly one term of
-  // d1[ ii ]is equal to one (which is the one where the minimimum is attained)
-  // and all the remains are equal to zero (see Deltat_min_k1_2 constraints)
+ observation1.resize( t );
 
-  d1_cnst.resize( t-1 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    LinearFunction::v_coeff_pair v_var;
-    for( Index j = i+1 ; j < t ; ++j ) {
-        v_var.push_back( std::make_pair( &d1[ ii ], 1.0));
-        ii += 1;
-    }
-    LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-    d1_cnst[ i ].set_rhs( 1.0 );
-    d1_cnst[ i ].set_lhs( 1.0 );
-    d1_cnst[ i ].set_function( Funct );
-  }
-
-  add_static_constraint( d1_cnst , "d1_cnst" );
-
-  // generate Deltat_min_k2_1 constraints which computes Deltat_k1[ i ]
-  // starting from h[ ii ], which is equal to one if the current target is
-  // observed at least twice by the constellation of satellites
-
-  Deltat_min_k2_1.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &Deltat_k2[ i ], 1.0 ));
-        v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T)));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        Deltat_min_k2_1[ ii ].set_rhs( 0.5*T );
-        Deltat_min_k2_1[ ii ].set_lhs( -Inf< double >() );
-        Deltat_min_k2_1[ ii ].set_function( Funct );
-        ii += 1;
-    }
-  }
-
-  add_static_constraint( Deltat_min_k2_1 , "Deltat_min_k2_1" );
-
-  // generate Deltat_min_k2_2 constraints which linearize the minimum operation
-  // for the forward times to compute Deltat_k2[ i ]: d2[ ii ] is an indicator
-  // variable which is equal to one for the term where the minimum is attained
-
-  Deltat_min_k2_2.resize( t*(t-1)/2 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-      //if ( j > i ){
-        LinearFunction::v_coeff_pair v_var;
-        v_var.push_back( std::make_pair( &Deltat_k2[ i ], 1.0 ));
-        v_var.push_back( std::make_pair( &h[ ii ], (( j - i)*dt - 0.5*T)));
-        v_var.push_back( std::make_pair( &d2[ ii ], -0.5*T));
-        LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-        Deltat_min_k2_2[ ii ].set_rhs( Inf< double >() );
-        Deltat_min_k2_2[ ii ].set_lhs( 0.0 );
-        Deltat_min_k2_2[ ii ].set_function( Funct );
-        ii += 1;
-    }
-  }
-
-  add_static_constraint( Deltat_min_k2_2 , "Deltat_min_k2_2" );
-
-  // generate d2_cnst constraints, which guarantee that exactly one term of
-  // d2[ ii ]is equal to one (which is the one where the minimimum is attained)
-  // and all the remains are equal to zero (see Deltat_min_k2_2 constraints)
-
-  d2_cnst.resize( t-1 );
-  ii = 0;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    LinearFunction::v_coeff_pair v_var;
-    for( Index j = i+1 ; j < t ; ++j ) {
-        v_var.push_back( std::make_pair( &d2[ ii ], 1.0));
-        ii += 1;
-    }
-    LinearFunction* Funct = new LinearFunction( std::move( v_var ));
-    d2_cnst[ i ].set_rhs( 1.0 );
-    d2_cnst[ i ].set_lhs( 1.0 );
-    d2_cnst[ i ].set_function( Funct );
-  }
-
-  add_static_constraint( d2_cnst , "d2_cnst" );
-
-  // generate obs_cnst_h constraint: sum_{ii \in [t-1]} h[ ii ] >= 1, which
-  // guarantee there exists at least two time stamp in which the current target
-  // is observed by the constellation of satellites
-
-  obs_cnst_h.resize( 1 );
-  ii = 0;
+ //for( Index i = 0 ; i < targets ; ++i ){
+ for( Index j = 0 ; j < t ; ++j ) {
   LinearFunction::v_coeff_pair v_var1;
-  for( Index i = 0 ; i < t-1 ; ++i ) {
-    for( Index j = i+1 ; j < t ; ++j ) {
-      v_var1.push_back( std::make_pair( &h[ ii ], 1.0));
-      ii += 1;
-    }
-  }
-  LinearFunction* FunctA = new LinearFunction( std::move( v_var1 ));
-  obs_cnst_h[ 0 ].set_rhs( Inf< double >() );
-  obs_cnst_h[ 0 ].set_lhs( 1.0 );
-  obs_cnst_h[ 0 ].set_function( FunctA );
+  for( Index k = 0 ; k < n ; ++k )
+   v_var1.push_back( std::make_pair( &xi[ k ][ j ] , 1.0 ) );
 
-  add_static_constraint( obs_cnst_h , "obs_cnst_h" );
+  observation1[ j ].set_function( new LinearFunction( std::move( v_var1 ) ) );
+  observation1[ j ].set_rhs( 1.0 ); //Inf< double >()
+  observation1[ j ].set_lhs( -Inf< double >() );
+ }
+ //}
 
-  // generate obs_cnst_xi constraints: sum_{j \in [t]} xi[ i ][ j ] >= 3
-  // \forall i \in [n], which guarantee there exists at least three time stamp
-  // in which the current target is observed by the each satellite
+ add_static_constraint( observation1 , "observation1" );
 
-  obs_cnst_xi.resize( n );
-  for( Index i = 0 ; i < n ; ++i ) {
-    LinearFunction::v_coeff_pair v_varxi;
-    for( Index j = 0 ; j < t ; ++j ) {
-      v_varxi.push_back( std::make_pair( &xi[ i ][ j ], 1.0));
-    }
-    LinearFunction* FunctB = new LinearFunction( std::move( v_varxi ));
-    obs_cnst_xi[ i ].set_rhs( Inf< double >() );
-    obs_cnst_xi[ i ].set_lhs( 3.0 );
-    obs_cnst_xi[ i ].set_function( FunctB );
-  }
-
-  add_static_constraint( obs_cnst_xi , "obs_cnst_xi" );
-
-  observation1.resize( t );
-
-  //for( Index i = 0 ; i < targets ; ++i ){
-      for( Index j = 0 ; j < t ; ++j ){
-         LinearFunction::v_coeff_pair v_var1;
-         for( Index k = 0 ; k < n ; ++k )
-            v_var1.push_back( std::make_pair( &xi[k][ j ], 1.0));
-
-         observation1[j].set_function( new LinearFunction( std::move( v_var1 )));
-         observation1[j].set_rhs( 1.0 );//Inf< double >()
-         observation1[j].set_lhs( -Inf< double >()  );
-      }
-   //}
-
-   add_static_constraint( observation1 , "observation1" );
-
-  AR2 |= HasCnst;
- }  // end( SingleTargetBlock::generate_abstract_constraints )
+ AR2 |= HasCnst;
+} // end( SingleTargetBlock::generate_abstract_constraints )
 
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetBlock::generate_objective( Configuration *objc )
+void SingleTargetBlock::generate_objective( Configuration * objc )
 {
+ if( AR1 & HasObj ) // the objective is there already
+  return; // cowardly (and silently) return
 
- if( AR1 & HasObj )  // the objective is there already
-  return;           // cowardly (and silently) return
+ LinearFunction::v_coeff_pair p( 1 );
 
-  LinearFunction::v_coeff_pair p( 1 );
+ p[ 0 ].first = &Deltat[ 0 ];
+ p[ 0 ].second = 1.0 / targets;
 
-  p[ 0 ].first = &Deltat[ 0 ];
-  p[ 0 ].second = 1.0/targets;
+ LinearFunction * Functobj = new LinearFunction( std::move( p ) );
 
-  LinearFunction* Functobj = new LinearFunction( std::move( p ));
+ c.set_function( Functobj );
+ set_objective( &c );
 
-  c.set_function( Functobj );
-  set_objective( &c );
+ AR1 |= HasObj;
 
-  AR1 |= HasObj;
-
- }  // end( SingleTargetBlock::generate_objective )
+} // end( SingleTargetBlock::generate_objective )
 
 /*--------------------------------------------------------------------------*/
 
- bool SingleTargetBlock::is_feasible( bool useabstract , Configuration *fsbc )
+bool SingleTargetBlock::is_feasible( bool useabstract , Configuration * fsbc )
 {
  FNumber eps = 0;
  auto tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >( fsbc );
 
- if( ( ! tfsbc ) && f_BlockConfig &&
+ if( ( !tfsbc ) && f_BlockConfig &&
      f_BlockConfig->f_is_feasible_Configuration )
   tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-                        f_BlockConfig->f_is_feasible_Configuration );
+   f_BlockConfig->f_is_feasible_Configuration );
  if( tfsbc )
   eps = tfsbc->f_value;
 
- return( 0 );
+ return ( 0 );
 
- }  // end( SingleTargetBlock::is_feasible )
+} // end( SingleTargetBlock::is_feasible )
 
 /*--------------------------------------------------------------------------*/
 
-bool SingleTargetBlock::is_optimal( bool useabstract , Configuration *optc )
+bool SingleTargetBlock::is_optimal( bool useabstract , Configuration * optc )
 {
  CNumber ceps = 0;
  FNumber feps = 0;
  if( optc ) {
   if( auto toptc =
-      dynamic_cast< SimpleConfiguration< std::pair< CNumber , FNumber > > * >(
-                                                                    optc ) ) {
+       dynamic_cast< SimpleConfiguration< std::pair< CNumber, FNumber > > * >(
+        optc ) ) {
    ceps = toptc->f_value.first;
    feps = toptc->f_value.second;
-   }
-  else {
+  } else {
    auto ttoptc = dynamic_cast< SimpleConfiguration< CNumber > * >( optc );
 
-   if( ( ! ttoptc ) && f_BlockConfig &&
+   if( ( !ttoptc ) && f_BlockConfig &&
        f_BlockConfig->f_is_optimal_Configuration )
     ttoptc = dynamic_cast< SimpleConfiguration< CNumber > * >(
-                           f_BlockConfig->f_is_optimal_Configuration );
+     f_BlockConfig->f_is_optimal_Configuration );
    if( ttoptc )
     ceps = ttoptc->f_value;
 
    if( f_BlockConfig && f_BlockConfig->f_is_feasible_Configuration ) {
     auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-                              f_BlockConfig->f_is_feasible_Configuration );
+     f_BlockConfig->f_is_feasible_Configuration );
     if( fsbc )
      feps = fsbc->f_value;
-    }
    }
   }
- else
-  if( f_BlockConfig ) {
-   if( f_BlockConfig->f_is_optimal_Configuration )
-    if( auto csbc = dynamic_cast< SimpleConfiguration< CNumber > * >(
-                              f_BlockConfig->f_is_optimal_Configuration ) )
-     ceps = csbc->f_value;
+ } else if( f_BlockConfig ) {
+  if( f_BlockConfig->f_is_optimal_Configuration )
+   if( auto csbc = dynamic_cast< SimpleConfiguration< CNumber > * >(
+        f_BlockConfig->f_is_optimal_Configuration ) )
+    ceps = csbc->f_value;
 
-   if( f_BlockConfig->f_is_feasible_Configuration )
-    if( auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-                              f_BlockConfig->f_is_feasible_Configuration ) )
-     feps = fsbc->f_value;
-   }
+  if( f_BlockConfig->f_is_feasible_Configuration )
+   if( auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
+        f_BlockConfig->f_is_feasible_Configuration ) )
+    feps = fsbc->f_value;
+ }
 
- return( 0 );
+ return ( 0 );
 
- }  //  end( SingleTargetBlock::is_optimal )
+} //  end( SingleTargetBlock::is_optimal )
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
 
 
- Solution * SingleTargetBlock::get_Solution( Configuration * solc , bool emptys )
+Solution * SingleTargetBlock::get_Solution( Configuration * solc ,
+                                            bool emptys )
 {
-
  int wsol = 0;
- if( ( ! solc ) && f_BlockConfig )
+ if( ( !solc ) && f_BlockConfig )
   solc = f_BlockConfig->f_solution_Configuration;
 
  if( auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc ) )
   wsol = tsolc->f_value;
 
- auto *sol = new SingleTargetSolution();
+ auto * sol = new SingleTargetSolution();
 
- if( ! emptys )
+ if( !emptys )
   sol->read( this );
 
- return( sol );
+ return ( sol );
 
- }  // end( SingleTargetBlock::get_Solution )
+} // end( SingleTargetBlock::get_Solution )
 
- void SingleTargetBlock::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
+void SingleTargetBlock::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
 {
- if( ! ( AR3 & HasVar ) )  // nowhere to put the value in
-  return;                 // cowardly (and silently) return
+ if( !( AR3 & HasVar ) ) // nowhere to put the value in
+  return; // cowardly (and silently) return
 
  Index i = rng.first;
 
- for( auto xi = Deltat.begin() + i ;
-       i < 1 ; ++i )
-   (xi++)->set_value( *(fstrt++) );
+ for( auto xi = Deltat.begin() + i ; i < 1 ; ++i )
+  ( xi++ )->set_value( *( fstrt++ ) );
 }
 
 
@@ -982,20 +976,18 @@ void SingleTargetBlock::add_Modification( sp_Mod mod , ChnlName chnl )
  if( mod->concerns_Block() ) {
   mod->concerns_Block( false );
   guts_of_add_Modification( mod.get() , chnl );
-  }
+ }
 
  Block::add_Modification( mod , chnl );
-
- }
+}
 
 /*--------------------------------------------------------------------------*/
 /*------ METHODS FOR LOADING, PRINTING & SAVING THE SingleTargetBlock ------*/
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetBlock::print( std::ostream  & output , char vlvl ) const
-{
+void SingleTargetBlock::print( std::ostream & output , char vlvl ) const {
 
- }  // end( SingleTargetBlock::print )
+} // end( SingleTargetBlock::print )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
@@ -1025,7 +1017,7 @@ void SingleTargetBlock::guts_of_destructor( void )
  Constraint::clear( obs2_cnst );
  Constraint::clear( obs4_cnst );
 
- c.clear();  // clear the Objective
+ c.clear(); // clear the Objective
 
  // explicitly reset all Constraint and Variable
  // this is done for the case where this method is called prior to re-loading
@@ -1037,7 +1029,7 @@ void SingleTargetBlock::guts_of_destructor( void )
  //reset_dynamic_variables();
  reset_objective();
 
- }  // end( SingleTargetBlock::guts_of_destructor )
+} // end( SingleTargetBlock::guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/
 
@@ -1062,8 +1054,8 @@ void SingleTargetBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
   *
   * This assumption drastically simplifies some of the logic here.*/
 
-  // C05FunctionModLinRngd - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /*
+ // C05FunctionModLinRngd - - - - - - - - - - - - - - - - - - - - - - - - - -
+ /*
  if( const auto tmod = dynamic_cast< C05FunctionModLinRngd * >( mod ) ) {
 
   auto lfo = static_cast< LinearFunction * const >( tmod->function() );
@@ -1080,66 +1072,62 @@ void SingleTargetBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 
  //throw( std::invalid_argument( "unsupported Modification to SingleTargetBlock" ) );
 
- }  // end( SingleTargetBlock::guts_of_add_Modification )
+} // end( SingleTargetBlock::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------- METHODS OF DCRSolution ------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SingleTargetSolution::deserialize( const netCDF::NcGroup & group )
-{}
+void SingleTargetSolution::deserialize( const netCDF::NcGroup & group ) {}
 
 void SingleTargetSolution::read( const Block * block )
 {
  auto SATB = dynamic_cast< const SingleTargetBlock * >( block );
- if( ! SATB )
+ if( !SATB )
   throw( std::invalid_argument( "block is not a SingleTargetBlock" ) );
 
- if( ! v_zeta.empty() ) {
+ if( !v_zeta.empty() ) {
   v_zeta.resize( 1 );
 
   SATB->get_zeta();
-  }
+ }
 }
 
 void SingleTargetSolution::write( Block * block )
 {
-
- auto SATB = dynamic_cast<SingleTargetBlock * >( block );
- if( ! SATB )
+ auto SATB = dynamic_cast< SingleTargetBlock * >( block );
+ if( !SATB )
   throw( std::invalid_argument( "block is not a SingleTargetBlock" ) );
 
- if( ! v_zeta.empty() ) {
+ if( !v_zeta.empty() ) {
   SATB->set_zeta( v_zeta.begin() );
-  }
-
+ }
 }
 
-void SingleTargetSolution::serialize( netCDF::NcGroup & group ) const
-{}
+void SingleTargetSolution::serialize( netCDF::NcGroup & group ) const {}
 
 SingleTargetSolution * SingleTargetSolution::scale( double factor ) const
 {
-  auto * sol = SingleTargetSolution::clone( true );
-  return( sol );
+ auto * sol = SingleTargetSolution::clone( true );
+ return ( sol );
 }
 
 void SingleTargetSolution::sum( const Solution * solution , double multiplier )
-{}
+{
+}
 
 SingleTargetSolution * SingleTargetSolution::clone( bool empty ) const
 {
-  auto * sol = new SingleTargetSolution();
+ auto * sol = new SingleTargetSolution();
 
  if( empty ) {
-  if( ! v_zeta.empty() )
+  if( !v_zeta.empty() )
    sol->v_zeta.resize( 1 );
-  }
- else {
+ } else {
   sol->v_zeta = v_zeta;
-  }
+ }
 
- return( sol );
+ return ( sol );
 }
 
 /*--------------------------------------------------------------------------*/

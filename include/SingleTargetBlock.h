@@ -16,7 +16,7 @@
 /*--------------------------------------------------------------------------*/
 
 #ifndef __SingleTargetBlock
- #define __SingleTargetBlock  /* self-identification: #endif at the end of the file */
+#define __SingleTargetBlock /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
@@ -39,11 +39,10 @@
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it
-{
- class SingleTargetBlock;     // forward declaration of SingleTargetBlock
+namespace SMSpp_di_unipi_it {
+class SingleTargetBlock; // forward declaration of SingleTargetBlock
 
- class SingleTargetSolution;  // forward declaration of SingleTargetSolution
+class SingleTargetSolution; // forward declaration of SingleTargetSolution
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- SingleTargetBlock-RELATED TYPES ---------------------*/
@@ -51,19 +50,20 @@ namespace SMSpp_di_unipi_it
 /** @defgroup SingleTargetBlock_TYPES SingleTargetBlock-related types
  *  @{ */
 
- using p_SingleTargetBlock = SingleTargetBlock *;  ///< a pointer to SingleTargetBlock
+using p_SingleTargetBlock =
+ SingleTargetBlock *; ///< a pointer to SingleTargetBlock
 
- using Vec_SingleTargetBlock = std::vector< p_SingleTargetBlock>;
- ///< a vector of pointers to SingleTargetBlock
+using Vec_SingleTargetBlock = std::vector< p_SingleTargetBlock >;
+///< a vector of pointers to SingleTargetBlock
 
- using Vec_SingleTargetBlock_it = Vec_SingleTargetBlock::iterator;
- ///< iterator for a Vec_SingleTargetBlock
+using Vec_SingleTargetBlock_it = Vec_SingleTargetBlock::iterator;
+///< iterator for a Vec_SingleTargetBlock
 
- using c_Vec_SingleTargetBlock = const Vec_SingleTargetBlock;
- ///< a const vector of pointers to SingleTargetBlock
+using c_Vec_SingleTargetBlock = const Vec_SingleTargetBlock;
+///< a const vector of pointers to SingleTargetBlock
 
- using c_Vec_SingleTargetBlock_it = c_Vec_SingleTargetBlock::iterator;
- ///< iterator for a c_Vec_SingleTargetBlock
+using c_Vec_SingleTargetBlock_it = c_Vec_SingleTargetBlock::iterator;
+///< iterator for a c_Vec_SingleTargetBlock
 
 /** @}  end( group( SingleTargetBlock_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
@@ -164,11 +164,10 @@ class SingleTargetBlock : public Block
 /*--------------------------------------------------------------------------*/
 
 public:
-
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Public types
+ /** @name Public types
  *
  * SingleTargetBlock defines three main public types:
  *
@@ -216,51 +215,51 @@ public:
 
 /*--------------------------------------------------------------------------*/
 
- typedef double FNumber;                     ///< type of arc flow / deficit
- typedef const FNumber c_FNumber;            ///< a read-only FNumber
+ typedef double FNumber; ///< type of arc flow / deficit
+ typedef const FNumber c_FNumber; ///< a read-only FNumber
 
  typedef std::vector< FNumber > Vec_FNumber; ///< a vector of FNumber
- typedef const Vec_FNumber c_Vec_FNumber;    ///< a const vector of FNumber
+ typedef const Vec_FNumber c_Vec_FNumber; ///< a const vector of FNumber
 
- typedef Vec_FNumber::iterator Vec_FNumber_it;   ///< iterator in Vec_FNumber
+ typedef Vec_FNumber::iterator Vec_FNumber_it; ///< iterator in Vec_FNumber
  typedef Vec_FNumber::const_iterator c_Vec_FNumber_it;
-                                           ///< const iterator in Vec_FNumber
+ ///< const iterator in Vec_FNumber
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double CNumber;                     ///< type of arc cost / potential
- typedef const CNumber c_CNumber;            ///< a read-only CNumber
+ typedef double CNumber; ///< type of arc cost / potential
+ typedef const CNumber c_CNumber; ///< a read-only CNumber
 
- typedef std::vector< CNumber > Vec_CNumber;  ///< a vector of CNumber
- typedef const Vec_CNumber c_Vec_CNumber;     ///< a const vector of CNumber
+ typedef std::vector< CNumber > Vec_CNumber; ///< a vector of CNumber
+ typedef const Vec_CNumber c_Vec_CNumber; ///< a const vector of CNumber
 
- typedef Vec_CNumber::iterator Vec_CNumber_it;   ///< iterator in Vec_CNumber
+ typedef Vec_CNumber::iterator Vec_CNumber_it; ///< iterator in Vec_CNumber
  typedef Vec_CNumber::const_iterator c_Vec_CNumber_it;
-                                           ///< const iterator in Vec_CNumber
+ ///< const iterator in Vec_CNumber
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
  typedef double FONumber;
  /**< type of the objective function: has to hold sums of products of
     FNumber(s) by CNumber(s) */
 
- typedef const FONumber c_FONumber;             ///< a read-only FONumber
+ typedef const FONumber c_FONumber; ///< a read-only FONumber
 
- typedef std::vector< FONumber > Vec_FONumber;  ///< a vector of FONumber
- typedef const Vec_FONumber c_Vec_FONumber;     ///< a const vector of FONumber
+ typedef std::vector< FONumber > Vec_FONumber; ///< a vector of FONumber
+ typedef const Vec_FONumber c_Vec_FONumber; ///< a const vector of FONumber
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*------------------------------- FRIENDS ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- friend SingleTargetSolution;  ///< make SingleTargetSolution friend
+ friend SingleTargetSolution; ///< make SingleTargetSolution friend
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------- CONSTRUCTOR AND DESTRUCTOR -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Constructor and Destructor
+ /** @name Constructor and Destructor
  *  @{ */
 
  /// constructor of SingleTargetBlock, taking a pointer to the father (generic) Block
@@ -268,8 +267,10 @@ public:
   * can be of any type, defaulting to nullptr so that this can also be used as
   * the void constructor. */
 
- explicit SingleTargetBlock( Block *father = nullptr )
-  : Block( father ) , AR1(0), AR2(0), AR3(0) { }
+ explicit SingleTargetBlock( Block * father = nullptr )
+     : Block( father ), AR1( 0 ), AR2( 0 ), AR3( 0 )
+ {
+ }
 
 
 /*--------------------------------------------------------------------------*/
@@ -277,16 +278,16 @@ public:
 
  virtual ~SingleTargetBlock() { guts_of_destructor(); }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Other initializations
+ /** @name Other initializations
  *  @{ */
-  /*
+ /*
   * Like load( std::istream & ), if there is any Solver attached to this
   * SingleTargetBlock then a NBModification (the "nuclear option") is issued. */
 
-  /* Meaning of the parameters in load():
+ /* Meaning of the parameters in load():
   * (i)   n is the number of satellite that should be active by the constellation
   * (ii)  dt is time stpe for the time discretization in seconds
   * (iii) T is the time horizon in hours
@@ -298,64 +299,70 @@ public:
   * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ])
   */
 
-  // for the computation of the parameters, please see ConstellationBlock, where
-  // there is a load() which read an input file in an opportune style with the
-  // parameters of the instance to be solved
+ // for the computation of the parameters, please see ConstellationBlock, where
+ // there is a load() which read an input file in an opportune style with the
+ // parameters of the instance to be solved
 
- void load( FNumber target, FNumber n , FNumber dt , FNumber T , FNumber altValues ,
-              FNumber thetaValues , FNumber indexOrbit, FNumber aHalf ,
-              boost::multi_array< double , 2 > CoverageLat , boost::multi_array< double , 2 > CoverageLong );
+ void load( FNumber target , FNumber n , FNumber dt , FNumber T ,
+            FNumber altValues, FNumber thetaValues, FNumber indexOrbit,
+            FNumber aHalf, boost::multi_array< double, 2 > CoverageLat,
+            boost::multi_array< double, 2 > CoverageLong );
 
- void load( std::istream &input , char frmt = 0 ) override;
+ void load( std::istream & input , char frmt = 0 ) override;
 
- [[nodiscard]] ColVariable * i2p_pi( Index iii , Index jjj ) const {
-  return( const_cast< ColVariable * >( &activation[ iii ][ jjj ] ) );
+ [[nodiscard]] ColVariable * i2p_pi( Index iii , Index jjj ) const
+ {
+  return ( const_cast< ColVariable * >( &activation[ iii ][ jjj ] ) );
  }
 
- [[nodiscard]] ColVariable * i2p_theta( Index iii ) const {
-  return( const_cast< ColVariable * >( &theta[ iii ] ) );
+ [[nodiscard]] ColVariable * i2p_theta( Index iii ) const
+ {
+  return ( const_cast< ColVariable * >( &theta[ iii ] ) );
  }
 
 /*--------------------------------------------------------------------------*/
  /// generate the abstract variables of the DCR
  /** Method that generates the abstract Variable of the SingleTarget. */
 
- void generate_abstract_variables( Configuration *stvv = nullptr ) override;
+ void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the static constraint of the SingleTarget
  /** Method that generates the abstract constraint of the SingleTarget. */
 
- void generate_abstract_constraints( Configuration *stcc = nullptr ) override;
+ void generate_abstract_constraints(
+  Configuration * stcc = nullptr ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the objective of the SingleTarget
  /** Method that generates the objective of the SingleTarget. */
 
- void generate_objective( Configuration *objc = nullptr ) override;
+ void generate_objective( Configuration * objc = nullptr ) override;
 
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------- Methods for reading the data of the SingleTargetBlock ----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the SingleTargetBlock
+ /** @name Methods for reading the data of the SingleTargetBlock
  *  @{ */
 
  /// getting the current sense of the Objective, which is minimization
 
- [[nodiscard]] int get_objective_sense( void ) const override {
-  return( Objective::eMin );
-  }
+ [[nodiscard]] int get_objective_sense( void ) const override
+ {
+  return ( Objective::eMin );
+ }
 
-  FNumber get_activation( Index i , Index j ) const {
-    return( activation[ i ][ j ].get_value() );
-  }
+ FNumber get_activation( Index i , Index j ) const
+ {
+  return ( activation[ i ][ j ].get_value() );
+ }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for checking the Block
+ /** @name Methods for checking the Block
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
@@ -380,8 +387,8 @@ public:
   *
   * - otherwise, it is 0. */
 
- bool is_feasible( bool useabstract = false , Configuration *fsbc = nullptr )
-  override;
+ bool is_feasible( bool useabstract = false ,
+                   Configuration * fsbc = nullptr ) override;
 
 /*--------------------------------------------------------------------------*/
  /// returns true if the current solution is (approximately) optimal
@@ -414,40 +421,39 @@ public:
   *
   * - otherwise, ceps == feps == 0. */
 
- bool is_optimal( bool useabstract = false  , Configuration *optc = nullptr )
-  override;
+ bool is_optimal( bool useabstract = false ,
+                  Configuration * optc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for handling Solution
+ /** @name Methods for handling Solution
  *  @{ */
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// gets the zeta variable
 
- FNumber get_zeta() const {
-   return( zeta[ 0 ].get_value() );
-  }
+ FNumber get_zeta() const { return ( zeta[ 0 ].get_value() ); }
 
-  void set_zeta( c_Vec_FNumber_it fstrt ,
-                 Range rng = Range( 0 , Inf< Index >() ) );
+ void set_zeta( c_Vec_FNumber_it fstrt ,
+                Range rng = Range( 0 , Inf< Index >() ) );
 
-  void set_activation( Index i , Index j , int value ) {
-      activation[ i ][ j ].set_value( value );
-      activation[ i ][ j ].is_fixed( true );
-    }
+ void set_activation( Index i , Index j , int value )
+ {
+  activation[ i ][ j ].set_value( value );
+  activation[ i ][ j ].is_fixed( true );
+ }
 
  /// returns a SingleTargetSolution representing the current solution of this SingleTargetBlock
 
- Solution * get_Solution( Configuration *solc = nullptr ,
+ Solution * get_Solution( Configuration * solc = nullptr ,
                           bool emptys = true ) override;
 
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for handling Modification
+ /** @name Methods for handling Modification
  *  @{ */
 
  /// returns true if there is any Solver "listening to this SingleTargetBlock"
@@ -521,10 +527,10 @@ public:
 
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*---------- METHODS FOR PRINTING & SAVING THE SingleTargetBlock -----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the SingleTargetBlock
+ /** @name Methods for printing & saving the SingleTargetBlock
  *  @{ */
 
  /// print the SingleTargetBlock on an ostream with the given verbosity
@@ -533,12 +539,11 @@ public:
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- protected:
-
+protected:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -547,7 +552,7 @@ public:
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
- unsigned char AR1,AR2,AR3;               ///< bit-wise coded: what abstract is there
+ unsigned char AR1, AR2, AR3; ///< bit-wise coded: what abstract is there
  static constexpr unsigned char HasVar = 1;
  ///< first bit of AR == 1 if the Variable have been constructed
  static constexpr unsigned char HasObj = 2;
@@ -555,45 +560,49 @@ public:
  static constexpr unsigned char HasCnst = 3;
  ///< first bit of AR == 1 if the Constraint have been constructed
 
- Index n;                        ///< the number of satellites
- Index t;                        ///< the total number of time step
- FNumber OrbitSet;               ///< the number of configurations
+ Index n; ///< the number of satellites
+ Index t; ///< the total number of time step
+ FNumber OrbitSet; ///< the number of configurations
  Index targets;
 
  FNumber indexOrbit;
- FNumber dt;                     ///< the time discretization step
- FNumber T;                      ///< the simulation horizon
- FNumber alphaHalf;              ///< the alpha half SingleTarget parameter
+ FNumber dt; ///< the time discretization step
+ FNumber T; ///< the simulation horizon
+ FNumber alphaHalf; ///< the alpha half SingleTarget parameter
 
- FNumber altitudeVal;        ///< vector of SingleTarget altitude values
- FNumber thetaVal;           ///< vector of SingleTarget theta values
+ FNumber altitudeVal; ///< vector of SingleTarget altitude values
+ FNumber thetaVal; ///< vector of SingleTarget theta values
 
- boost::multi_array< double , 2 > CoverageSatLat;  ///< the matrix of pre-computed CoverageSatLat
- boost::multi_array< double , 2 > CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
+ boost::multi_array< double, 2 >
+  CoverageSatLat; ///< the matrix of pre-computed CoverageSatLat
+ boost::multi_array< double, 2 >
+  CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
 
- double f_cond_lower;            ///< conditional lower bound, can be -INF
- double f_cond_upper;            ///< conditional upper bound, can be +INF
+ double f_cond_lower; ///< conditional lower bound, can be -INF
+ double f_cond_upper; ///< conditional upper bound, can be +INF
 
- std::vector< ColVariable > Deltat;   ///< the SingleTarget revisit time
- std::vector< ColVariable > Deltat_k1;   ///< the SingleTarget revisit time (1)
- std::vector< ColVariable > Deltat_k2;   ///< the SingleTarget revisit time (2)
- std::vector< ColVariable > zeta;   ///< the SingleTarget activation variables
- std::vector< ColVariable > b1;   ///< the SingleTarget activation variables
- std::vector< ColVariable > b2;   ///< the SingleTarget activation variables
+ std::vector< ColVariable > Deltat; ///< the SingleTarget revisit time
+ std::vector< ColVariable > Deltat_k1; ///< the SingleTarget revisit time (1)
+ std::vector< ColVariable > Deltat_k2; ///< the SingleTarget revisit time (2)
+ std::vector< ColVariable > zeta; ///< the SingleTarget activation variables
+ std::vector< ColVariable > b1; ///< the SingleTarget activation variables
+ std::vector< ColVariable > b2; ///< the SingleTarget activation variables
 
  std::vector< ColVariable > Deltat_k1A;
  std::vector< ColVariable > Deltat_k2A;
  std::vector< ColVariable > Deltat_k2AUX;
 
- boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
+ boost::multi_array< ColVariable, 2 > xi; ///< the observation variables
  std::vector< ColVariable > h; ///< the two-observation variables
- boost::multi_array< ColVariable , 2 > activation; ///< the observation variables
+ boost::multi_array< ColVariable, 2 >
+  activation; ///< the observation variables
  std::vector< ColVariable > theta; ///< the theta variables
 
  std::vector< ColVariable > d1; ///< the d1 variables
  std::vector< ColVariable > d2; ///< the d2 variables
 
- std::vector< FRowConstraint > orbitSelection; /// the SingleTarget activation constraint
+ std::vector< FRowConstraint >
+  orbitSelection; /// the SingleTarget activation constraint
  std::vector< FRowConstraint > theta_UB; /// the MultiTarget theta constraint
 
  std::vector< FRowConstraint > Deltat_max1; /// the Deltat_max1 constraints
@@ -602,31 +611,44 @@ public:
  std::vector< FRowConstraint > Deltat_max22; /// the Deltat_max1 constraints
  std::vector< FRowConstraint > Deltat_max3; /// the Deltat_max3 constraints
 
- std::vector< FRowConstraint > observation1; ///< the Deltat_min_k1 constraints (1)
- std::vector< FRowConstraint > Deltat_min_k1_1; ///< the Deltat_min_k1 constraints (1)
- std::vector< FRowConstraint > Deltat_min_k1_2; ///< the Deltat_min_k1 constraints (2)
+ std::vector< FRowConstraint >
+  observation1; ///< the Deltat_min_k1 constraints (1)
+ std::vector< FRowConstraint >
+  Deltat_min_k1_1; ///< the Deltat_min_k1 constraints (1)
+ std::vector< FRowConstraint >
+  Deltat_min_k1_2; ///< the Deltat_min_k1 constraints (2)
  std::vector< FRowConstraint > d1_cnst; /// the d1 activation constraint
 
- std::vector< FRowConstraint > Deltat_min_k1_11; ///< the Deltat_min_k1 constraints (1)
+ std::vector< FRowConstraint >
+  Deltat_min_k1_11; ///< the Deltat_min_k1 constraints (1)
  std::vector< FRowConstraint > Deltat_min_k2_11;
 
- std::vector< FRowConstraint > Deltat_min_k2_1; ///< the Deltat_min_k2 constraints (1)
- std::vector< FRowConstraint > Deltat_min_k2_2; ///< the Deltat_min_k2 constraints (2)
+ std::vector< FRowConstraint >
+  Deltat_min_k2_1; ///< the Deltat_min_k2 constraints (1)
+ std::vector< FRowConstraint >
+  Deltat_min_k2_2; ///< the Deltat_min_k2 constraints (2)
  std::vector< FRowConstraint > d2_cnst; /// the d2 activation constraint
  std::vector< FRowConstraint > d2a_cnst; /// the d2 activation constraint
 
  std::vector< FRowConstraint > d1A_cnst;
  std::vector< FRowConstraint > d2A_cnst;
 
- boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the observation constraints
- std::vector< FRowConstraint > activationSat1_cnst; ///< the observation constraints
+ boost::multi_array< FRowConstraint, 2 >
+  activationSat_cnst; ///< the observation constraints
+ std::vector< FRowConstraint >
+  activationSat1_cnst; ///< the observation constraints
 
- std::vector< FRowConstraint > h_cnst_1; ///< the linearization of the product of two zeta's (1)
- std::vector< FRowConstraint > h_cnst_2; ///< the linearization of the product of two zeta's (2)
- std::vector< FRowConstraint > h_cnst_3; ///< the linearization of the product of two zeta's (3)
+ std::vector< FRowConstraint >
+  h_cnst_1; ///< the linearization of the product of two zeta's (1)
+ std::vector< FRowConstraint >
+  h_cnst_2; ///< the linearization of the product of two zeta's (2)
+ std::vector< FRowConstraint >
+  h_cnst_3; ///< the linearization of the product of two zeta's (3)
 
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat
- boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
+ boost::multi_array< FRowConstraint, 2 >
+  obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat
+ boost::multi_array< FRowConstraint, 2 >
+  obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong
 
  std::vector< FRowConstraint > obs_cnst;
  std::vector< FRowConstraint > obs_cnst_h;
@@ -635,19 +657,18 @@ public:
  std::vector< FRowConstraint > Deltat_max_dt;
  std::vector< FRowConstraint > Deltat_max_dt1;
 
- FRealObjective c;               ///< the (linear) objective function
+ FRealObjective c; ///< the (linear) objective function
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- private:
-
+private:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// register SingleTargetBlock methods into the method factories
-/** Although in general private methods should not be commented, this one is
+ /// register SingleTargetBlock methods into the method factories
+ /** Although in general private methods should not be commented, this one is
  * because it does the registration of the following SingleTargetBlock methods*/
 
  void guts_of_destructor( void );
@@ -659,12 +680,12 @@ public:
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- SMSpp_insert_in_factory_h;  // insert SingleTargetBlock in the Block factory
+ SMSpp_insert_in_factory_h; // insert SingleTargetBlock in the Block factory
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SingleTargetBlock ) )
+}; // end( class( SingleTargetBlock ) )
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- CLASS SingleTargetBlockMod -----------------------*/
@@ -686,8 +707,7 @@ class SingleTargetBlockMod : public Modification
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
+public:
 /*---------------------------- PUBLIC TYPES --------------------------------*/
  /// public enum for the types of SingleTargetBlockMod
 
@@ -696,44 +716,43 @@ class SingleTargetBlockMod : public Modification
  /// constructor: takes the SingleTargetBlock and the type
 
  SingleTargetBlockMod( SingleTargetBlock * fblock , int type )
-  : f_Block( fblock ) , f_type( type ) {}
+     : f_Block( fblock ), f_type( type )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SingleTargetBlockMod() = default;   ///< destructor, does nothing
+ virtual ~SingleTargetBlockMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// returns the [DCR]Block to which the SingleTargetBlockMod refers
 
- Block * get_Block( void ) const override  { return( f_Block ); }
+ Block * get_Block( void ) const override { return ( f_Block ); }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
  /// accessor to the type of modification
 
- int type( void ) const { return( f_type ); }
+ int type( void ) const { return ( f_type ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the SingleTargetBlockMod
 
- void print( std::ostream &output ) const override {
-
-  }
+ void print( std::ostream & output ) const override {}
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- SingleTargetBlock *f_Block;
-               ///< pointer to the SingleTargetBlock to which the SingleTargetBlockMod refers
+ SingleTargetBlock * f_Block;
+ ///< pointer to the SingleTargetBlock to which the SingleTargetBlockMod refers
 
- int f_type;   ///< type of Modification
+ int f_type; ///< type of Modification
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SingleTargetBlockMod ) )
+}; // end( class( SingleTargetBlockMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- CLASS SingleTargetBlockRngdMod ---------------------*/
@@ -747,44 +766,46 @@ class SingleTargetBlockRngdMod : public SingleTargetBlockMod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
+public:
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  /// constructor: takes the SingleTargetBlock, the type, and the range
 
- SingleTargetBlockRngdMod( SingleTargetBlock * fblock , int type , Block::Range rng )
-  : SingleTargetBlockMod( fblock , type ) , f_rng( rng ) {}
+ SingleTargetBlockRngdMod( SingleTargetBlock * fblock , int type ,
+                           Block::Range rng )
+     : SingleTargetBlockMod( fblock , type ), f_rng( rng )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SingleTargetBlockRngdMod() = default;   ///< destructor, does nothing
+ virtual ~SingleTargetBlockRngdMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the range
 
- Block::c_Range & rng( void ) const { return( f_rng ); }
+ Block::c_Range & rng( void ) const { return ( f_rng ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the SingleTargetBlockRngdMod
 
- void print( std::ostream &output ) const override {
+ void print( std::ostream & output ) const override
+ {
   SingleTargetBlockMod::print( output );
   output << "[ " << f_rng.first << ", " << f_rng.second << " )" << std::endl;
-  }
+ }
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- Block::Range f_rng;     ///< the range
+ Block::Range f_rng; ///< the range
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SingleTargetBlockRngdMod ) )
+}; // end( class( SingleTargetBlockRngdMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- CLASS SingleTargetBlockSbstMod ---------------------*/
@@ -798,9 +819,7 @@ class SingleTargetBlockSbstMod : public SingleTargetBlockMod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
-
+public:
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  ///< constructor: takes the SingleTargetBlock, the type, and the subset
@@ -812,114 +831,118 @@ class SingleTargetBlockSbstMod : public SingleTargetBlockMod
   *
   * although this is not checked by the class. */
 
- SingleTargetBlockSbstMod( SingleTargetBlock * fblock , int type , Block::Subset && nms )
-  : SingleTargetBlockMod( fblock , type ) , f_nms( std::move( nms ) ) {}
+ SingleTargetBlockSbstMod( SingleTargetBlock * fblock , int type ,
+                           Block::Subset && nms )
+     : SingleTargetBlockMod( fblock , type ), f_nms( std::move( nms ) )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SingleTargetBlockSbstMod() = default;  ///< destructor, does nothing
+ virtual ~SingleTargetBlockSbstMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the subset
 
- Block::c_Subset & nms( void ) const { return( f_nms ); }
+ Block::c_Subset & nms( void ) const { return ( f_nms ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the SingleTargetBlockSbstMod
 
- void print( std::ostream &output ) const override {
+ void print( std::ostream & output ) const override
+ {
   SingleTargetBlockMod::print( output );
   output << "(# " << f_nms.size() << ")" << std::endl;
-  }
+ }
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- Block::Subset f_nms;   ///< the subset
+ Block::Subset f_nms; ///< the subset
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SingleTargetBlockSbstMod ) )
+}; // end( class( SingleTargetBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- CLASS SingleTargetSolution -----------------------*/
 /*--------------------------------------------------------------------------*/
 
-class SingleTargetSolution : public Solution {
-
+class SingleTargetSolution : public Solution
+{
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
 public:
-
 /*------------------------------- FRIENDS ----------------------------------*/
 
-friend SingleTargetBlock;  ///< make SingleTargetBlock friend
+ friend SingleTargetBlock; ///< make SingleTargetBlock friend
 
 /*----------- CONSTRUCTING AND DESTRUCTING SingleTargetSolution ------------*/
 
-  explicit SingleTargetSolution( void ) { }  /// constructor, it has nothing to do
+ explicit SingleTargetSolution( void ) {
+ } /// constructor, it has nothing to do
 
-  void deserialize( const netCDF::NcGroup & group ) override final;
+ void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
- ~SingleTargetSolution() = default;  ///< destructor: it is virtual, and empty
+ ~SingleTargetSolution() = default; ///< destructor: it is virtual, and empty
 
 /*------- METHODS DESCRIBING THE BEHAVIOR OF A SingleTargetSolution --------*/
 
-  void read( const Block * block ) override final;
+ void read( const Block * block ) override final;
 
-  void write( Block * block ) override final;
+ void write( Block * block ) override final;
 
-  void serialize( netCDF::NcGroup & group ) const override final;
+ void serialize( netCDF::NcGroup & group ) const override final;
 
-  SingleTargetSolution * scale( double factor ) const override final;
+ SingleTargetSolution * scale( double factor ) const override final;
 
-  void sum( const Solution * solution , double multiplier ) override final;
+ void sum( const Solution * solution , double multiplier ) override final;
 
-  SingleTargetSolution * clone( bool empty = false ) const override final;
+ SingleTargetSolution * clone( bool empty = false ) const override final;
 
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 
-//protected:
+ //protected:
 
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 
- void print( std::ostream &output ) const override final {
-   //output << "SingleTargetSolution";
+ void print( std::ostream & output ) const override final
+ {
+  //output << "SingleTargetSolution";
  }
 
 /*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
 
-//private:
+ //private:
 
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 
-SingleTargetBlock::Vec_FNumber v_zeta;   ///< the arc flows
+ SingleTargetBlock::Vec_FNumber v_zeta; ///< the arc flows
 
 /*--------------------------------------------------------------------------*/
 
-SMSpp_insert_in_factory_h;
+ SMSpp_insert_in_factory_h;
 
 /*--------------------------------------------------------------------------*/
 
-};  // end( class( SingleTargetSolution ) )
+}; // end( class( SingleTargetSolution ) )
 
 /** @} end( group( SingleTargetBlock_CLASSES ) ) --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( namespace SMSpp_di_unipi_it )
+}; // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* SingleTargetBlock.h included */
+#endif /* SingleTargetBlock.h included */
 
 /*--------------------------------------------------------------------------*/
 /*---------------------- End File SingleTargetBlock.h ----------------------*/

@@ -16,7 +16,7 @@
 /*--------------------------------------------------------------------------*/
 
 #ifndef __ConstellationBlock
- #define __ConstellationBlock  /* self-identification: #endif at the end of the file */
+#define __ConstellationBlock /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
@@ -34,8 +34,7 @@
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it
-{
+namespace SMSpp_di_unipi_it {
 /*--------------------------------------------------------------------------*/
 /*-------------------- ConstellationBlock-RELATED TYPES --------------------*/
 /*--------------------------------------------------------------------------*/
@@ -45,17 +44,17 @@ namespace SMSpp_di_unipi_it
  *
  *  @{ */
 
- using CNumber = SatelliteBlock::CNumber;
- using c_RHSValue = RowConstraint::c_RHSValue;
- using Vec_CNumber = SatelliteBlock::Vec_CNumber;
- using FNumber = SatelliteBlock::FNumber;
- using Vec_FNumber = SatelliteBlock::Vec_FNumber;
+using CNumber = SatelliteBlock::CNumber;
+using c_RHSValue = RowConstraint::c_RHSValue;
+using Vec_CNumber = SatelliteBlock::Vec_CNumber;
+using FNumber = SatelliteBlock::FNumber;
+using Vec_FNumber = SatelliteBlock::Vec_FNumber;
 
- using FMultiVector = std::vector< Vec_FNumber >;
- using CMultiVector = std::vector< Vec_CNumber >;
- using MultiSubset = std::vector< Block::Subset >;
+using FMultiVector = std::vector< Vec_FNumber >;
+using CMultiVector = std::vector< Vec_CNumber >;
+using MultiSubset = std::vector< Block::Subset >;
 
- using Vec_Bool = std::vector< bool >;
+using Vec_Bool = std::vector< bool >;
 
 /** @}  end( types ) */
 /*--------------------------------------------------------------------------*/
@@ -91,37 +90,36 @@ class ConstellationBlock : public Block
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- public:
-
+public:
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- enum MCFType { kMCF , kSPT };
+ enum MCFType { kMCF, kSPT };
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 /*---------------------------- CONSTRUCTOR ---------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Constructor and Destructor
+ /** @name Constructor and Destructor
  *  @{ */
 
  /// constructor of ConstellationBlock
  /** Constructor of ConstellationBlock. It accepts a pointer to the father
   * Block, which can be of any type. */
 
- ConstellationBlock( Block *father = nullptr ) : Block( father ) , AR(0) { }
+ ConstellationBlock( Block * father = nullptr ) : Block( father ), AR( 0 ) {}
 
 /*--------------------------------------------------------------------------*/
  /// destructor of ConstellationBlock
 
  virtual ~ConstellationBlock() { guts_of_destructor(); }
 
-/*@} -----------------------------------------------------------------------*/
+ /*@} -----------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Other initializations
+ /** @name Other initializations
  *  @{ */
 
  /// loads the instance from the given file in the given format
@@ -149,97 +147,123 @@ class ConstellationBlock : public Block
 
 /*--------------------------------------------------------------------------*/
 
- void generate_abstract_constraints( Configuration * stcc = nullptr )
-  override;
+ void generate_abstract_constraints(
+  Configuration * stcc = nullptr ) override;
 
-/**@} ----------------------------------------------------------------------*/
+ /**@} ----------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
 
  bool is_feasible( bool useabstract = false ,
                    Configuration * fsbc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------------- METHODS FOR PRINTING & SAVING THE ConstellationBlock -----*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the ConstellationBlock
+ /** @name Methods for printing & saving the ConstellationBlock
  *  @{ */
 
  /// print the ConstellationBlock on an ostream with the given verbosity
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*----------- Methods for reading the data of the SatelliteBlock -----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the ConstellationBlock
+ /** @name Methods for reading the data of the ConstellationBlock
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
  /// getting the current sense of the Objective, which is minimization
 
- int get_objective_sense( void ) const override final {
-  return( f_sense );
-  }
+ int get_objective_sense( void ) const override final { return ( f_sense ); }
 
 /*--------------------------------------------------------------------------*/
 
  /// public get()-type functions for accessing the current values of the parameters
  /// and the variables
 
-  double get_thetaVar( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_thetaVar() ); }
-  double get_alt( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alt() ); }
-  double get_alpha( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alpha() ); }
-  double get_theta( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_theta() ); }
-  double get_Lat( Index k , Index i , Index n , Index t ) const
-        { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_Delta_lat(i,n,t) ); }
-  double get_Long( Index k , Index i , Index n , Index t ) const
-        { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_Delta_long(i,n,t) ); }
+ double get_thetaVar( Index k ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_thetaVar() );
+ }
+ double get_alt( Index k ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alt() );
+ }
+ double get_alpha( Index k ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alpha() );
+ }
+ double get_theta( Index k ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_theta() );
+ }
+ double get_Lat( Index k , Index i , Index n , Index t ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )
+            ->get_Delta_lat( i , n , t ) );
+ }
+ double get_Long( Index k , Index i , Index n , Index t ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )
+            ->get_Delta_long( i , n , t ) );
+ }
 
-  Index get_horizon( void ) const { return( horizon ); }
+ Index get_horizon( void ) const { return ( horizon ); }
 
-  Index get_timeStep( void ) const { return( time_step ); }
+ Index get_timeStep( void ) const { return ( time_step ); }
 
-  Index get_numSat( void ) const { return( satellites ); }
+ Index get_numSat( void ) const { return ( satellites ); }
 
-  Index get_numTarget( void ) const { return( targets ); }
+ Index get_numTarget( void ) const { return ( targets ); }
 
-  Index get_numTime( void ) const { return( horizon / time_step ); }
+ Index get_numTime( void ) const { return ( horizon / time_step ); }
 
-  Index get_period( Index k ) const { return( periods[ k ] ); }
+ Index get_period( Index k ) const { return ( periods[ k ] ); }
 
-  Index get_numOrbits( Index k ) const { return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_numOrbit() ); }
+ Index get_numOrbits( Index k ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_numOrbit() );
+ }
 
-  double get_zs( Index k ) const {
-    return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_zeta() );
-  }
+ double get_zs( Index k ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_zeta() );
+ }
 
-  double get_xis( Index k , Index n , Index t ) const {
-    return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_xi( n , t ) );
-  }
+ double get_xis( Index k , Index n , Index t ) const
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_xi( n , t ) );
+ }
 
-  double get_activations( Index k , Index j ) const {
-    return( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_activation( j ) );
-  }
+ double get_activations( Index k , Index j ) const
+ {
+  return (
+   static_cast< SatelliteBlock * >( v_Block[ k ] )->get_activation( j ) );
+ }
 
-  void set_activations( Index k , Index j , int value ) {
-    return( static_cast< SatelliteBlock * >( v_Block[ k ] )->set_activation( j , value ) );
-  }
+ void set_activations( Index k , Index j , int value )
+ {
+  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )
+            ->set_activation( j , value ) );
+ }
 
-  void set_zs( Index k , int value ) {
-    return( static_cast< SatelliteBlock * >( v_Block[ k ] )->set_zeta( value ) );
-  }
+ void set_zs( Index k , int value )
+ {
+  return (
+   static_cast< SatelliteBlock * >( v_Block[ k ] )->set_zeta( value ) );
+ }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- protected:
-
+protected:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Protected methods for inserting and extracting
+ /** @name Protected methods for inserting and extracting
  *  @{ */
 
 
@@ -250,7 +274,7 @@ class ConstellationBlock : public Block
 
  //void CmnIntlz( void );
 
-/* @} ----------------------------------------------------------------------*/
+ /* @} ----------------------------------------------------------------------*/
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
@@ -263,8 +287,7 @@ class ConstellationBlock : public Block
 /*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- private:
-
+private:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -275,37 +298,38 @@ class ConstellationBlock : public Block
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- SMSpp_insert_in_factory_h;  // insert it in the Block factory
+ SMSpp_insert_in_factory_h; // insert it in the Block factory
 
 /*--------------------------------------------------------------------------*/
 
- FNumber satellites;   /// the maximum number of satellites in the constellation
- FNumber targets;      /// the number of targets
- FNumber time_step;    /// the time discretization step [seconds]
- FNumber horizon;      /// the simulation horizon [seconds]
- double thetaValF;     /// the Theta values per satellite
+ FNumber satellites; /// the maximum number of satellites in the constellation
+ FNumber targets; /// the number of targets
+ FNumber time_step; /// the time discretization step [seconds]
+ FNumber horizon; /// the simulation horizon [seconds]
+ double thetaValF; /// the Theta values per satellite
 
- Vec_CNumber periods;      /// the number of periods per target
+ Vec_CNumber periods; /// the number of periods per target
 
- boost::multi_array< FRowConstraint , 2 > observation; /// the observation constraints
- boost::multi_array< FRowConstraint , 2 > observation1; /// the observation1 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  observation; /// the observation constraints
+ boost::multi_array< FRowConstraint, 2 >
+  observation1; /// the observation1 constraints
  std::vector< FRowConstraint > thetaM;
 
- };  // end( class( ConstellationBlock ) )
+}; // end( class( ConstellationBlock ) )
 
 /*--------------------------------------------------------------------------*/
 
 /*@}  end( group( ConstellationBlock_CLASSES ) ) ---------------------------*/
 /*--------------------------------------------------------------------------*/
 
- }  // end( namespace SMSpp_di_unipi_it )
+} // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* ConstellationBlock.h included */
+#endif /* ConstellationBlock.h included */
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- End File ConstellationBlock.h ----------------------*/
 /*--------------------------------------------------------------------------*/
-

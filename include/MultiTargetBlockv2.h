@@ -16,7 +16,7 @@
 /*--------------------------------------------------------------------------*/
 
 #ifndef __MultiTargetBlockv2
- #define __MultiTargetBlockv2  /* self-identification: #endif at the end of the file */
+#define __MultiTargetBlockv2 /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
@@ -39,11 +39,10 @@
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it
-{
- class MultiTargetBlockv2;     // forward declaration of MultiTargetBlockv2
+namespace SMSpp_di_unipi_it {
+class MultiTargetBlockv2; // forward declaration of MultiTargetBlockv2
 
- class MultiTargetSolution;  // forward declaration of MultiTargetSolution
+class MultiTargetSolution; // forward declaration of MultiTargetSolution
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- MultiTargetBlockv2-RELATED TYPES --------------------*/
@@ -51,19 +50,20 @@ namespace SMSpp_di_unipi_it
 /** @defgroup MultiTargetBlockv2_TYPES MultiTargetBlockv2-related types
  *  @{ */
 
- using p_MultiTargetBlockv2 = MultiTargetBlockv2 *;  ///< a pointer to MultiTargetBlockv2
+using p_MultiTargetBlockv2 =
+ MultiTargetBlockv2 *; ///< a pointer to MultiTargetBlockv2
 
- using Vec_MultiTargetBlockv2 = std::vector< p_MultiTargetBlockv2>;
- ///< a vector of pointers to MultiTargetBlockv2
+using Vec_MultiTargetBlockv2 = std::vector< p_MultiTargetBlockv2 >;
+///< a vector of pointers to MultiTargetBlockv2
 
- using Vec_MultiTargetBlockv2_it = Vec_MultiTargetBlockv2::iterator;
- ///< iterator for a Vec_MultiTargetBlockv2
+using Vec_MultiTargetBlockv2_it = Vec_MultiTargetBlockv2::iterator;
+///< iterator for a Vec_MultiTargetBlockv2
 
- using c_Vec_MultiTargetBlockv2 = const Vec_MultiTargetBlockv2;
- ///< a const vector of pointers to MultiTargetBlockv2
+using c_Vec_MultiTargetBlockv2 = const Vec_MultiTargetBlockv2;
+///< a const vector of pointers to MultiTargetBlockv2
 
- using c_Vec_MultiTargetBlockv2_it = c_Vec_MultiTargetBlockv2::iterator;
- ///< iterator for a c_Vec_MultiTargetBlockv2
+using c_Vec_MultiTargetBlockv2_it = c_Vec_MultiTargetBlockv2::iterator;
+///< iterator for a c_Vec_MultiTargetBlockv2
 
 /** @}  end( group( MultiTargetBlockv2_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
@@ -85,11 +85,10 @@ class MultiTargetBlockv2 : public Block
 /*--------------------------------------------------------------------------*/
 
 public:
-
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Public types
+ /** @name Public types
  *
  * MultiTargetBlockv2 defines three main public types:
  *
@@ -137,51 +136,51 @@ public:
 
 /*--------------------------------------------------------------------------*/
 
- typedef double FNumber;                     ///< type of arc flow / deficit
- typedef const FNumber c_FNumber;            ///< a read-only FNumber
+ typedef double FNumber; ///< type of arc flow / deficit
+ typedef const FNumber c_FNumber; ///< a read-only FNumber
 
  typedef std::vector< FNumber > Vec_FNumber; ///< a vector of FNumber
- typedef const Vec_FNumber c_Vec_FNumber;    ///< a const vector of FNumber
+ typedef const Vec_FNumber c_Vec_FNumber; ///< a const vector of FNumber
 
- typedef Vec_FNumber::iterator Vec_FNumber_it;   ///< iterator in Vec_FNumber
+ typedef Vec_FNumber::iterator Vec_FNumber_it; ///< iterator in Vec_FNumber
  typedef Vec_FNumber::const_iterator c_Vec_FNumber_it;
-                                           ///< const iterator in Vec_FNumber
+ ///< const iterator in Vec_FNumber
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double CNumber;                     ///< type of arc cost / potential
- typedef const CNumber c_CNumber;            ///< a read-only CNumber
+ typedef double CNumber; ///< type of arc cost / potential
+ typedef const CNumber c_CNumber; ///< a read-only CNumber
 
- typedef std::vector< CNumber > Vec_CNumber;  ///< a vector of CNumber
- typedef const Vec_CNumber c_Vec_CNumber;     ///< a const vector of CNumber
+ typedef std::vector< CNumber > Vec_CNumber; ///< a vector of CNumber
+ typedef const Vec_CNumber c_Vec_CNumber; ///< a const vector of CNumber
 
- typedef Vec_CNumber::iterator Vec_CNumber_it;   ///< iterator in Vec_CNumber
+ typedef Vec_CNumber::iterator Vec_CNumber_it; ///< iterator in Vec_CNumber
  typedef Vec_CNumber::const_iterator c_Vec_CNumber_it;
-                                           ///< const iterator in Vec_CNumber
+ ///< const iterator in Vec_CNumber
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
  typedef double FONumber;
  /**< type of the objective function: has to hold sums of products of
     FNumber(s) by CNumber(s) */
 
- typedef const FONumber c_FONumber;             ///< a read-only FONumber
+ typedef const FONumber c_FONumber; ///< a read-only FONumber
 
- typedef std::vector< FONumber > Vec_FONumber;  ///< a vector of FONumber
- typedef const Vec_FONumber c_Vec_FONumber;     ///< a const vector of FONumber
+ typedef std::vector< FONumber > Vec_FONumber; ///< a vector of FONumber
+ typedef const Vec_FONumber c_Vec_FONumber; ///< a const vector of FONumber
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*------------------------------- FRIENDS ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- friend MultiTargetSolution;  ///< make MultiTargetSolution friend
+ friend MultiTargetSolution; ///< make MultiTargetSolution friend
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------- CONSTRUCTOR AND DESTRUCTOR -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Constructor and Destructor
+ /** @name Constructor and Destructor
  *  @{ */
 
  /// constructor of MultiTargetBlockv2, taking a pointer to the father (generic) Block
@@ -189,8 +188,10 @@ public:
   * can be of any type, defaulting to nullptr so that this can also be used as
   * the void constructor. */
 
- explicit MultiTargetBlockv2( Block *father = nullptr )
-  : Block( father ) , AR1(0), AR2(0), AR3(0) { }
+ explicit MultiTargetBlockv2( Block * father = nullptr )
+     : Block( father ), AR1( 0 ), AR2( 0 ), AR3( 0 )
+ {
+ }
 
 
 /*--------------------------------------------------------------------------*/
@@ -198,55 +199,57 @@ public:
 
  virtual ~MultiTargetBlockv2() { guts_of_destructor(); }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Other initializations
+ /** @name Other initializations
  *  @{ */
-  /*
+ /*
   * Like load( std::istream & ), if there is any Solver attached to this
   * MultiTargetBlockv2 then a NBModification (the "nuclear option") is issued. */
 
  void load( const std::string & input , char frmt = 0 ) override;
 
- void load( std::istream &input , char frmt = 0 ) override;
+ void load( std::istream & input , char frmt = 0 ) override;
 
 /*--------------------------------------------------------------------------*/
  /// generate the abstract variables of the DCR
  /** Method that generates the abstract Variable of the MultiTarget. */
 
- void generate_abstract_variables( Configuration *stvv = nullptr ) override;
+ void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the static constraint of the MultiTarget
  /** Method that generates the abstract constraint of the MultiTarget. */
 
- void generate_abstract_constraints( Configuration *stcc = nullptr ) override;
+ void generate_abstract_constraints(
+  Configuration * stcc = nullptr ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the objective of the MultiTarget
  /** Method that generates the objective of the MultiTarget. */
 
- void generate_objective( Configuration *objc = nullptr ) override;
+ void generate_objective( Configuration * objc = nullptr ) override;
 
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------- Methods for reading the data of the MultiTargetBlockv2 ---------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the MultiTargetBlockv2
+ /** @name Methods for reading the data of the MultiTargetBlockv2
  *  @{ */
 
  /// getting the current sense of the Objective, which is minimization
 
- [[nodiscard]] int get_objective_sense( void ) const override {
-  return( Objective::eMin );
-  }
+ [[nodiscard]] int get_objective_sense( void ) const override
+ {
+  return ( Objective::eMin );
+ }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for checking the Block
+ /** @name Methods for checking the Block
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
@@ -271,8 +274,8 @@ public:
   *
   * - otherwise, it is 0. */
 
- bool is_feasible( bool useabstract = false , Configuration *fsbc = nullptr )
-  override;
+ bool is_feasible( bool useabstract = false ,
+                   Configuration * fsbc = nullptr ) override;
 
 /*--------------------------------------------------------------------------*/
  /// returns true if the current solution is (approximately) optimal
@@ -305,27 +308,27 @@ public:
   *
   * - otherwise, ceps == feps == 0. */
 
- bool is_optimal( bool useabstract = false  , Configuration *optc = nullptr )
-  override;
+ bool is_optimal( bool useabstract = false ,
+                  Configuration * optc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for handling Solution
+ /** @name Methods for handling Solution
  *  @{ */
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
  /// returns a MultiTargetSolution representing the current solution of this MultiTargetBlockv2
 
- Solution * get_Solution( Configuration *solc = nullptr ,
+ Solution * get_Solution( Configuration * solc = nullptr ,
                           bool emptys = true ) override;
 
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for handling Modification
+ /** @name Methods for handling Modification
  *  @{ */
 
  /// returns true if there is any Solver "listening to this MultiTargetBlockv2"
@@ -399,10 +402,10 @@ public:
 
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*---------- METHODS FOR PRINTING & SAVING THE MultiTargetBlockv2 ----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the MultiTargetBlockv2
+ /** @name Methods for printing & saving the MultiTargetBlockv2
  *  @{ */
 
  /// print the MultiTargetBlockv2 on an ostream with the given verbosity
@@ -411,12 +414,11 @@ public:
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- protected:
-
+protected:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -425,7 +427,7 @@ public:
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
- unsigned char AR1,AR2,AR3;               ///< bit-wise coded: what abstract is there
+ unsigned char AR1, AR2, AR3; ///< bit-wise coded: what abstract is there
  static constexpr unsigned char HasVar = 1;
  ///< first bit of AR == 1 if the Variable have been constructed
  static constexpr unsigned char HasObj = 2;
@@ -433,111 +435,143 @@ public:
  static constexpr unsigned char HasCnst = 3;
  ///< first bit of AR == 1 if the Constraint have been constructed
 
- Index n;                        ///< the number of satellites
- Index t;                        ///< the total number of time step
- FNumber OrbitSet;               ///< the number of configurations
+ Index n; ///< the number of satellites
+ Index t; ///< the total number of time step
+ FNumber OrbitSet; ///< the number of configurations
 
- Index tgt;                        ///< the total number of time step
+ Index tgt; ///< the total number of time step
  FNumber targets;
 
  FNumber indexOrbit;
- FNumber dt;                     ///< the time discretization step
- FNumber T;                      ///< the simulation horizon
- FNumber alphaHalf;              ///< the alpha half MultiTarget parameter
+ FNumber dt; ///< the time discretization step
+ FNumber T; ///< the simulation horizon
+ FNumber alphaHalf; ///< the alpha half MultiTarget parameter
 
- FNumber altitudeVal;        ///< vector of MultiTarget altitude values
- FNumber thetaValFinal;           ///< vector of MultiTarget theta values
+ FNumber altitudeVal; ///< vector of MultiTarget altitude values
+ FNumber thetaValFinal; ///< vector of MultiTarget theta values
 
- FNumber satellites;   ///< the number of satellites in the MultiTarget
- FNumber time_step;    ///< the time discretization step
- FNumber horizon;      ///< the simulation horizon [sec]
+ FNumber satellites; ///< the number of satellites in the MultiTarget
+ FNumber time_step; ///< the time discretization step
+ FNumber horizon; ///< the simulation horizon [sec]
 
- boost::multi_array< double , 3 > CoverageSatLat;  ///< the matrix of pre-computed CoverageSatLat
- boost::multi_array< double , 3 > CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
+ boost::multi_array< double, 3 >
+  CoverageSatLat; ///< the matrix of pre-computed CoverageSatLat
+ boost::multi_array< double, 3 >
+  CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
 
- double f_cond_lower;            ///< conditional lower bound, can be -INF
- double f_cond_upper;            ///< conditional upper bound, can be +INF
+ double f_cond_lower; ///< conditional lower bound, can be -INF
+ double f_cond_upper; ///< conditional upper bound, can be +INF
 
- std::vector< ColVariable > theta;   ///< the satellite theta
+ std::vector< ColVariable > theta; ///< the satellite theta
 
- std::vector< ColVariable > Deltat;   ///< the MultiTarget revisit time
- boost::multi_array< ColVariable , 2 > Deltat_k1;   ///< the MultiTarget revisit time (1)
- boost::multi_array< ColVariable , 2 > Deltat_k2;   ///< the MultiTarget revisit time (2)
- boost::multi_array< ColVariable , 2 > zeta;   ///< the MultiTarget activation variables
- boost::multi_array< ColVariable , 2 > b1;   ///< the MultiTarget activation variables
- boost::multi_array< ColVariable , 2 > b2;   ///< the MultiTarget activation variables
+ std::vector< ColVariable > Deltat; ///< the MultiTarget revisit time
+ boost::multi_array< ColVariable, 2 >
+  Deltat_k1; ///< the MultiTarget revisit time (1)
+ boost::multi_array< ColVariable, 2 >
+  Deltat_k2; ///< the MultiTarget revisit time (2)
+ boost::multi_array< ColVariable, 2 >
+  zeta; ///< the MultiTarget activation variables
+ boost::multi_array< ColVariable, 2 >
+  b1; ///< the MultiTarget activation variables
+ boost::multi_array< ColVariable, 2 >
+  b2; ///< the MultiTarget activation variables
 
- boost::multi_array< ColVariable , 2 > Deltat_k1A;
- boost::multi_array< ColVariable , 2 > Deltat_k2A;
- boost::multi_array< ColVariable , 2 > Deltat_k2AUX;
+ boost::multi_array< ColVariable, 2 > Deltat_k1A;
+ boost::multi_array< ColVariable, 2 > Deltat_k2A;
+ boost::multi_array< ColVariable, 2 > Deltat_k2AUX;
 
- boost::multi_array< ColVariable , 3 > xi; ///< the observation variables
- boost::multi_array< ColVariable , 2 > h; ///< the two-observation variables
- boost::multi_array< ColVariable , 2 > activation; ///< the observation variables
+ boost::multi_array< ColVariable, 3 > xi; ///< the observation variables
+ boost::multi_array< ColVariable, 2 > h; ///< the two-observation variables
+ boost::multi_array< ColVariable, 2 >
+  activation; ///< the observation variables
 
- boost::multi_array< ColVariable , 2 > d1; ///< the d1 variables
- boost::multi_array< ColVariable , 2 > d2; ///< the d2 variables
+ boost::multi_array< ColVariable, 2 > d1; ///< the d1 variables
+ boost::multi_array< ColVariable, 2 > d2; ///< the d2 variables
 
- std::vector< FRowConstraint > orbitSelection; /// the MultiTarget activation constraint
- std::vector< FRowConstraint > theta_UB; /// the MultiTarget activation constraint
+ std::vector< FRowConstraint >
+  orbitSelection; /// the MultiTarget activation constraint
+ std::vector< FRowConstraint >
+  theta_UB; /// the MultiTarget activation constraint
 
  //boost::multi_array< FRowConstraint , 3 >  duplicate_pi; /// the duplicate_pi constraints
 
- boost::multi_array< FRowConstraint , 2 > observation1; /// the observation1 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  observation1; /// the observation1 constraints
 
- boost::multi_array< FRowConstraint , 2 >  Deltat_max1; /// the Deltat_max1 constraints
- boost::multi_array< FRowConstraint , 2 >  Deltat_max11; /// the Deltat_max1 constraints
- boost::multi_array< FRowConstraint , 2 >  Deltat_max2; /// the Deltat_max2 constraints
- boost::multi_array< FRowConstraint , 2 >  Deltat_max22; /// the Deltat_max1 constraints
- boost::multi_array< FRowConstraint , 2 >  Deltat_max3; /// the Deltat_max3 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_max1; /// the Deltat_max1 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_max11; /// the Deltat_max1 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_max2; /// the Deltat_max2 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_max22; /// the Deltat_max1 constraints
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_max3; /// the Deltat_max3 constraints
 
- boost::multi_array< FRowConstraint , 2 > Deltat_min_k1_1; ///< the Deltat_min_k1 constraints (1)
- boost::multi_array< FRowConstraint , 2 > Deltat_min_k1_2; ///< the Deltat_min_k1 constraints (2)
- boost::multi_array< FRowConstraint , 2 > d1_cnst; /// the d1 activation constraint
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_min_k1_1; ///< the Deltat_min_k1 constraints (1)
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_min_k1_2; ///< the Deltat_min_k1 constraints (2)
+ boost::multi_array< FRowConstraint, 2 >
+  d1_cnst; /// the d1 activation constraint
 
- boost::multi_array< FRowConstraint , 2 > Deltat_min_k1_11; ///< the Deltat_min_k1 constraints (1)
- boost::multi_array< FRowConstraint , 2 > Deltat_min_k2_11;
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_min_k1_11; ///< the Deltat_min_k1 constraints (1)
+ boost::multi_array< FRowConstraint, 2 > Deltat_min_k2_11;
 
- boost::multi_array< FRowConstraint , 2 > Deltat_min_k2_1; ///< the Deltat_min_k2 constraints (1)
- boost::multi_array< FRowConstraint , 2 > Deltat_min_k2_2; ///< the Deltat_min_k2 constraints (2)
- boost::multi_array< FRowConstraint , 2 > d2_cnst; /// the d2 activation constraint
- boost::multi_array< FRowConstraint , 2 > d2a_cnst; /// the d2 activation constraint
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_min_k2_1; ///< the Deltat_min_k2 constraints (1)
+ boost::multi_array< FRowConstraint, 2 >
+  Deltat_min_k2_2; ///< the Deltat_min_k2 constraints (2)
+ boost::multi_array< FRowConstraint, 2 >
+  d2_cnst; /// the d2 activation constraint
+ boost::multi_array< FRowConstraint, 2 >
+  d2a_cnst; /// the d2 activation constraint
 
- boost::multi_array< FRowConstraint , 2 > d1A_cnst;
- boost::multi_array< FRowConstraint , 2 > d2A_cnst;
+ boost::multi_array< FRowConstraint, 2 > d1A_cnst;
+ boost::multi_array< FRowConstraint, 2 > d2A_cnst;
 
- boost::multi_array< FRowConstraint , 3 > activationSat_cnst; ///< the observation constraints
- boost::multi_array< FRowConstraint , 2 > activationSat1_cnst; ///< the observation constraints
+ boost::multi_array< FRowConstraint, 3 >
+  activationSat_cnst; ///< the observation constraints
+ boost::multi_array< FRowConstraint, 2 >
+  activationSat1_cnst; ///< the observation constraints
 
- boost::multi_array< FRowConstraint , 2 > h_cnst_1; ///< the linearization of the product of two zeta's (1)
- boost::multi_array< FRowConstraint , 2 > h_cnst_2; ///< the linearization of the product of two zeta's (2)
- boost::multi_array< FRowConstraint , 2 > h_cnst_3; ///< the linearization of the product of two zeta's (3)
+ boost::multi_array< FRowConstraint, 2 >
+  h_cnst_1; ///< the linearization of the product of two zeta's (1)
+ boost::multi_array< FRowConstraint, 2 >
+  h_cnst_2; ///< the linearization of the product of two zeta's (2)
+ boost::multi_array< FRowConstraint, 2 >
+  h_cnst_3; ///< the linearization of the product of two zeta's (3)
 
- boost::multi_array< FRowConstraint , 3 > obs1_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (1)
- boost::multi_array< FRowConstraint , 3 > obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (2)
- boost::multi_array< FRowConstraint , 3 > obs3_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (1)
- boost::multi_array< FRowConstraint , 3 > obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (2)
+ boost::multi_array< FRowConstraint, 3 >
+  obs1_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (1)
+ boost::multi_array< FRowConstraint, 3 >
+  obs2_cnst; /// the linearized observation constraints via big-M for CoverageSatLat (2)
+ boost::multi_array< FRowConstraint, 3 >
+  obs3_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (1)
+ boost::multi_array< FRowConstraint, 3 >
+  obs4_cnst; /// the linearized observation constraints via big-M for CoverageSatLong (2)
 
  std::vector< FRowConstraint > obs_cnst;
  std::vector< FRowConstraint > obs_cnst_h;
- boost::multi_array< FRowConstraint , 2 > obs_cnst_xi;
+ boost::multi_array< FRowConstraint, 2 > obs_cnst_xi;
 
  std::vector< FRowConstraint > Deltat_max_dt;
  std::vector< FRowConstraint > Deltat_max_dt1;
 
- FRealObjective c;               ///< the (linear) objective function
+ FRealObjective c; ///< the (linear) objective function
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- private:
-
+private:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// register MultiTargetBlockv2 methods into the method factories
-/** Although in general private methods should not be commented, this one is
+ /// register MultiTargetBlockv2 methods into the method factories
+ /** Although in general private methods should not be commented, this one is
  * because it does the registration of the following MultiTargetBlockv2 methods*/
 
  void guts_of_destructor( void );
@@ -549,12 +583,12 @@ public:
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- SMSpp_insert_in_factory_h;  // insert MultiTargetBlockv2 in the Block factory
+ SMSpp_insert_in_factory_h; // insert MultiTargetBlockv2 in the Block factory
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( MultiTargetBlockv2 ) )
+}; // end( class( MultiTargetBlockv2 ) )
 
 /*--------------------------------------------------------------------------*/
 /*---------------------- CLASS MultiTargetBlockv2Mod -----------------------*/
@@ -576,8 +610,7 @@ class MultiTargetBlockv2Mod : public Modification
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
+public:
 /*---------------------------- PUBLIC TYPES --------------------------------*/
  /// public enum for the types of MultiTargetBlockv2Mod
 
@@ -586,44 +619,43 @@ class MultiTargetBlockv2Mod : public Modification
  /// constructor: takes the MultiTargetBlockv2 and the type
 
  MultiTargetBlockv2Mod( MultiTargetBlockv2 * fblock , int type )
-  : f_Block( fblock ) , f_type( type ) {}
+     : f_Block( fblock ), f_type( type )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~MultiTargetBlockv2Mod() = default;   ///< destructor, does nothing
+ virtual ~MultiTargetBlockv2Mod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// returns the [DCR]Block to which the MultiTargetBlockv2Mod refers
 
- Block * get_Block( void ) const override  { return( f_Block ); }
+ Block * get_Block( void ) const override { return ( f_Block ); }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
  /// accessor to the type of modification
 
- int type( void ) const { return( f_type ); }
+ int type( void ) const { return ( f_type ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the MultiTargetBlockv2Mod
 
- void print( std::ostream &output ) const override {
-
-  }
+ void print( std::ostream & output ) const override {}
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- MultiTargetBlockv2 *f_Block;
-               ///< pointer to the MultiTargetBlockv2 to which the MultiTargetBlockv2Mod refers
+ MultiTargetBlockv2 * f_Block;
+ ///< pointer to the MultiTargetBlockv2 to which the MultiTargetBlockv2Mod refers
 
- int f_type;   ///< type of Modification
+ int f_type; ///< type of Modification
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( MultiTargetBlockv2Mod ) )
+}; // end( class( MultiTargetBlockv2Mod ) )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- CLASS MultiTargetBlockv2RngdMod ---------------------*/
@@ -637,44 +669,46 @@ class MultiTargetBlockv2RngdMod : public MultiTargetBlockv2Mod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
+public:
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  /// constructor: takes the MultiTargetBlockv2, the type, and the range
 
- MultiTargetBlockv2RngdMod( MultiTargetBlockv2 * fblock , int type , Block::Range rng )
-  : MultiTargetBlockv2Mod( fblock , type ) , f_rng( rng ) {}
+ MultiTargetBlockv2RngdMod( MultiTargetBlockv2 * fblock , int type ,
+                            Block::Range rng )
+     : MultiTargetBlockv2Mod( fblock , type ), f_rng( rng )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~MultiTargetBlockv2RngdMod() = default;   ///< destructor, does nothing
+ virtual ~MultiTargetBlockv2RngdMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the range
 
- Block::c_Range & rng( void ) const { return( f_rng ); }
+ Block::c_Range & rng( void ) const { return ( f_rng ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the MultiTargetBlockv2RngdMod
 
- void print( std::ostream &output ) const override {
+ void print( std::ostream & output ) const override
+ {
   MultiTargetBlockv2Mod::print( output );
   output << "[ " << f_rng.first << ", " << f_rng.second << " )" << std::endl;
-  }
+ }
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- Block::Range f_rng;     ///< the range
+ Block::Range f_rng; ///< the range
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( MultiTargetBlockv2RngdMod ) )
+}; // end( class( MultiTargetBlockv2RngdMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- CLASS MultiTargetBlockv2SbstMod ---------------------*/
@@ -688,9 +722,7 @@ class MultiTargetBlockv2SbstMod : public MultiTargetBlockv2Mod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
-
+public:
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  ///< constructor: takes the MultiTargetBlockv2, the type, and the subset
@@ -702,114 +734,117 @@ class MultiTargetBlockv2SbstMod : public MultiTargetBlockv2Mod
   *
   * although this is not checked by the class. */
 
- MultiTargetBlockv2SbstMod( MultiTargetBlockv2 * fblock , int type , Block::Subset && nms )
-  : MultiTargetBlockv2Mod( fblock , type ) , f_nms( std::move( nms ) ) {}
+ MultiTargetBlockv2SbstMod( MultiTargetBlockv2 * fblock , int type ,
+                            Block::Subset && nms )
+     : MultiTargetBlockv2Mod( fblock , type ), f_nms( std::move( nms ) )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~MultiTargetBlockv2SbstMod() = default;  ///< destructor, does nothing
+ virtual ~MultiTargetBlockv2SbstMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the subset
 
- Block::c_Subset & nms( void ) const { return( f_nms ); }
+ Block::c_Subset & nms( void ) const { return ( f_nms ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the MultiTargetBlockv2SbstMod
 
- void print( std::ostream &output ) const override {
+ void print( std::ostream & output ) const override
+ {
   MultiTargetBlockv2Mod::print( output );
   output << "(# " << f_nms.size() << ")" << std::endl;
-  }
+ }
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- Block::Subset f_nms;   ///< the subset
+ Block::Subset f_nms; ///< the subset
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( MultiTargetBlockv2SbstMod ) )
+}; // end( class( MultiTargetBlockv2SbstMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- CLASS MultiTargetSolution ------------------------*/
 /*--------------------------------------------------------------------------*/
 
-class MultiTargetSolution : public Solution {
-
+class MultiTargetSolution : public Solution
+{
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
 public:
-
 /*------------------------------- FRIENDS ----------------------------------*/
 
-friend MultiTargetBlockv2;  ///< make MultiTargetBlockv2 friend
+ friend MultiTargetBlockv2; ///< make MultiTargetBlockv2 friend
 
 /*------------ CONSTRUCTING AND DESTRUCTING MultiTargetSolution ------------*/
 
-  explicit MultiTargetSolution( void ) { }  /// constructor, it has nothing to do
+ explicit MultiTargetSolution( void ) {} /// constructor, it has nothing to do
 
-  void deserialize( const netCDF::NcGroup & group ) override final;
+ void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
- ~MultiTargetSolution() = default;  ///< destructor: it is virtual, and empty
+ ~MultiTargetSolution() = default; ///< destructor: it is virtual, and empty
 
 /*-------- METHODS DESCRIBING THE BEHAVIOR OF A MultiTargetSolution --------*/
 
-  void read( const Block * block ) override final;
+ void read( const Block * block ) override final;
 
-  void write( Block * block ) override final;
+ void write( Block * block ) override final;
 
-  void serialize( netCDF::NcGroup & group ) const override final;
+ void serialize( netCDF::NcGroup & group ) const override final;
 
-  MultiTargetSolution * scale( double factor ) const override final;
+ MultiTargetSolution * scale( double factor ) const override final;
 
-  void sum( const Solution * solution , double multiplier ) override final;
+ void sum( const Solution * solution , double multiplier ) override final;
 
-  MultiTargetSolution * clone( bool empty = false ) const override final;
+ MultiTargetSolution * clone( bool empty = false ) const override final;
 
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 
-//protected:
+ //protected:
 
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 
- void print( std::ostream &output ) const override final {
-   //output << "MultiTargetSolution";
+ void print( std::ostream & output ) const override final
+ {
+  //output << "MultiTargetSolution";
  }
 
 /*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
 
-//private:
+ //private:
 
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 
-MultiTargetBlockv2::Vec_FNumber v_zeta;   ///< the arc flows
+ MultiTargetBlockv2::Vec_FNumber v_zeta; ///< the arc flows
 
 /*--------------------------------------------------------------------------*/
 
-SMSpp_insert_in_factory_h;
+ SMSpp_insert_in_factory_h;
 
 /*--------------------------------------------------------------------------*/
 
-};  // end( class( MultiTargetSolution ) )
+}; // end( class( MultiTargetSolution ) )
 
 /** @} end( group( MultiTargetBlockv2_CLASSES ) ) --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( namespace SMSpp_di_unipi_it )
+}; // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* MultiTargetBlockv2.h included */
+#endif /* MultiTargetBlockv2.h included */
 
 /*--------------------------------------------------------------------------*/
 /*------------------- End File MultiTargetBlockv2.h ------------------------*/

@@ -16,7 +16,7 @@
 /*--------------------------------------------------------------------------*/
 
 #ifndef __SatelliteBlock
- #define __SatelliteBlock  /* self-identification: #endif at the end of the file */
+#define __SatelliteBlock /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
@@ -39,11 +39,10 @@
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it
-{
- class SatelliteBlock;     // forward declaration of SatelliteBlock
+namespace SMSpp_di_unipi_it {
+class SatelliteBlock; // forward declaration of SatelliteBlock
 
- class SatelliteSolution;  // forward declaration of SatelliteSolution
+class SatelliteSolution; // forward declaration of SatelliteSolution
 
 /*--------------------------------------------------------------------------*/
 /*---------------------- SatelliteBlock-RELATED TYPES ----------------------*/
@@ -51,19 +50,19 @@ namespace SMSpp_di_unipi_it
 /** @defgroup SatelliteBlock_TYPES SatelliteBlock-related types
  *  @{ */
 
- using p_SatelliteBlock = SatelliteBlock *;  ///< a pointer to SatelliteBlock
+using p_SatelliteBlock = SatelliteBlock *; ///< a pointer to SatelliteBlock
 
- using Vec_SatelliteBlock = std::vector< p_SatelliteBlock>;
- ///< a vector of pointers to SatelliteBlock
+using Vec_SatelliteBlock = std::vector< p_SatelliteBlock >;
+///< a vector of pointers to SatelliteBlock
 
- using Vec_SatelliteBlock_it = Vec_SatelliteBlock::iterator;
- ///< iterator for a Vec_SatelliteBlock
+using Vec_SatelliteBlock_it = Vec_SatelliteBlock::iterator;
+///< iterator for a Vec_SatelliteBlock
 
- using c_Vec_SatelliteBlock = const Vec_SatelliteBlock;
- ///< a const vector of pointers to SatelliteBlock
+using c_Vec_SatelliteBlock = const Vec_SatelliteBlock;
+///< a const vector of pointers to SatelliteBlock
 
- using c_Vec_SatelliteBlock_it = c_Vec_SatelliteBlock::iterator;
- ///< iterator for a c_Vec_SatelliteBlock
+using c_Vec_SatelliteBlock_it = c_Vec_SatelliteBlock::iterator;
+///< iterator for a c_Vec_SatelliteBlock
 
 /** @}  end( group( SatelliteBlock_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
@@ -124,11 +123,10 @@ class SatelliteBlock : public Block
 /*--------------------------------------------------------------------------*/
 
 public:
-
 /*--------------------------------------------------------------------------*/
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Public types
+ /** @name Public types
  *
  * SatelliteBlock defines three main public types:
  *
@@ -176,51 +174,51 @@ public:
 
 /*--------------------------------------------------------------------------*/
 
- typedef double FNumber;                     ///< type of arc flow / deficit
- typedef const FNumber c_FNumber;            ///< a read-only FNumber
+ typedef double FNumber; ///< type of arc flow / deficit
+ typedef const FNumber c_FNumber; ///< a read-only FNumber
 
  typedef std::vector< FNumber > Vec_FNumber; ///< a vector of FNumber
- typedef const Vec_FNumber c_Vec_FNumber;    ///< a const vector of FNumber
+ typedef const Vec_FNumber c_Vec_FNumber; ///< a const vector of FNumber
 
- typedef Vec_FNumber::iterator Vec_FNumber_it;   ///< iterator in Vec_FNumber
+ typedef Vec_FNumber::iterator Vec_FNumber_it; ///< iterator in Vec_FNumber
  typedef Vec_FNumber::const_iterator c_Vec_FNumber_it;
-                                           ///< const iterator in Vec_FNumber
+ ///< const iterator in Vec_FNumber
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double CNumber;                     ///< type of arc cost / potential
- typedef const CNumber c_CNumber;            ///< a read-only CNumber
+ typedef double CNumber; ///< type of arc cost / potential
+ typedef const CNumber c_CNumber; ///< a read-only CNumber
 
- typedef std::vector< CNumber > Vec_CNumber;  ///< a vector of CNumber
- typedef const Vec_CNumber c_Vec_CNumber;     ///< a const vector of CNumber
+ typedef std::vector< CNumber > Vec_CNumber; ///< a vector of CNumber
+ typedef const Vec_CNumber c_Vec_CNumber; ///< a const vector of CNumber
 
- typedef Vec_CNumber::iterator Vec_CNumber_it;   ///< iterator in Vec_CNumber
+ typedef Vec_CNumber::iterator Vec_CNumber_it; ///< iterator in Vec_CNumber
  typedef Vec_CNumber::const_iterator c_Vec_CNumber_it;
-                                           ///< const iterator in Vec_CNumber
+ ///< const iterator in Vec_CNumber
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
  typedef double FONumber;
  /**< type of the objective function: has to hold sums of products of
     FNumber(s) by CNumber(s) */
 
- typedef const FONumber c_FONumber;             ///< a read-only FONumber
+ typedef const FONumber c_FONumber; ///< a read-only FONumber
 
- typedef std::vector< FONumber > Vec_FONumber;  ///< a vector of FONumber
- typedef const Vec_FONumber c_Vec_FONumber;     ///< a const vector of FONumber
+ typedef std::vector< FONumber > Vec_FONumber; ///< a vector of FONumber
+ typedef const Vec_FONumber c_Vec_FONumber; ///< a const vector of FONumber
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*------------------------------- FRIENDS ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- friend SatelliteSolution;  ///< make SatelliteSolution friend
+ friend SatelliteSolution; ///< make SatelliteSolution friend
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------- CONSTRUCTOR AND DESTRUCTOR -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Constructor and Destructor
+ /** @name Constructor and Destructor
  *  @{ */
 
  /// constructor of SatelliteBlock, taking a pointer to the father (generic) Block
@@ -228,8 +226,10 @@ public:
   * can be of any type, defaulting to nullptr so that this can also be used as
   * the void constructor. */
 
- explicit SatelliteBlock( Block *father = nullptr )
-  : Block( father ) , AR1(0), AR2(0), AR3(0) { }
+ explicit SatelliteBlock( Block * father = nullptr )
+     : Block( father ), AR1( 0 ), AR2( 0 ), AR3( 0 )
+ {
+ }
 
 
 /*--------------------------------------------------------------------------*/
@@ -237,16 +237,16 @@ public:
 
  virtual ~SatelliteBlock() { guts_of_destructor(); }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Other initializations
+ /** @name Other initializations
  *  @{ */
-  /*
+ /*
   * Like load( std::istream & ), if there is any Solver attached to this
   * SatelliteBlock then a NBModification (the "nuclear option") is issued. */
 
-  /* Meaning of the parameters in load():
+ /* Meaning of the parameters in load():
   * (i)   n is the number of targets that should be observed by the constellation
   * (ii)  dt is time stpe for the time discretization in seconds
   * (iii) T is the time horizon in hours
@@ -258,66 +258,72 @@ public:
   * (ix)  CoverageLong is the multiarray with the difference abs(satLong - Longitude[ m ])
   */
 
-  // for the computation of the parameters, please see ConstellationBlock, where
-  // there is a load() which read an input file in an opportune style with the
-  // parameters of the instance to be solved
+ // for the computation of the parameters, please see ConstellationBlock, where
+ // there is a load() which read an input file in an opportune style with the
+ // parameters of the instance to be solved
 
- void load( FNumber n , FNumber dt , FNumber T , FNumber altValues , FNumber thetaValues ,
-              FNumber indexOrbit, FNumber aHalf ,
-              boost::multi_array< double , 3 > CoverageLat , boost::multi_array< double , 3 > CoverageLong ,
-              std::vector< double > periods_tgt );
+ void load( FNumber n , FNumber dt , FNumber T , FNumber altValues ,
+            FNumber thetaValues, FNumber indexOrbit, FNumber aHalf,
+            boost::multi_array< double, 3 > CoverageLat,
+            boost::multi_array< double, 3 > CoverageLong,
+            std::vector< double > periods_tgt );
 
- void load( std::istream &input , char frmt = 0 ) override;
+ void load( std::istream & input , char frmt = 0 ) override;
 
- [[nodiscard]] ColVariable * i2p_r( Index iii , Index jjj ) const {
+ [[nodiscard]] ColVariable * i2p_r( Index iii , Index jjj ) const
+ {
   ///std::cout << iii << "," << jjj << "\n";
-  return( const_cast< ColVariable * >( &xi[ iii ][ jjj ] ) );
+  return ( const_cast< ColVariable * >( &xi[ iii ][ jjj ] ) );
  }
 
- [[nodiscard]] ColVariable * i2p_z() const {
-  return( const_cast< ColVariable * >( &zeta[ 0 ] ) );
+ [[nodiscard]] ColVariable * i2p_z() const
+ {
+  return ( const_cast< ColVariable * >( &zeta[ 0 ] ) );
  }
 
- [[nodiscard]] ColVariable * i2p_theta() const {
-  return( const_cast< ColVariable * >( &thetaVar[ 0 ] ) );
+ [[nodiscard]] ColVariable * i2p_theta() const
+ {
+  return ( const_cast< ColVariable * >( &thetaVar[ 0 ] ) );
  }
 
 /*--------------------------------------------------------------------------*/
  /// generate the abstract variables of the SatelliteBlock
  /** Method that generates the abstract Variable of the Satellite. */
 
- void generate_abstract_variables( Configuration *stvv = nullptr ) override;
+ void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the static constraint of the SatelliteBlock
  /** Method that generates the abstract constraint of the Satellite. */
 
- void generate_abstract_constraints( Configuration *stcc = nullptr ) override;
+ void generate_abstract_constraints(
+  Configuration * stcc = nullptr ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// generate the objective of the SatelliteBlock
  /** Method that generates the objective of the SatelliteBlock. */
 
- void generate_objective( Configuration *objc = nullptr ) override;
+ void generate_objective( Configuration * objc = nullptr ) override;
 
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*----------- Methods for reading the data of the SatelliteBlock -----------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the SatelliteBlock
+ /** @name Methods for reading the data of the SatelliteBlock
  *  @{ */
 
  /// getting the current sense of the Objective, which is minimization
 
- [[nodiscard]] int get_objective_sense( void ) const override {
-  return( Objective::eMin );
-  }
+ [[nodiscard]] int get_objective_sense( void ) const override
+ {
+  return ( Objective::eMin );
+ }
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for checking the Block
+ /** @name Methods for checking the Block
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
@@ -342,8 +348,8 @@ public:
   *
   * - otherwise, it is 0. */
 
- bool is_feasible( bool useabstract = false , Configuration *fsbc = nullptr )
-  override;
+ bool is_feasible( bool useabstract = false ,
+                   Configuration * fsbc = nullptr ) override;
 
 /*--------------------------------------------------------------------------*/
  /// returns true if the current solution is (approximately) optimal
@@ -376,85 +382,93 @@ public:
   *
   * - otherwise, ceps == feps == 0. */
 
- bool is_optimal( bool useabstract = false  , Configuration *optc = nullptr )
-  override;
+ bool is_optimal( bool useabstract = false ,
+                  Configuration * optc = nullptr ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for handling Solution
+ /** @name Methods for handling Solution
  *  @{ */
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// gets the zeta variable
 
- FNumber get_zeta() const {
-   return( zeta[ 0 ].get_value() );
-  }
+ FNumber get_zeta() const { return ( zeta[ 0 ].get_value() ); }
 
-  void set_zeta( c_Vec_FNumber_it fstrt ,
-                 Range rng = Range( 0 , Inf< Index >() ) );
+ void set_zeta( c_Vec_FNumber_it fstrt ,
+                Range rng = Range( 0 , Inf< Index >() ) );
 
-  FNumber get_xi( Index n , Index t ) const {
-    return( xi[ n ][ t ].get_value() );
-  }
+ FNumber get_xi( Index n , Index t ) const
+ {
+  return ( xi[ n ][ t ].get_value() );
+ }
 
-  FNumber get_activation( Index j ) const {
-    return( activation[ j ].get_value() );
-  }
+ FNumber get_activation( Index j ) const
+ {
+  return ( activation[ j ].get_value() );
+ }
 
-  void set_xi1( Index n , Index t , int value) {
-    xi[ n ][ t ].set_value( value );
-  }
+ void set_xi1( Index n , Index t , int value )
+ {
+  xi[ n ][ t ].set_value( value );
+ }
 
-  void set_activation1( Index j , int value ) {
-    activation[ j ].set_value( value );
-  }
+ void set_activation1( Index j , int value )
+ {
+  activation[ j ].set_value( value );
+ }
 
-  void set_zeta1( int value ) {
-    zeta[ 0 ].set_value( value );
-  }
+ void set_zeta1( int value ) { zeta[ 0 ].set_value( value ); }
 
-  void set_activation( Index j , int value ) {
-    activation[ j ].set_value( value );
-    activation[ j ].is_fixed( true );
-  }
+ void set_activation( Index j , int value )
+ {
+  activation[ j ].set_value( value );
+  activation[ j ].is_fixed( true );
+ }
 
-  void set_zeta( int value ) {
-    zeta[ 0 ].set_value( value );
-    zeta[ 0 ].is_fixed( true );
-  }
+ void set_zeta( int value )
+ {
+  zeta[ 0 ].set_value( value );
+  zeta[ 0 ].is_fixed( true );
+ }
 
-  Index get_period( Index k ) const { return( periods[ k ] ); }
+ Index get_period( Index k ) const { return ( periods[ k ] ); }
 
-  Index get_numOrbit( void ) const { return( OrbitSet ); }
+ Index get_numOrbit( void ) const { return ( OrbitSet ); }
 
-  Index get_n( void ) const { return( n ); }
+ Index get_n( void ) const { return ( n ); }
 
-  Index get_t( void ) const { return( t ); }
+ Index get_t( void ) const { return ( t ); }
 
-  double get_horizon( void ) const { return( T ); }
-  double get_timeStep( void ) const { return( dt ); }
+ double get_horizon( void ) const { return ( T ); }
+ double get_timeStep( void ) const { return ( dt ); }
 
-  double get_thetaVar( void ) const { return( thetaVar[0].get_value() ); }
-  double get_theta( void ) const { return( thetaVal ); }
-  double get_alpha( void ) const { return( alphaHalf ); }
+ double get_thetaVar( void ) const { return ( thetaVar[ 0 ].get_value() ); }
+ double get_theta( void ) const { return ( thetaVal ); }
+ double get_alpha( void ) const { return ( alphaHalf ); }
 
-  double get_alt( void ) const { return( altitudeVal ); }
+ double get_alt( void ) const { return ( altitudeVal ); }
 
-  double get_Delta_lat( Index i , Index n , Index t ) const { return( CoverageSatLat[ n ][ t ][ i ] ); }
-  double get_Delta_long( Index i , Index n , Index t ) const { return( CoverageSatLong[ n ][ t ][ i ] ); }
+ double get_Delta_lat( Index i , Index n , Index t ) const
+ {
+  return ( CoverageSatLat[ n ][ t ][ i ] );
+ }
+ double get_Delta_long( Index i , Index n , Index t ) const
+ {
+  return ( CoverageSatLong[ n ][ t ][ i ] );
+ }
 
  /// returns a SatelliteSolution representing the current solution of this SatelliteBlock
 
- Solution * get_Solution( Configuration *solc = nullptr ,
+ Solution * get_Solution( Configuration * solc = nullptr ,
                           bool emptys = true ) override;
 
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for handling Modification
+ /** @name Methods for handling Modification
  *  @{ */
 
  /// returns true if there is any Solver "listening to this SatelliteBlock"
@@ -528,10 +542,10 @@ public:
 
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*------------ METHODS FOR PRINTING & SAVING THE SatelliteBlock ------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the SatelliteBlock
+ /** @name Methods for printing & saving the SatelliteBlock
  *  @{ */
 
  /// print the SatelliteBlock on an ostream with the given verbosity
@@ -540,12 +554,11 @@ public:
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
-/** @} ---------------------------------------------------------------------*/
+ /** @} ---------------------------------------------------------------------*/
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
- protected:
-
+protected:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -554,7 +567,7 @@ public:
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
- unsigned char AR1,AR2,AR3;               ///< bit-wise coded: what abstract is there
+ unsigned char AR1, AR2, AR3; ///< bit-wise coded: what abstract is there
  static constexpr unsigned char HasVar = 1;
  ///< first bit of AR == 1 if the Variable have been constructed
  static constexpr unsigned char HasObj = 2;
@@ -562,57 +575,63 @@ public:
  static constexpr unsigned char HasCnst = 3;
  ///< first bit of AR == 1 if the Constraint have been constructed
 
- Index n;                        ///< the number of targets
- Index t;                        ///< the total number of time step
- FNumber OrbitSet;               ///< the number of configurations
+ Index n; ///< the number of targets
+ Index t; ///< the total number of time step
+ FNumber OrbitSet; ///< the number of configurations
 
  FNumber indexOrbit;
- FNumber dt;                     ///< the time discretization step
- FNumber T;                      ///< the simulation horizon
- FNumber alphaHalf;              ///< the alpha half satellite parameter
+ FNumber dt; ///< the time discretization step
+ FNumber T; ///< the simulation horizon
+ FNumber alphaHalf; ///< the alpha half satellite parameter
 
- FNumber altitudeVal;        ///< vector of satellite altitude values
- FNumber thetaVal;           ///< vector of satellite theta values
+ FNumber altitudeVal; ///< vector of satellite altitude values
+ FNumber thetaVal; ///< vector of satellite theta values
 
- Vec_CNumber periods;      ///< the number of periods per target
+ Vec_CNumber periods; ///< the number of periods per target
 
- boost::multi_array< double , 3 > CoverageSatLat;  ///< the matrix of pre-computed CoverageSatLat
- boost::multi_array< double , 3 > CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
+ boost::multi_array< double, 3 >
+  CoverageSatLat; ///< the matrix of pre-computed CoverageSatLat
+ boost::multi_array< double, 3 >
+  CoverageSatLong; ///< the matrix of pre-computed CoverageSatLong
 
- double f_cond_lower;            ///< conditional lower bound, can be -INF
- double f_cond_upper;            ///< conditional upper bound, can be +INF
+ double f_cond_lower; ///< conditional lower bound, can be -INF
+ double f_cond_upper; ///< conditional upper bound, can be +INF
 
- std::vector< ColVariable > thetaVar;           ///< vector of satellite theta values
+ std::vector< ColVariable > thetaVar; ///< vector of satellite theta values
 
- boost::multi_array< ColVariable , 2 > xi; ///< the observation variables
- std::vector< ColVariable > zeta;   ///< the satellite activation variables
+ boost::multi_array< ColVariable, 2 > xi; ///< the observation variables
+ std::vector< ColVariable > zeta; ///< the satellite activation variables
 
  std::vector< ColVariable > activation; ///< the observation variables
 
- std::vector< FRowConstraint > orbitSelection; /// the satellite activation constraint
+ std::vector< FRowConstraint >
+  orbitSelection; /// the satellite activation constraint
 
  std::vector< FRowConstraint > thetaUB; /// the theta upper bound constraint
  std::vector< FRowConstraint > thetaLB; /// the theta upper bound constraint
 
- std::vector< FRowConstraint > activationSat_cnst_1; /// the theta upper bound constraints
- boost::multi_array< FRowConstraint , 2 > activationSat_cnst; ///< the activation constraints
+ std::vector< FRowConstraint >
+  activationSat_cnst_1; /// the theta upper bound constraints
+ boost::multi_array< FRowConstraint, 2 >
+  activationSat_cnst; ///< the activation constraints
 
- boost::multi_array< FRowConstraint , 2 > obs2_cnst; /// the (big-M linearized) observation constraints for CoverageSatLat
- boost::multi_array< FRowConstraint , 2 > obs4_cnst; /// the (big-M linearized) observation constraints for CoverageSatLong
+ boost::multi_array< FRowConstraint, 2 >
+  obs2_cnst; /// the (big-M linearized) observation constraints for CoverageSatLat
+ boost::multi_array< FRowConstraint, 2 >
+  obs4_cnst; /// the (big-M linearized) observation constraints for CoverageSatLong
 
- FRealObjective c;               ///< the (linear) objective function
+ FRealObjective c; ///< the (linear) objective function
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- private:
-
+private:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// register SatelliteBlock methods into the method factories
-/** Although in general private methods should not be commented, this one is
+ /// register SatelliteBlock methods into the method factories
+ /** Although in general private methods should not be commented, this one is
  * because it does the registration of the following SatelliteBlock methods*/
 
  void guts_of_destructor( void );
@@ -624,12 +643,12 @@ public:
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- SMSpp_insert_in_factory_h;  // insert SatelliteBlock in the Block factory
+ SMSpp_insert_in_factory_h; // insert SatelliteBlock in the Block factory
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlock ) )
+}; // end( class( SatelliteBlock ) )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------- CLASS SatelliteBlockMod -----------------------*/
@@ -651,8 +670,7 @@ class SatelliteBlockMod : public Modification
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
+public:
 /*---------------------------- PUBLIC TYPES --------------------------------*/
  /// public enum for the types of SatelliteBlockMod
 
@@ -661,44 +679,43 @@ class SatelliteBlockMod : public Modification
  /// constructor: takes the SatelliteBlock and the type
 
  SatelliteBlockMod( SatelliteBlock * fblock , int type )
-  : f_Block( fblock ) , f_type( type ) {}
+     : f_Block( fblock ), f_type( type )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SatelliteBlockMod() = default;   ///< destructor, does nothing
+ virtual ~SatelliteBlockMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// returns the [DCR]Block to which the SatelliteBlockMod refers
 
- Block * get_Block( void ) const override  { return( f_Block ); }
+ Block * get_Block( void ) const override { return ( f_Block ); }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
  /// accessor to the type of modification
 
- int type( void ) const { return( f_type ); }
+ int type( void ) const { return ( f_type ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the SatelliteBlockMod
 
- void print( std::ostream &output ) const override {
-
-  }
+ void print( std::ostream & output ) const override {}
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- SatelliteBlock *f_Block;
-               ///< pointer to the SatelliteBlock to which the SatelliteBlockMod refers
+ SatelliteBlock * f_Block;
+ ///< pointer to the SatelliteBlock to which the SatelliteBlockMod refers
 
- int f_type;   ///< type of Modification
+ int f_type; ///< type of Modification
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlockMod ) )
+}; // end( class( SatelliteBlockMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*------------------------ CLASS SatelliteBlockRngdMod ---------------------*/
@@ -712,44 +729,45 @@ class SatelliteBlockRngdMod : public SatelliteBlockMod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
+public:
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  /// constructor: takes the SatelliteBlock, the type, and the range
 
  SatelliteBlockRngdMod( SatelliteBlock * fblock , int type , Block::Range rng )
-  : SatelliteBlockMod( fblock , type ) , f_rng( rng ) {}
+     : SatelliteBlockMod( fblock , type ), f_rng( rng )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SatelliteBlockRngdMod() = default;   ///< destructor, does nothing
+ virtual ~SatelliteBlockRngdMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the range
 
- Block::c_Range & rng( void ) const { return( f_rng ); }
+ Block::c_Range & rng( void ) const { return ( f_rng ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the SatelliteBlockRngdMod
 
- void print( std::ostream &output ) const override {
+ void print( std::ostream & output ) const override
+ {
   SatelliteBlockMod::print( output );
   output << "[ " << f_rng.first << ", " << f_rng.second << " )" << std::endl;
-  }
+ }
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- Block::Range f_rng;     ///< the range
+ Block::Range f_rng; ///< the range
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlockRngdMod ) )
+}; // end( class( SatelliteBlockRngdMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*------------------------ CLASS SatelliteBlockSbstMod ---------------------*/
@@ -763,9 +781,7 @@ class SatelliteBlockSbstMod : public SatelliteBlockMod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
- public:
-
-
+public:
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
  ///< constructor: takes the SatelliteBlock, the type, and the subset
@@ -777,114 +793,117 @@ class SatelliteBlockSbstMod : public SatelliteBlockMod
   *
   * although this is not checked by the class. */
 
- SatelliteBlockSbstMod( SatelliteBlock * fblock , int type , Block::Subset && nms )
-  : SatelliteBlockMod( fblock , type ) , f_nms( std::move( nms ) ) {}
+ SatelliteBlockSbstMod( SatelliteBlock * fblock , int type ,
+                        Block::Subset && nms )
+     : SatelliteBlockMod( fblock , type ), f_nms( std::move( nms ) )
+ {
+ }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SatelliteBlockSbstMod() = default;  ///< destructor, does nothing
+ virtual ~SatelliteBlockSbstMod() = default; ///< destructor, does nothing
 
 /*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 
  /// accessor to the subset
 
- Block::c_Subset & nms( void ) const { return( f_nms ); }
+ Block::c_Subset & nms( void ) const { return ( f_nms ); }
 
 /*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
 
- protected:
-
+protected:
 /*-------------------------- PROTECTED METHODS -----------------------------*/
  /// print the SatelliteBlockSbstMod
 
- void print( std::ostream &output ) const override {
+ void print( std::ostream & output ) const override
+ {
   SatelliteBlockMod::print( output );
   output << "(# " << f_nms.size() << ")" << std::endl;
-  }
+ }
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- Block::Subset f_nms;   ///< the subset
+ Block::Subset f_nms; ///< the subset
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlockSbstMod ) )
+}; // end( class( SatelliteBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
 /*------------------------ CLASS SatelliteSolution -------------------------*/
 /*--------------------------------------------------------------------------*/
 
-class SatelliteSolution : public Solution {
-
+class SatelliteSolution : public Solution
+{
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
 public:
-
 /*------------------------------- FRIENDS ----------------------------------*/
 
-friend SatelliteBlock;  ///< make SatelliteBlock friend
+ friend SatelliteBlock; ///< make SatelliteBlock friend
 
 /*------------- CONSTRUCTING AND DESTRUCTING SatelliteSolution -------------*/
 
-  explicit SatelliteSolution( void ) { }  /// constructor, it has nothing to do
+ explicit SatelliteSolution( void ) {} /// constructor, it has nothing to do
 
-  void deserialize( const netCDF::NcGroup & group ) override final;
+ void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
- ~SatelliteSolution() = default;  ///< destructor: it is virtual, and empty
+ ~SatelliteSolution() = default; ///< destructor: it is virtual, and empty
 
 /*--------- METHODS DESCRIBING THE BEHAVIOR OF A SatelliteSolution ---------*/
 
-  void read( const Block * block ) override final;
+ void read( const Block * block ) override final;
 
-  void write( Block * block ) override final;
+ void write( Block * block ) override final;
 
-  void serialize( netCDF::NcGroup & group ) const override final;
+ void serialize( netCDF::NcGroup & group ) const override final;
 
-  SatelliteSolution * scale( double factor ) const override final;
+ SatelliteSolution * scale( double factor ) const override final;
 
-  void sum( const Solution * solution , double multiplier ) override final;
+ void sum( const Solution * solution , double multiplier ) override final;
 
-  SatelliteSolution * clone( bool empty = false ) const override final;
+ SatelliteSolution * clone( bool empty = false ) const override final;
 
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 
-//protected:
+ //protected:
 
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 
- void print( std::ostream &output ) const override final {
-   //output << "SatelliteSolution";
+ void print( std::ostream & output ) const override final
+ {
+  //output << "SatelliteSolution";
  }
 
 /*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
 
-//private:
+ //private:
 
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 
-SatelliteBlock::Vec_FNumber v_zeta;   ///< the arc flows
+ SatelliteBlock::Vec_FNumber v_zeta; ///< the arc flows
 
 /*--------------------------------------------------------------------------*/
 
-SMSpp_insert_in_factory_h;
+ SMSpp_insert_in_factory_h;
 
 /*--------------------------------------------------------------------------*/
 
-};  // end( class( SatelliteSolution ) )
+}; // end( class( SatelliteSolution ) )
 
 /** @} end( group( SatelliteBlock_CLASSES ) ) --------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( namespace SMSpp_di_unipi_it )
+}; // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* SatelliteBlock.h included */
+#endif /* SatelliteBlock.h included */
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- End File SatelliteBlock.h ------------------------*/

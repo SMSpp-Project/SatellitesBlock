@@ -56,3 +56,21 @@ add_test(NAME ${modName}_test
 set_tests_properties(${modName}_test PROPERTIES LABELS "${modName}")
 
 # --------------------------------------------------------------------------- #
+
+# ----- SatellitesBlock_milp_test -------------------------------------------- #
+# solves a small SCDP instance as a MILP; it needs a MILPSolver, so it is
+# built only when the module is available
+if (NOT TARGET ${modNamespace}::MILPSolver)
+    find_package(MILPSolver QUIET)
+endif ()
+if (TARGET ${modNamespace}::MILPSolver)
+    add_executable(${modName}_milp_test test_milp.cpp)
+    target_link_libraries(${modName}_milp_test PRIVATE
+            ${modNamespace}::${modName} ${modNamespace}::MILPSolver)
+
+    add_test(NAME ${modName}_milp_test
+             COMMAND ${modName}_milp_test
+             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+
+    set_tests_properties(${modName}_milp_test PROPERTIES LABELS "${modName}")
+endif ()
