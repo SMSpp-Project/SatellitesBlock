@@ -11,4 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- initial module skeleton generated from ModuleTemplate
+- ConstellationBlock, SatelliteBlock, SingleTargetBlock, MultiTargetBlock
+  (and its MultiTargetBlockv2 variant) for the continuous Satellite
+  Constellation Design Problem, with the SatelliteSolver heuristic
+
+- module structure generated from ModuleTemplate
+
+### Changed
+
+- sources realigned to the SMS++ style
