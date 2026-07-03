@@ -7,12 +7,10 @@ continuous case: `SatelliteBlock`, `SingleTargetBlock`, `MultiTargetBlock`
 (with its `MultiTargetBlockv2` variant) and the `ConstellationBlock` that
 aggregates them, together with the `SatelliteSolver` heuristic.
 
-### Bibliography
-
-- L. Mencarelli. A MILP approach to minimize the average of maximum revisit
-  times in small satellite constellation design problems. Working paper, 2025.
-- L. Mencarelli. On the Lagrangian relaxation for the satellite constellation
-  design problem. Working paper, 2025.
+The formulations implemented here are described in the working papers
+"A MILP approach to minimize the average of maximum revisit times in small
+satellite constellation design problems" and "On the Lagrangian relaxation
+for the satellite constellation design problem" by L. Mencarelli (2025).
 
 
 ## Getting started
