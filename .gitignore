@@ -31,6 +31,7 @@
 # --- Test binaries ------------------------------------------
 test/SatellitesBlock_test
 test/SatellitesBlock_milp_test
+test/SatellitesBlock_ld_test
 
 # --- CMake --------------------------------------------------
 build/

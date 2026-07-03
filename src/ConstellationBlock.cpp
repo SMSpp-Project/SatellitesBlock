@@ -396,9 +396,10 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
     std::make_pair( static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_z() ,
                     -thetaValF * 0.9 ) );
   }
-  thetaM[ 0 ].set_function( new LinearFunction( std::move( v_var12 ) ) );
-  thetaM[ 0 ].set_rhs( 0.0 ); //Inf< double >()
-  thetaM[ 0 ].set_lhs( -Inf< double >() );
+  thetaM[ 0 ].set_function( new LinearFunction( std::move( v_var12 ) ) ,
+                            eNoBlck );
+  thetaM[ 0 ].set_rhs( 0.0 , eNoBlck ); //Inf< double >()
+  thetaM[ 0 ].set_lhs( -Inf< double >() , eNoBlck );
 
   add_static_constraint( thetaM , "thetaM" );
 
@@ -433,9 +434,9 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
      }
     }
     observation[ i ][ j ].set_function(
-     new LinearFunction( std::move( v_var ) ) );
-    observation[ i ][ j ].set_rhs( Inf< double >() );
-    observation[ i ][ j ].set_lhs( 1.0 );
+     new LinearFunction( std::move( v_var ) ), eNoBlck );
+    observation[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+    observation[ i ][ j ].set_lhs( 1.0 , eNoBlck );
    }
 
    for( Index j = periods[ i ] ; j < maxPeriods ; ++j ) {
@@ -449,9 +450,9 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
     // fake constraints when j \geq periods[ i ]: we simply set 0 * z[ i ] == 0
     // for SatelliteBlock i \in [s], where s is the total number of the satellite
     observation[ i ][ j ].set_function(
-     new LinearFunction( std::move( v_var ) ) );
-    observation[ i ][ j ].set_rhs( 0.0 );
-    observation[ i ][ j ].set_lhs( 0.0 );
+     new LinearFunction( std::move( v_var ) ), eNoBlck );
+    observation[ i ][ j ].set_rhs( 0.0 , eNoBlck );
+    observation[ i ][ j ].set_lhs( 0.0 , eNoBlck );
    }
   }
 
@@ -470,9 +471,9 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
       static_cast< SatelliteBlock * >( v_Block[ k ] )->i2p_r( i , j ), 1.0 ) );
 
     observation1[ i ][ j ].set_function(
-     new LinearFunction( std::move( v_var1 ) ) );
-    observation1[ i ][ j ].set_rhs( 1.0 ); //Inf< double >()
-    observation1[ i ][ j ].set_lhs( -Inf< double >() );
+     new LinearFunction( std::move( v_var1 ) ), eNoBlck );
+    observation1[ i ][ j ].set_rhs( 1.0 , eNoBlck ); //Inf< double >()
+    observation1[ i ][ j ].set_lhs( -Inf< double >() , eNoBlck );
    }
   }
 

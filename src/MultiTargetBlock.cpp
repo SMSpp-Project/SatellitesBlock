@@ -389,9 +389,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
      static_cast< SingleTargetBlock * >( v_Block[ i + 1 ] )->i2p_pi( j , k ),
      -1.0 ) );
     duplicate_pi[ i ][ j ][ k ].set_function(
-     new LinearFunction( std::move( v_vars ) ) );
-    duplicate_pi[ i ][ j ][ k ].set_rhs( 0.0 );
-    duplicate_pi[ i ][ j ][ k ].set_lhs( 0.0 );
+     new LinearFunction( std::move( v_vars ) ), eNoBlck );
+    duplicate_pi[ i ][ j ][ k ].set_rhs( 0.0 , eNoBlck );
+    duplicate_pi[ i ][ j ][ k ].set_lhs( 0.0 , eNoBlck );
    }
   }
  }
@@ -410,9 +410,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
     static_cast< SingleTargetBlock * >( v_Block[ i + 1 ] )->i2p_theta( j ),
     -1.0 ) );
    duplicate_theta[ i ][ j ].set_function(
-    new LinearFunction( std::move( v_vars ) ) );
-   duplicate_theta[ i ][ j ].set_rhs( 0.0 );
-   duplicate_theta[ i ][ j ].set_lhs( 0.0 );
+    new LinearFunction( std::move( v_vars ) ), eNoBlck );
+   duplicate_theta[ i ][ j ].set_rhs( 0.0 , eNoBlck );
+   duplicate_theta[ i ][ j ].set_lhs( 0.0 , eNoBlck );
   }
  }
 
@@ -426,9 +426,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
          for( Index i = 0 ; i < targets  ; ++i ) {
             v_vars.push_back( std::make_pair( static_cast< SingleTargetBlock * >( v_Block[ i ] )->i2p_pi( j , k ), 1.0 ));
          }
-         duplicate_pi[j][k].set_function( new LinearFunction( std::move( v_vars )));
-         duplicate_pi[j][k].set_rhs( 1.0 );
-         duplicate_pi[j][k].set_lhs( -Inf< double >() );
+         duplicate_pi[j][k].set_function( new LinearFunction( std::move( v_vars )) , eNoBlck );
+         duplicate_pi[j][k].set_rhs( 1.0 , eNoBlck );
+         duplicate_pi[j][k].set_lhs( -Inf< double >() , eNoBlck );
       }
    }
 */

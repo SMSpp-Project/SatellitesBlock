@@ -232,26 +232,26 @@ void SatelliteBlock::generate_abstract_variables( Configuration * stvv )
 
  thetaVar.resize( 1 );
  for( auto & var : thetaVar )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( thetaVar );
 
  zeta.resize( 1 );
  for( auto & var : zeta )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( zeta );
 
  activation.resize( OrbitSet );
  for( auto & var : activation )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( activation );
 
  xi.resize( boost::extents[ n ][ t ] );
  for( Index i = 0 ; i < n ; ++i )
   for( Index j = 0 ; j < t ; ++j )
-   xi[ i ][ j ].set_type( ColVariable::kBinary );
+   xi[ i ][ j ].set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( xi );
 
@@ -273,9 +273,9 @@ void SatelliteBlock::generate_abstract_constraints( Configuration * stcc )
  var_theta1.push_back( std::make_pair( &thetaVar[ 0 ] , 1.0 ) );
  var_theta1.push_back( std::make_pair( &zeta[ 0 ] , -thetaVal ) );
  LinearFunction * FunctTheta1 = new LinearFunction( std::move( var_theta1 ) );
- thetaUB[ 0 ].set_rhs( 0.0 );
- thetaUB[ 0 ].set_lhs( -Inf< double >() );
- thetaUB[ 0 ].set_function( FunctTheta1 );
+ thetaUB[ 0 ].set_rhs( 0.0 , eNoBlck );
+ thetaUB[ 0 ].set_lhs( -Inf< double >() , eNoBlck );
+ thetaUB[ 0 ].set_function( FunctTheta1 , eNoBlck );
 
  add_static_constraint( thetaUB );
 
@@ -284,9 +284,9 @@ void SatelliteBlock::generate_abstract_constraints( Configuration * stcc )
  var_theta2.push_back( std::make_pair( &thetaVar[ 0 ] , 1.0 ) );
  var_theta2.push_back( std::make_pair( &zeta[ 0 ] , -thetaVal / 20 ) );
  LinearFunction * FunctTheta2 = new LinearFunction( std::move( var_theta2 ) );
- thetaLB[ 0 ].set_rhs( Inf< double >() );
- thetaLB[ 0 ].set_lhs( 0.0 );
- thetaLB[ 0 ].set_function( FunctTheta2 );
+ thetaLB[ 0 ].set_rhs( Inf< double >() , eNoBlck );
+ thetaLB[ 0 ].set_lhs( 0.0 , eNoBlck );
+ thetaLB[ 0 ].set_function( FunctTheta2 , eNoBlck );
 
  add_static_constraint( thetaLB );
 
@@ -301,9 +301,9 @@ void SatelliteBlock::generate_abstract_constraints( Configuration * stcc )
  }
  orbit_var.push_back( std::make_pair( &zeta[ 0 ] , -1.0 ) );
  LinearFunction * FunctAnm = new LinearFunction( std::move( orbit_var ) );
- orbitSelection[ 0 ].set_rhs( 0.0 );
- orbitSelection[ 0 ].set_lhs( 0.0 );
- orbitSelection[ 0 ].set_function( FunctAnm );
+ orbitSelection[ 0 ].set_rhs( 0.0 , eNoBlck );
+ orbitSelection[ 0 ].set_lhs( 0.0 , eNoBlck );
+ orbitSelection[ 0 ].set_function( FunctAnm , eNoBlck );
 
  add_static_constraint( orbitSelection );
 
@@ -321,9 +321,9 @@ void SatelliteBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back( std::make_pair( &xi[ i ][ j ] , -1.0 ) );
    v_var.push_back( std::make_pair( &zeta[ 0 ] , 1.0 ) );
    LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
-   activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() );
-   activationSat_cnst[ i ][ j ].set_lhs( 0.0 );
-   activationSat_cnst[ i ][ j ].set_function( FunctSat );
+   activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+   activationSat_cnst[ i ][ j ].set_lhs( 0.0 , eNoBlck );
+   activationSat_cnst[ i ][ j ].set_function( FunctSat , eNoBlck );
   }
  }
  add_static_constraint( activationSat_cnst );
@@ -338,9 +338,9 @@ void SatelliteBlock::generate_abstract_constraints( Configuration * stcc )
   }
  }
  LinearFunction * FunctSat_1 = new LinearFunction( std::move( v_var_z ) );
- activationSat_cnst_1[ 0 ].set_rhs( 0.0 );
- activationSat_cnst_1[ 0 ].set_lhs( -Inf< double >() );
- activationSat_cnst_1[ 0 ].set_function( FunctSat_1 );
+ activationSat_cnst_1[ 0 ].set_rhs( 0.0 , eNoBlck );
+ activationSat_cnst_1[ 0 ].set_lhs( -Inf< double >() , eNoBlck );
+ activationSat_cnst_1[ 0 ].set_function( FunctSat_1 , eNoBlck );
 
  add_static_constraint( activationSat_cnst_1 );
 
@@ -394,13 +394,13 @@ void SatelliteBlock::generate_abstract_constraints( Configuration * stcc )
    LinearFunction * Funct1 = new LinearFunction( std::move( v_obs1 ) );
    LinearFunction * Funct2 = new LinearFunction( std::move( v_obs2 ) );
 
-   obs2_cnst[ i ][ j ].set_rhs( Inf< double >() );
-   obs2_cnst[ i ][ j ].set_lhs( -MLAT );
-   obs2_cnst[ i ][ j ].set_function( Funct1 );
+   obs2_cnst[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+   obs2_cnst[ i ][ j ].set_lhs( -MLAT , eNoBlck );
+   obs2_cnst[ i ][ j ].set_function( Funct1 , eNoBlck );
 
-   obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
-   obs4_cnst[ i ][ j ].set_lhs( -MLONG );
-   obs4_cnst[ i ][ j ].set_function( Funct2 );
+   obs4_cnst[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+   obs4_cnst[ i ][ j ].set_lhs( -MLONG , eNoBlck );
+   obs4_cnst[ i ][ j ].set_function( Funct2 , eNoBlck );
   }
  }
 

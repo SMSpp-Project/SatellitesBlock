@@ -244,14 +244,14 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
 
  theta.resize( n );
  for( auto & var : theta )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( theta );
 
  // Deltat is the maximum revisit time (the objective to minimize)
  Deltat.resize( 1 );
  for( auto & var : Deltat )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( Deltat );
 
@@ -259,14 +259,14 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // constraints (see SingleTargetBlock.h)
  Deltat_k1A.resize( t * ( t - 1 ) / 2 );
  for( auto & var : Deltat_k1A )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( Deltat_k1A );
 
  // Delta_k1[ j ] is the maximum revisit time for forward times j's
  Deltat_k1.resize( t - 1 );
  for( auto & var : Deltat_k1 )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( Deltat_k1 );
 
@@ -274,7 +274,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // the computation of Deltat the terms T/2 for forward times j's
  b1.resize( t - 1 );
  for( auto & var : b1 )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( b1 );
 
@@ -282,14 +282,14 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // constraints (see SingleTargetBlock.h)
  Deltat_k2A.resize( t * ( t - 1 ) / 2 );
  for( auto & var : Deltat_k2A )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( Deltat_k2A );
 
  // Delta_k2[ j ] is the maximum revisit time for backward times j's
  Deltat_k2.resize( t - 1 );
  for( auto & var : Deltat_k2 )
-  var.set_type( ColVariable::kNonNegative );
+  var.set_type( ColVariable::kNonNegative , eNoBlck );
 
  add_static_variable( Deltat_k2 );
 
@@ -297,7 +297,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // the computation of Deltat the terms T/2 for backward times j's
  b2.resize( t - 1 );
  for( auto & var : b2 )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( b2 );
 
@@ -305,7 +305,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // observes the current target at time stamp j
  zeta.resize( t );
  for( auto & var : zeta )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( zeta );
 
@@ -315,7 +315,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  activation.resize( boost::extents[ n ][ OrbitSet ] );
  for( Index i = 0 ; i < n ; ++i )
   for( Index j = 0 ; j < OrbitSet ; ++j )
-   activation[ i ][ j ].set_type( ColVariable::kBinary );
+   activation[ i ][ j ].set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( activation );
 
@@ -325,7 +325,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // where t is the total number of time stamps
  h.resize( t * ( t - 1 ) / 2 );
  for( auto & var : h )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( h );
 
@@ -334,7 +334,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  xi.resize( boost::extents[ n ][ t ] );
  for( Index i = 0 ; i < n ; ++i )
   for( Index j = 0 ; j < t ; ++j )
-   xi[ i ][ j ].set_type( ColVariable::kBinary );
+   xi[ i ][ j ].set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( xi );
 
@@ -342,7 +342,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // minimum constraints (see SingleTargetBlock.h)
  d1.resize( t * ( t - 1 ) / 2 );
  for( auto & var : d1 )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( d1 );
 
@@ -350,7 +350,7 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
  // minimum constraints (see SingleTargetBlock.h)
  d2.resize( t * ( t - 1 ) / 2 );
  for( auto & var : d2 )
-  var.set_type( ColVariable::kBinary );
+  var.set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( d2 );
 
@@ -377,9 +377,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   for( Index j = 0 ; j < OrbitSet ; ++j )
    orbit_var.push_back( std::make_pair( &activation[ i ][ j ] , 1.0 ) );
   LinearFunction * FunctAnm = new LinearFunction( std::move( orbit_var ) );
-  orbitSelection[ i ].set_rhs( 1.0 );
-  orbitSelection[ i ].set_lhs( 1.0 );
-  orbitSelection[ i ].set_function( FunctAnm );
+  orbitSelection[ i ].set_rhs( 1.0 , eNoBlck );
+  orbitSelection[ i ].set_lhs( 1.0 , eNoBlck );
+  orbitSelection[ i ].set_function( FunctAnm , eNoBlck );
  }
 
  add_static_constraint( orbitSelection , "orbitSelection" );
@@ -400,9 +400,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back( std::make_pair( &xi[ i ][ j ] , -1.0 ) );
    v_var.push_back( std::make_pair( &zeta[ j ] , 1.0 ) );
    LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
-   activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() );
-   activationSat_cnst[ i ][ j ].set_lhs( 0.0 );
-   activationSat_cnst[ i ][ j ].set_function( FunctSat );
+   activationSat_cnst[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+   activationSat_cnst[ i ][ j ].set_lhs( 0.0 , eNoBlck );
+   activationSat_cnst[ i ][ j ].set_function( FunctSat , eNoBlck );
   }
  }
  add_static_constraint( activationSat_cnst , "activationSat_cnst" );
@@ -423,9 +423,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   }
   v_var.push_back( std::make_pair( &zeta[ i ] , -1.0 ) );
   LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
-  activationSat1_cnst[ i ].set_rhs( Inf< double >() );
-  activationSat1_cnst[ i ].set_lhs( 0.0 );
-  activationSat1_cnst[ i ].set_function( FunctSat );
+  activationSat1_cnst[ i ].set_rhs( Inf< double >() , eNoBlck );
+  activationSat1_cnst[ i ].set_lhs( 0.0 , eNoBlck );
+  activationSat1_cnst[ i ].set_function( FunctSat , eNoBlck );
  }
  add_static_constraint( activationSat1_cnst , "activationSat1_cnst" );
 
@@ -444,9 +444,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back( std::make_pair( &h[ ii ] , -1.0 ) );
    v_var.push_back( std::make_pair( &zeta[ i ] , 1.0 ) );
    LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
-   h_cnst_1[ ii ].set_rhs( Inf< double >() );
-   h_cnst_1[ ii ].set_lhs( 0.0 );
-   h_cnst_1[ ii ].set_function( FunctSat );
+   h_cnst_1[ ii ].set_rhs( Inf< double >() , eNoBlck );
+   h_cnst_1[ ii ].set_lhs( 0.0 , eNoBlck );
+   h_cnst_1[ ii ].set_function( FunctSat , eNoBlck );
    ii += 1;
   }
  }
@@ -463,9 +463,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back( std::make_pair( &h[ ii ] , -1.0 ) );
    v_var.push_back( std::make_pair( &zeta[ j ] , 1.0 ) );
    LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
-   h_cnst_2[ ii ].set_rhs( Inf< double >() );
-   h_cnst_2[ ii ].set_lhs( 0.0 );
-   h_cnst_2[ ii ].set_function( FunctSat );
+   h_cnst_2[ ii ].set_rhs( Inf< double >() , eNoBlck );
+   h_cnst_2[ ii ].set_lhs( 0.0 , eNoBlck );
+   h_cnst_2[ ii ].set_function( FunctSat , eNoBlck );
    ii += 1;
   }
  }
@@ -484,9 +484,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back( std::make_pair( &zeta[ i ] , -1.0 ) );
    v_var.push_back( std::make_pair( &zeta[ j ] , -1.0 ) );
    LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
-   h_cnst_3[ ii ].set_rhs( Inf< double >() );
-   h_cnst_3[ ii ].set_lhs( -1.0 );
-   h_cnst_3[ ii ].set_function( FunctSat );
+   h_cnst_3[ ii ].set_rhs( Inf< double >() , eNoBlck );
+   h_cnst_3[ ii ].set_lhs( -1.0 , eNoBlck );
+   h_cnst_3[ ii ].set_function( FunctSat , eNoBlck );
    ii += 1;
   }
  }
@@ -540,13 +540,13 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    LinearFunction * Funct1 = new LinearFunction( std::move( v_obs1 ) );
    LinearFunction * Funct2 = new LinearFunction( std::move( v_obs2 ) );
 
-   obs2_cnst[ i ][ j ].set_rhs( Inf< double >() );
-   obs2_cnst[ i ][ j ].set_lhs( ( -MLAT ) );
-   obs2_cnst[ i ][ j ].set_function( Funct1 );
+   obs2_cnst[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+   obs2_cnst[ i ][ j ].set_lhs( ( -MLAT ) , eNoBlck );
+   obs2_cnst[ i ][ j ].set_function( Funct1 , eNoBlck );
 
-   obs4_cnst[ i ][ j ].set_rhs( Inf< double >() );
-   obs4_cnst[ i ][ j ].set_lhs( ( -MLONG ) );
-   obs4_cnst[ i ][ j ].set_function( Funct2 );
+   obs4_cnst[ i ][ j ].set_rhs( Inf< double >() , eNoBlck );
+   obs4_cnst[ i ][ j ].set_lhs( ( -MLONG ) , eNoBlck );
+   obs4_cnst[ i ][ j ].set_function( Funct2 , eNoBlck );
   }
  }
 
@@ -559,9 +559,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   v_var_theta.push_back( std::make_pair( &theta[ i ] , 1.0 ) );
   LinearFunction * Funct_theta =
    new LinearFunction( std::move( v_var_theta ) );
-  theta_UB[ i ].set_rhs( thetaVal );
-  theta_UB[ i ].set_lhs( -Inf< double >() );
-  theta_UB[ i ].set_function( Funct_theta );
+  theta_UB[ i ].set_rhs( thetaVal , eNoBlck );
+  theta_UB[ i ].set_lhs( -Inf< double >() , eNoBlck );
+  theta_UB[ i ].set_function( Funct_theta , eNoBlck );
  }
 
  add_static_constraint( theta_UB , "theta_UB" );
@@ -574,9 +574,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
  LinearFunction::v_coeff_pair v_vart1;
  v_vart1.push_back( std::make_pair( &Deltat[ 0 ] , 1.0 ) );
  LinearFunction * Functt1 = new LinearFunction( std::move( v_vart1 ) );
- Deltat_max_dt1[ 0 ].set_rhs( Inf< double >() );
- Deltat_max_dt1[ 0 ].set_lhs( dt );
- Deltat_max_dt1[ 0 ].set_function( Functt1 );
+ Deltat_max_dt1[ 0 ].set_rhs( Inf< double >() , eNoBlck );
+ Deltat_max_dt1[ 0 ].set_lhs( dt , eNoBlck );
+ Deltat_max_dt1[ 0 ].set_function( Functt1 , eNoBlck );
 
  add_static_constraint( Deltat_max_dt1 , "Deltat_max_dt1" );
 
@@ -593,9 +593,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   v_var.push_back( std::make_pair( &Deltat_k1[ i ] , -1.0 ) );
   v_var.push_back( std::make_pair( &b1[ i ] , 0.5 * T ) );
   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-  Deltat_max1[ i ].set_rhs( Inf< double >() );
-  Deltat_max1[ i ].set_lhs( 0.0 );
-  Deltat_max1[ i ].set_function( Funct );
+  Deltat_max1[ i ].set_rhs( Inf< double >() , eNoBlck );
+  Deltat_max1[ i ].set_lhs( 0.0 , eNoBlck );
+  Deltat_max1[ i ].set_function( Funct , eNoBlck );
  }
 
  add_static_constraint( Deltat_max1 , "Deltat_max1" );
@@ -610,9 +610,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   v_var.push_back( std::make_pair( &Deltat_k1[ i ] , 1.0 ) );
   v_var.push_back( std::make_pair( &b1[ i ] , -0.5 * T ) );
   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-  Deltat_max11[ i ].set_rhs( Inf< double >() );
-  Deltat_max11[ i ].set_lhs( 0.0 );
-  Deltat_max11[ i ].set_function( Funct );
+  Deltat_max11[ i ].set_rhs( Inf< double >() , eNoBlck );
+  Deltat_max11[ i ].set_lhs( 0.0 , eNoBlck );
+  Deltat_max11[ i ].set_function( Funct , eNoBlck );
  }
 
  add_static_constraint( Deltat_max11 , "Deltat_max11" );
@@ -630,9 +630,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   v_var.push_back( std::make_pair( &Deltat_k2[ i ] , -1.0 ) );
   v_var.push_back( std::make_pair( &b2[ i ] , 0.5 * T ) );
   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-  Deltat_max2[ i ].set_rhs( Inf< double >() );
-  Deltat_max2[ i ].set_lhs( 0.0 );
-  Deltat_max2[ i ].set_function( Funct );
+  Deltat_max2[ i ].set_rhs( Inf< double >() , eNoBlck );
+  Deltat_max2[ i ].set_lhs( 0.0 , eNoBlck );
+  Deltat_max2[ i ].set_function( Funct , eNoBlck );
  }
 
  add_static_constraint( Deltat_max2 , "Deltat_max2" );
@@ -647,9 +647,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   v_var.push_back( std::make_pair( &Deltat_k2[ i ] , 1.0 ) );
   v_var.push_back( std::make_pair( &b2[ i ] , -0.5 * T ) );
   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-  Deltat_max22[ i ].set_rhs( Inf< double >() );
-  Deltat_max22[ i ].set_lhs( 0.0 );
-  Deltat_max22[ i ].set_function( Funct );
+  Deltat_max22[ i ].set_rhs( Inf< double >() , eNoBlck );
+  Deltat_max22[ i ].set_lhs( 0.0 , eNoBlck );
+  Deltat_max22[ i ].set_function( Funct , eNoBlck );
  }
 
  add_static_constraint( Deltat_max22 , "Deltat_max22" );
@@ -668,9 +668,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back(
     std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
    LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-   Deltat_min_k1_1[ ii ].set_rhs( Inf< double >() );
-   Deltat_min_k1_1[ ii ].set_lhs( -0.5 * T );
-   Deltat_min_k1_1[ ii ].set_function( Funct );
+   Deltat_min_k1_1[ ii ].set_rhs( Inf< double >() , eNoBlck );
+   Deltat_min_k1_1[ ii ].set_lhs( -0.5 * T , eNoBlck );
+   Deltat_min_k1_1[ ii ].set_function( Funct , eNoBlck );
    ii += 1;
   }
  }
@@ -692,9 +692,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
     std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
    v_var.push_back( std::make_pair( &d1[ ii ] , 0.5 * T ) );
    LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-   Deltat_min_k1_2[ ii ].set_rhs( 0.0 );
-   Deltat_min_k1_2[ ii ].set_lhs( -Inf< double >() );
-   Deltat_min_k1_2[ ii ].set_function( Funct );
+   Deltat_min_k1_2[ ii ].set_rhs( 0.0 , eNoBlck );
+   Deltat_min_k1_2[ ii ].set_lhs( -Inf< double >() , eNoBlck );
+   Deltat_min_k1_2[ ii ].set_function( Funct , eNoBlck );
    ii += 1;
   }
  }
@@ -714,9 +714,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    ii += 1;
   }
   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-  d1_cnst[ i ].set_rhs( 1.0 );
-  d1_cnst[ i ].set_lhs( 1.0 );
-  d1_cnst[ i ].set_function( Funct );
+  d1_cnst[ i ].set_rhs( 1.0 , eNoBlck );
+  d1_cnst[ i ].set_lhs( 1.0 , eNoBlck );
+  d1_cnst[ i ].set_function( Funct , eNoBlck );
  }
 
  add_static_constraint( d1_cnst , "d1_cnst" );
@@ -735,9 +735,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_var.push_back(
     std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
    LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-   Deltat_min_k2_1[ ii ].set_rhs( 0.5 * T );
-   Deltat_min_k2_1[ ii ].set_lhs( -Inf< double >() );
-   Deltat_min_k2_1[ ii ].set_function( Funct );
+   Deltat_min_k2_1[ ii ].set_rhs( 0.5 * T , eNoBlck );
+   Deltat_min_k2_1[ ii ].set_lhs( -Inf< double >() , eNoBlck );
+   Deltat_min_k2_1[ ii ].set_function( Funct , eNoBlck );
    ii += 1;
   }
  }
@@ -759,9 +759,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
     std::make_pair( &h[ ii ] , ( ( j - i ) * dt - 0.5 * T ) ) );
    v_var.push_back( std::make_pair( &d2[ ii ] , -0.5 * T ) );
    LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-   Deltat_min_k2_2[ ii ].set_rhs( Inf< double >() );
-   Deltat_min_k2_2[ ii ].set_lhs( 0.0 );
-   Deltat_min_k2_2[ ii ].set_function( Funct );
+   Deltat_min_k2_2[ ii ].set_rhs( Inf< double >() , eNoBlck );
+   Deltat_min_k2_2[ ii ].set_lhs( 0.0 , eNoBlck );
+   Deltat_min_k2_2[ ii ].set_function( Funct , eNoBlck );
    ii += 1;
   }
  }
@@ -781,9 +781,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    ii += 1;
   }
   LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
-  d2_cnst[ i ].set_rhs( 1.0 );
-  d2_cnst[ i ].set_lhs( 1.0 );
-  d2_cnst[ i ].set_function( Funct );
+  d2_cnst[ i ].set_rhs( 1.0 , eNoBlck );
+  d2_cnst[ i ].set_lhs( 1.0 , eNoBlck );
+  d2_cnst[ i ].set_function( Funct , eNoBlck );
  }
 
  add_static_constraint( d2_cnst , "d2_cnst" );
@@ -802,9 +802,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   }
  }
  LinearFunction * FunctA = new LinearFunction( std::move( v_var1 ) );
- obs_cnst_h[ 0 ].set_rhs( Inf< double >() );
- obs_cnst_h[ 0 ].set_lhs( 1.0 );
- obs_cnst_h[ 0 ].set_function( FunctA );
+ obs_cnst_h[ 0 ].set_rhs( Inf< double >() , eNoBlck );
+ obs_cnst_h[ 0 ].set_lhs( 1.0 , eNoBlck );
+ obs_cnst_h[ 0 ].set_function( FunctA , eNoBlck );
 
  add_static_constraint( obs_cnst_h , "obs_cnst_h" );
 
@@ -819,9 +819,9 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
    v_varxi.push_back( std::make_pair( &xi[ i ][ j ] , 1.0 ) );
   }
   LinearFunction * FunctB = new LinearFunction( std::move( v_varxi ) );
-  obs_cnst_xi[ i ].set_rhs( Inf< double >() );
-  obs_cnst_xi[ i ].set_lhs( 3.0 );
-  obs_cnst_xi[ i ].set_function( FunctB );
+  obs_cnst_xi[ i ].set_rhs( Inf< double >() , eNoBlck );
+  obs_cnst_xi[ i ].set_lhs( 3.0 , eNoBlck );
+  obs_cnst_xi[ i ].set_function( FunctB , eNoBlck );
  }
 
  add_static_constraint( obs_cnst_xi , "obs_cnst_xi" );
@@ -834,9 +834,10 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
   for( Index k = 0 ; k < n ; ++k )
    v_var1.push_back( std::make_pair( &xi[ k ][ j ] , 1.0 ) );
 
-  observation1[ j ].set_function( new LinearFunction( std::move( v_var1 ) ) );
-  observation1[ j ].set_rhs( 1.0 ); //Inf< double >()
-  observation1[ j ].set_lhs( -Inf< double >() );
+  observation1[ j ].set_function( new LinearFunction( std::move( v_var1 ) ) ,
+                                  eNoBlck );
+  observation1[ j ].set_rhs( 1.0 , eNoBlck ); //Inf< double >()
+  observation1[ j ].set_lhs( -Inf< double >() , eNoBlck );
  }
  //}
 
@@ -859,8 +860,8 @@ void SingleTargetBlock::generate_objective( Configuration * objc )
 
  LinearFunction * Functobj = new LinearFunction( std::move( p ) );
 
- c.set_function( Functobj );
- set_objective( &c );
+ c.set_function( Functobj , eNoBlck );
+ set_objective( &c , eNoMod );
 
  AR1 |= HasObj;
 

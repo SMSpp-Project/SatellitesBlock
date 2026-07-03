@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- no Modification is issued while constructing the abstract representation
+  (eNoMod/eNoBlck in the generate_* methods): this made the Blocks unusable
+  as sub-Block of a Lagrangian decomposition
+
+### Added
+
+- Lagrangian decomposition test (LagrangianDualSolver + BundleSolver +
+  *MILPSolver) on a small multi-target SCDP instance
+
 ## [0.1.0] - 2026-07-02
 
 ### Added
