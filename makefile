@@ -32,7 +32,10 @@ SBkOBJ = $(SBkSDR)/obj/ConstellationBlock.o \
          $(SBkSDR)/obj/MultiTargetBlockv2.o \
          $(SBkSDR)/obj/SatelliteBlock.o \
          $(SBkSDR)/obj/SatelliteSolver.o \
-         $(SBkSDR)/obj/SingleTargetBlock.o
+         $(SBkSDR)/obj/SingleTargetBlock.o \
+		 $(SBkSDR)/obj/ConstellationBlock_discrete.o \
+		 $(SBkSDR)/obj/SatelliteBlock_discrete.o \
+         $(SBkSDR)/obj/SatelliteSolver_discrete.o 
 
 SBkINC = -I$(SBkSDR)/include
 
@@ -41,7 +44,10 @@ SBkH   = $(SBkSDR)/include/ConstellationBlock.h \
          $(SBkSDR)/include/MultiTargetBlockv2.h \
          $(SBkSDR)/include/SatelliteBlock.h \
          $(SBkSDR)/include/SatelliteSolver.h \
-         $(SBkSDR)/include/SingleTargetBlock.h
+         $(SBkSDR)/include/SingleTargetBlock.h \
+		 $(SBkSDR)/include/ConstellationBlock_discrete.h \
+		 $(SBkSDR)/include/SatelliteBlock_discrete.h \
+         $(SBkSDR)/include/SatelliteSolver_discrete.h 
 
 # clean - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -72,6 +78,18 @@ $(SBkSDR)/obj/SatelliteSolver.o: $(SBkSDR)/src/SatelliteSolver.cpp $(SBkH) $(SMS
 
 $(SBkSDR)/obj/SingleTargetBlock.o: $(SBkSDR)/src/SingleTargetBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/SingleTargetBlock.cpp -o $@ \
+	$(SBkINC) $(SMS++INC) $(SW)
+
+$(SBkSDR)/obj/ConstellationBlock_discrete.o: $(SBkSDR)/src/ConstellationBlock_discrete.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+	$(CC) -c $(SBkSDR)/src/ConstellationBlock_discrete.cpp -o $@ \
+	$(SBkINC) $(SMS++INC) $(SW)
+
+$(SBkSDR)/obj/SatelliteBlock_discrete.o: $(SBkSDR)/src/SatelliteBlock_discrete.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+	$(CC) -c $(SBkSDR)/src/SatelliteBlock_discrete.cpp -o $@ \
+	$(SBkINC) $(SMS++INC) $(SW)
+
+$(SBkSDR)/obj/SatelliteSolver_discrete.o: $(SBkSDR)/src/SatelliteSolver_discrete.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+	$(CC) -c $(SBkSDR)/src/SatelliteSolver_discrete.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
 ########################## End of makefile ###################################

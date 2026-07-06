@@ -24,7 +24,7 @@
 
 #include "BlockSolverConfig.h"
 
-#include "ConstellationBlock_discrete.h"
+#include "ConstellationBlock.h"
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------------- USING -----------------------------------*/
@@ -42,10 +42,10 @@ int main( int argc , char ** argv )
  std::string config = argc > 2 ? argv[ 2 ] : "MILPPar.txt";
 
  // construct a ConstellationBlock via the factory and load the instance
- auto block = dynamic_cast< ConstellationBlock_discrete * >(
-                                    Block::new_Block( "ConstellationBlock_discrete" ) );
+ auto block = dynamic_cast< ConstellationBlock * >(
+                                    Block::new_Block( "ConstellationBlock" ) );
  if( ! block ) {
-  std::cerr << "ConstellationBlock_discrete not present in Block factory" << std::endl;
+  std::cerr << "ConstellationBlock not present in Block factory" << std::endl;
   return( 1 );
   }
 
