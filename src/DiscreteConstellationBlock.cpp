@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*------------------------- File ConstellationBlock_discrete.cpp ---------------------*/
+/*------------------------- File DiscreteConstellationBlock.cpp ------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Implementation of the ConstellationBlock_discrete class.
+ * Implementation of the DiscreteConstellationBlock class.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -18,7 +18,7 @@
 /*------------------------------ INCLUDES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#include "ConstellationBlock_discrete.h"
+#include "DiscreteConstellationBlock.h"
 
 #include <math.h>
 
@@ -45,8 +45,8 @@ using Index = Block::Index;
 /*--------------------------- STATIC MEMBERS -------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-// register ConstellationBlock_discrete to the Block factory
-SMSpp_insert_in_factory_cpp_1( ConstellationBlock_discrete );
+// register DiscreteConstellationBlock to the Block factory
+SMSpp_insert_in_factory_cpp_1( DiscreteConstellationBlock );
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------------- CONSTANTS -------------------------------*/
@@ -64,10 +64,10 @@ static const auto angle0 = -1.3882860164509252;
 /*------------------------ OTHER INITIALIZATIONS ---------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void  ConstellationBlock_discrete::load( std::istream & input , char frmt ){
+void  DiscreteConstellationBlock::load( std::istream & input , char frmt ){
 }
 
-void ConstellationBlock_discrete::load( const std::string & input , char frmt )
+void DiscreteConstellationBlock::load( const std::string & input , char frmt )
 {
 
  // ensure starting from clean slate
@@ -339,7 +339,7 @@ for(Index isat = 0; isat < satellites; ++isat){
          thetaValSat[isat][lll] = thetaValF[lll];
       ellSat[isat] = ell;
       std::cout << "number Orbits: " << indexOrbit << " " << ell << "\n"; 
-      auto SB = new SatelliteBlock_discrete( this );
+      auto SB = new DiscreteSatelliteBlock( this );
       SB->load( indexOrbit , ell );
       v_Block[ isat ] = SB;
  }
@@ -350,11 +350,11 @@ for(Index isat = 0; isat < satellites; ++isat){
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
 
- }  // end( ConstellationBlock_discrete::load( const std::string & input )
+ }  // end( DiscreteConstellationBlock::load( const std::string & input )
 
 /*--------------------------------------------------------------------------*/
 
-void ConstellationBlock_discrete::generate_abstract_variables( Configuration * stvv )
+void DiscreteConstellationBlock::generate_abstract_variables( Configuration * stvv )
 {
 
   for( auto blck : v_Block )
@@ -363,7 +363,7 @@ void ConstellationBlock_discrete::generate_abstract_variables( Configuration * s
 
 /*--------------------------------------------------------------------------*/
 
-void ConstellationBlock_discrete::generate_abstract_constraints( Configuration * stcc )
+void DiscreteConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 {
 
  if( ! ( AR ) ) {   
@@ -374,7 +374,8 @@ void ConstellationBlock_discrete::generate_abstract_constraints( Configuration *
    for( Index k = 0 ; k < satellites ; ++k )
       for( Index o = 0 ; o < indexOrbitSat[k] ; ++o )
          for( Index l = 0 ; l < ellSat[k] ; ++l )
-         v_var12.push_back( std::make_pair( static_cast< SatelliteBlock_discrete * >( v_Block[ k ] )->i2p_y(o,l), thetaValSat[k][l] - 0.9 * thetaValSat[k][0] ));
+         v_var12.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( 
+                  v_Block[ k ] )->i2p_y(o,l), thetaValSat[k][l] - 0.9 * thetaValSat[k][0] ));
 
    thetaM.set_function( new LinearFunction( std::move( v_var12 )));
    thetaM.set_rhs( 0.0 );//Inf< double >()
@@ -402,7 +403,7 @@ void ConstellationBlock_discrete::generate_abstract_constraints( Configuration *
                   for( Index tt = j*pp ; tt < (j+1)*pp ; ++tt ) {
                      obb += obs[k][tt][i][o][l];
                   }
-               v_var.push_back( std::make_pair( static_cast< SatelliteBlock_discrete * >( v_Block[ k ] )->i2p_y( o , l ), obb ));
+               v_var.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ k ] )->i2p_y( o , l ), obb ));
             }
          }
       }
@@ -420,7 +421,7 @@ void ConstellationBlock_discrete::generate_abstract_constraints( Configuration *
          for( Index o = 0 ; o < indexOrbitSat[k] ; ++o ) 
             for( Index l = 0 ; l < ellSat[k] ; ++l ) 
                for( Index tt = j*pp ; tt < (j+1)*pp ; ++tt ) 
-                  v_var.push_back( std::make_pair( static_cast< SatelliteBlock_discrete * >( v_Block[ k ] )->i2p_y( o , l ), 0.0 ));
+                  v_var.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ k ] )->i2p_y( o , l ), 0.0 ));
 
       // fake constraints when j >= periods[i]
       observation[i][j].set_function( new LinearFunction( std::move( v_var )));
@@ -442,7 +443,7 @@ void ConstellationBlock_discrete::generate_abstract_constraints( Configuration *
    for( Index k = 0 ; k < satellites ; ++k ) {
       for( Index o = 0 ; o < indexOrbitSat[k] ; ++o ) {
          for( Index l = 0 ; l < ellSat[k] ; ++l ) {
-            v_var.push_back( std::make_pair( static_cast< SatelliteBlock_discrete * >( v_Block[ k ] )->i2p_y( o , l ), obs[k][j][i][o][l] ));
+            v_var.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ k ] )->i2p_y( o , l ), obs[k][j][i][o][l] ));
          }
       }
    }
@@ -468,10 +469,10 @@ void ConstellationBlock_discrete::generate_abstract_constraints( Configuration *
       if(std::floor(i/3)==std::floor((i+1)/3)){
          for( Index o = 0 ; o < indexOrbitSat[i] ; ++o ) 
             for( Index l = 0 ; l < ellSat[i] ; ++l ) 
-                  v_vars.push_back( std::make_pair( static_cast< SatelliteBlock_discrete * >( v_Block[ i ] )->i2p_y( o , l ), 1.0 ));
+                  v_vars.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ i ] )->i2p_y( o , l ), 1.0 ));
          for( Index o = 0 ; o < indexOrbitSat[i+1] ; ++o ) 
             for( Index l = 0 ; l < ellSat[i+1] ; ++l ) 
-                  v_vars.push_back( std::make_pair( static_cast< SatelliteBlock_discrete * >( v_Block[ i+1 ] )->i2p_y( o , l ), -1.0 ));
+                  v_vars.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ i+1 ] )->i2p_y( o , l ), -1.0 ));
       symmetry[i].set_function( new LinearFunction( std::move( v_vars )));
       symmetry[i].set_rhs( 0.0 ); 
       symmetry[i].set_lhs( -Inf< double >() );
@@ -484,14 +485,14 @@ void ConstellationBlock_discrete::generate_abstract_constraints( Configuration *
    std::cout << "Constraints charged!\n";
 }
 
- }  // end( ConstellationBlock_discrete::generate_abstract_constraints() )
+ }  // end( DiscreteConstellationBlock::generate_abstract_constraints() )
 
 
 /*--------------------------------------------------------------------------*/
-/*---------------- METHODS FOR CHECKING THE UCBlock ------------------------*/
+/*---------------- METHODS FOR CHECKING THE DiscreteConstellationBlock -----*/
 /*--------------------------------------------------------------------------*/
 
-bool ConstellationBlock_discrete::is_feasible( bool useabstract , Configuration * fsbc )
+bool DiscreteConstellationBlock::is_feasible( bool useabstract , Configuration * fsbc )
 {
  // Retrieve the tolerance and the type of violation.
  double tol = 1e-1;
@@ -526,13 +527,13 @@ bool ConstellationBlock_discrete::is_feasible( bool useabstract , Configuration 
   && RowConstraint::is_feasible( observation1, tol , rel_viol )
 );
 
-}  // end( ConstellationBlock_discrete::is_feasible )
+}  // end( DiscreteConstellationBlock::is_feasible )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void ConstellationBlock_discrete::print( std::ostream & output , char vlvl ) const
+void DiscreteConstellationBlock::print( std::ostream & output , char vlvl ) const
 {
  }
 
@@ -540,7 +541,7 @@ void ConstellationBlock_discrete::print( std::ostream & output , char vlvl ) con
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void ConstellationBlock_discrete::guts_of_destructor( void )
+void DiscreteConstellationBlock::guts_of_destructor( void )
 {
  /* clear() all Constraint to ensure that they do not bother to un-register
     themselves from Variable that are going to be deleted anyway. Then
@@ -552,18 +553,8 @@ void ConstellationBlock_discrete::guts_of_destructor( void )
  reset_dynamic_variables();
  reset_objective();
 
- // explicitly reset all Constraint and Variable
- // this is done for the case where this method is called prior to re-loading
- // a new instance: if not, the new representation would be added to the
- // (no longer current) one
- reset_static_constraints();
- // not needed, there isn't any - reset_static_variables();
- // not needed, there isn't any - reset_dynamic_constraints();
- // not needed, there isn't any - reset_dynamic_variables();
- // not needed, there isn't any - reset_objective();
-
  }  // end( guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/
-/*---------------------- End File ConstellationBlock_discrete.cpp -------------------*/
+/*---------------------- End File DiscreteConstellationBlock.cpp -----------*/
 /*--------------------------------------------------------------------------*/

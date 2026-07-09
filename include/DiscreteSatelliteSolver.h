@@ -1,21 +1,21 @@
 /*--------------------------------------------------------------------------*/
-/*------------------ File SatelliteSolver_discrete.h ---------------------*/
+/*------------------ File DiscreteSatelliteSolver.h ------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the SatelliteSolver_discrete class.
+ * Header file for the DiscreteSatelliteSolver class.
  *
- * \author Antonio Frangioni \n
+ * \author Luca Frangioni \n
  *         Dipartimento di Informatica \n
  *         Universita' di Pisa \n
  *
- * \copyright &copy; by Antonio Frangioni
+ * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
 /*----------------------------- DEFINITIONS --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#ifndef __SatelliteSolver_discrete
- #define __SatelliteSolver_discrete
+#ifndef __DiscreteSatelliteSolver
+ #define __DiscreteSatelliteSolver
                       /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
@@ -24,7 +24,7 @@
 
 #include "Solver.h"
 
-#include "SatelliteBlock_discrete.h"
+#include "DiscreteSatelliteBlock.h"
 
 #include "BlockSolverConfig.h"
 
@@ -37,26 +37,21 @@
 /// namespace for the Structured Modeling System++ (SMS++)
 namespace SMSpp_di_unipi_it
 {
-  
- //using namespace MCFClass_di_unipi_it;
- //using Index = Block::Index;
- 
- //class SatelliteSolver_discreteState;  // forward declaration of SatelliteSolver_discreteState
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------- CLASSES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @defgroup SatelliteSolver_discrete_CLASSES Classes in SatelliteSolver_discrete.h
+/** @defgroup DiscreteSatelliteSolver_CLASSES Classes in DiscreteSatelliteSolver.h
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteSolver_discrete --------------*/
+/*-------------------------- CLASS DiscreteSatelliteSolver --------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// Solver for SatelliteBlock_discrete
+/// Solver for DiscreteSatelliteBlock
 
-class SatelliteSolver_discrete : public Solver {
+class DiscreteSatelliteSolver : public Solver {
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
@@ -71,28 +66,28 @@ public:
  *  @{ */
 
 /** @} ---------------------------------------------------------------------*/
-/*----------------- CONSTRUCTING AND DESTRUCTING SatelliteSolver_discrete */
+/*----------------- CONSTRUCTING AND DESTRUCTING DiscreteSatelliteSolver ---*/
 /*--------------------------------------------------------------------------*/
-/** @name Constructing and destructing SatelliteSolver_discrete
+/** @name Constructing and destructing DiscreteSatelliteSolver
  *  @{ */
 
  /// constructor: does nothing special
  /** Void constructor: does nothing special, except verifying that the
   * template argument derives from BenBound. */
 
- SatelliteSolver_discrete( void ) : Solver() { }
+ DiscreteSatelliteSolver( void ) : Solver() { }
 
 /*--------------------------------------------------------------------------*/
  /// destructor: it has to release all the Modifications
 
- virtual ~SatelliteSolver_discrete() { }
+ virtual ~DiscreteSatelliteSolver() { }
 
 /** @} ---------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Other initializations
  *
- * Parameter-wise, SatelliteSolver_discrete maps the parameters of [CDA]Solver
+ * Parameter-wise, DiscreteSatelliteSolver maps the parameters of [CDA]Solver
 **/
 
  /// set the (pointer to the) Block that the Solver has to solve
@@ -106,17 +101,17 @@ public:
   Solver::set_Block( block );  // attach to the new Block
 
   if( block ) {  // this is not just resetting everything
-   auto SATB = dynamic_cast< SatelliteBlock_discrete * >( f_Block );
+   auto SATB = dynamic_cast< DiscreteSatelliteBlock * >( f_Block );
    if( ! SATB )
     throw( std::invalid_argument(
-		         "SatelliteSolver_discrete:set_Block: block must be a SatelliteBlock_discrete" ) );
+		         "DiscreteSatelliteSolver:set_Block: block must be a DiscreteSatelliteBlock" ) );
 
    bool owned = SATB->is_owned_by( f_id );
    if( ( ! owned ) && ( !SATB->read_lock() ) )
-    throw( std::logic_error( "cannot acquire read_lock on SatelliteBlock_discrete" ) );
-   // load the new SatelliteBlock_discrete into the :BenBound object
+    throw( std::logic_error( "cannot acquire read_lock on DiscreteSatelliteBlock" ) );
+   // load the new DiscreteSatelliteBlock into the :BenBound object
 
-   // once done, read_unlock the SatelliteBlock_discrete (if it was read-lock()-ed)
+   // once done, read_unlock the DiscreteSatelliteBlock (if it was read-lock()-ed)
    if( ! owned )
     SATB->read_unlock();
 
@@ -140,7 +135,7 @@ public:
 
   lock();  // first of all, acquire self-lock
 
-  if( ! f_Block )           // there is no [SatelliteBlock_discrete] to solve
+  if( ! f_Block )           // there is no [DiscreteSatelliteBlock] to solve
    return( kBlockLocked );  // return error 
 
   bool owned = f_Block->is_owned_by( f_id );       // check if already locked
@@ -152,9 +147,7 @@ public:
 
   process_outstanding_Modification();
 
-  /****** COMPUTE PROCEDURE ******/
-
-  auto SATB = dynamic_cast< SatelliteBlock_discrete * >( f_Block );
+  auto SATB = dynamic_cast< DiscreteSatelliteBlock * >( f_Block );
   int index = 0;
   eta_min = 0.0;
   double eta;
@@ -164,7 +157,8 @@ public:
 
   for(int j = 0; j < o ; j++){
     for(int tt = 0; tt < ell ; tt++){
-      eta = static_cast< LinearFunction *>(static_cast< FRealObjective *>( SATB->get_objective())->get_function())->get_coefficient(index);
+      eta = static_cast< LinearFunction *>(static_cast< FRealObjective *>
+                ( SATB->get_objective())->get_function())->get_coefficient(index);
       if(eta < eta_min){
         o_min = j;
         ell_min = tt;
@@ -173,8 +167,6 @@ public:
       index++;
     }
   }
-
-  //std::cout << eta_min << " " << ell_min << " " << o_min << std::endl;
 
   unlock();                  // unlock the mutex    
   
@@ -223,7 +215,7 @@ bool has_var_solution( void ) override {
   if( tsolc && ( tsolc->f_value == 2 ) )
    return;
 
-  auto SATB = static_cast< SatelliteBlock_discrete * >( f_Block );
+  auto SATB = static_cast< DiscreteSatelliteBlock * >( f_Block );
   auto o = SATB->get_orbits();
   auto ell = SATB->get_ell();
 
@@ -306,16 +298,16 @@ private:
 
 /*--------------------------------------------------------------------------*/
 
-};  // end( class( SatelliteSolver_discrete ) )
+};  // end( class( DiscreteSatelliteSolver ) )
 }  // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* SatelliteSolver_discrete.h included */
+#endif  /* DiscreteSatelliteSolver.h included */
 
 /*--------------------------------------------------------------------------*/
-/*---------------- End File SatelliteSolver_discrete.h -------------------*/
+/*---------------- End File DiscreteSatelliteSolver.h ----------------------*/
 /*--------------------------------------------------------------------------*/
 
 

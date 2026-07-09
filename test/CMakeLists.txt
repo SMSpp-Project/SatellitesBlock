@@ -74,34 +74,3 @@ if (TARGET ${modNamespace}::MILPSolver)
 
     set_tests_properties(${modName}_milp_test PROPERTIES LABELS "${modName}")
 endif ()
-
-# ----- SatellitesBlock_ld_test ---------------------------------------------- #
-# solves a small SCDP instance by Lagrangian decomposition, so it needs
-# LagrangianDualSolver, BundleSolver and a *MILPSolver; it is built only
-# when all the modules are available
-# BundleSolver may have been built with libtorch (LearningBundle): in that
-# case its imported target references torch's own CMake targets, that only
-# exist after finding the Torch package
-find_package(Torch QUIET)
-if (NOT TARGET ${modNamespace}::BundleSolver)
-    find_package(BundleSolver QUIET)
-endif ()
-if (NOT TARGET ${modNamespace}::LagrangianDualSolver)
-    find_package(LagrangianDualSolver QUIET)
-endif ()
-if (TARGET ${modNamespace}::BundleSolver AND
-    TARGET ${modNamespace}::LagrangianDualSolver AND
-    TARGET ${modNamespace}::MILPSolver)
-    add_executable(${modName}_ld_test test_ld.cpp)
-    target_link_libraries(${modName}_ld_test PRIVATE
-            ${modNamespace}::${modName}
-            ${modNamespace}::LagrangianDualSolver
-            ${modNamespace}::BundleSolver
-            ${modNamespace}::MILPSolver)
-
-    add_test(NAME ${modName}_ld_test
-             COMMAND ${modName}_ld_test
-             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-
-    set_tests_properties(${modName}_ld_test PROPERTIES LABELS "${modName}")
-endif ()

@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*------------------- File SatelliteSolver_discrete.cpp ------------------*/
+/*------------------- File DiscreteSatelliteSolver.cpp ---------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Implementation of the SatelliteSolver_discrete class.
+ * Implementation of the DiscreteSatelliteSolver class.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -20,7 +20,7 @@
 /*------------------------------ INCLUDES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#include "SatelliteSolver_discrete.h"
+#include "DiscreteSatelliteSolver.h"
 
 /*--------------------------------------------------------------------------*/
 /*------------------------- NAMESPACE AND USING ----------------------------*/
@@ -28,10 +28,10 @@
 
 using namespace SMSpp_di_unipi_it;
 
-// register SatelliteSolver_discrete to the Solver factory
+// register DiscreteSatelliteSolver to the Solver factory
 
-SMSpp_insert_in_factory_cpp_0( SatelliteSolver_discrete );
+SMSpp_insert_in_factory_cpp_0( DiscreteSatelliteSolver );
 
 /*--------------------------------------------------------------------------*/
-/*--------------- End File SatelliteSolver_discrete.cpp ------------------*/
+/*--------------- End File DiscreteSatelliteSolver.cpp ---------------------*/
 /*--------------------------------------------------------------------------*/

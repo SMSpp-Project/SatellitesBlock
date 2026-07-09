@@ -38,7 +38,7 @@ using namespace SMSpp_di_unipi_it;
 
 int main( int argc , char ** argv )
 {
- std::string instance = argc > 1 ? argv[ 1 ] : "inputheur";
+ std::string instance = argc > 1 ? argv[ 1 ] : "inputheur-const";
  std::string config = argc > 2 ? argv[ 2 ] : "MILPPar.txt";
 
  // construct a ConstellationBlock via the factory and load the instance

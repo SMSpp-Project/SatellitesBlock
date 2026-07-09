@@ -462,16 +462,6 @@ void MultiTargetBlock::guts_of_destructor( void )
  reset_dynamic_variables();
  reset_objective();
 
- // explicitly reset all Constraint and Variable
- // this is done for the case where this method is called prior to re-loading
- // a new instance: if not, the new representation would be added to the
- // (no longer current) one
- reset_static_constraints();
- // not needed, there isn't any - reset_static_variables();
- // not needed, there isn't any - reset_dynamic_constraints();
- // not needed, there isn't any - reset_dynamic_variables();
- // not needed, there isn't any - reset_objective();
-
 } // end( guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/

@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*-------------------- File SatelliteBlock_discrete.h ---------------------------*/
+/*-------------------- File DiscreteSatelliteBlock.h -----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the *concrete* class SatelliteBlock_discrete, which implements
+ * Header file for the *concrete* class DiscreteSatelliteBlock, which implements
  * the Block concept [see Block.h] for the solution of Satellite observavility problem.
  *
  * \author Luca Mencarelli \n
@@ -15,8 +15,9 @@
 /*----------------------------- DEFINITIONS --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#ifndef __SatelliteBlock_discrete
- #define __SatelliteBlock_discrete  /* self-identification: #endif at the end of the file */
+#ifndef __DiscreteSatelliteBlock
+ #define __DiscreteSatelliteBlock  
+                      /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
@@ -41,44 +42,45 @@
 /// namespace for the Structured Modeling System++ (SMS++)
 namespace SMSpp_di_unipi_it
 {
- class SatelliteBlock_discrete;     // forward declaration of SatelliteBlock_discrete
+ class DiscreteSatelliteBlock;     // forward declaration of DiscreteSatelliteBlock
 
- class SatelliteSolution_discrete;  // forward declaration of SatelliteSolution_discrete
+ class DiscreteSatelliteSolution;  // forward declaration of DiscreteSatelliteSolution
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- SatelliteBlock_discrete-RELATED TYPES ---------------------------*/
+/*----------------------- DiscreteSatelliteBlock-RELATED TYPES ---------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @defgroup SatelliteBlock_discrete_TYPES SatelliteBlock_discrete-related types
+/** @defgroup DiscreteSatelliteBlock_TYPES DiscreteSatelliteBlock-related types
  *  @{ */
 
- using p_SatelliteBlock_discrete = SatelliteBlock_discrete *;  ///< a pointer to SatelliteBlock_discrete
+ using p_DiscreteSatelliteBlock = DiscreteSatelliteBlock *;  
+    ///< a pointer to DiscreteSatelliteBlock
 
- using Vec_SatelliteBlock_discrete = std::vector< p_SatelliteBlock_discrete>;
- ///< a vector of pointers to SatelliteBlock_discrete
+ using Vec_DiscreteSatelliteBlock = std::vector< p_DiscreteSatelliteBlock>;
+ ///< a vector of pointers to DiscreteSatelliteBlock
 
- using Vec_SatelliteBlock_discrete_it = Vec_SatelliteBlock_discrete::iterator;
- ///< iterator for a Vec_SatelliteBlock_discrete
+ using Vec_DiscreteSatelliteBlock_it = Vec_DiscreteSatelliteBlock::iterator;
+ ///< iterator for a Vec_DiscreteSatelliteBlock
 
- using c_Vec_SatelliteBlock_discrete = const Vec_SatelliteBlock_discrete;
- ///< a const vector of pointers to SatelliteBlock_discrete
+ using c_Vec_DiscreteSatelliteBlock = const Vec_DiscreteSatelliteBlock;
+ ///< a const vector of pointers to DiscreteSatelliteBlock
 
- using c_Vec_SatelliteBlock_discrete_it = c_Vec_SatelliteBlock_discrete::iterator;
- ///< iterator for a c_Vec_SatelliteBlock_discrete
+ using c_Vec_DiscreteSatelliteBlock_it = c_Vec_DiscreteSatelliteBlock::iterator;
+ ///< iterator for a c_Vec_DiscreteSatelliteBlock
 
-/** @}  end( group( SatelliteBlock_discrete_TYPES ) ) */ 
+/** @}  end( group( DiscreteSatelliteBlock_TYPES ) ) */ 
 /*--------------------------------------------------------------------------*/
 /*------------------------------- CLASSES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @defgroup SatelliteBlock_discrete_CLASSES Classes in SatelliteBlock_discrete.h
+/** @defgroup DiscreteSatelliteBlock_CLASSES Classes in DiscreteSatelliteBlock.h
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteBlock_discrete --------------------------------*/
+/*-------------------------- CLASS DiscreteSatelliteBlock ------------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-class SatelliteBlock_discrete : public Block
+class DiscreteSatelliteBlock : public Block
 {
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
@@ -91,7 +93,7 @@ public:
 /*--------------------------------------------------------------------------*/
 /** @name Public types
  *
- * SatelliteBlock_discrete defines three main public types:
+ * DiscreteSatelliteBlock defines three main public types:
  *
  * - FNumber, the type of flow variables, arc capacities, and node deficits;
  *
@@ -114,7 +116,7 @@ public:
  * one needs to solve. This directly translates in significant memory savings
  * and/or speed improvements.
  *
- * However, while using a SatelliteBlock_discrete as a part of some larger problem, it may
+ * However, while using a DiscreteSatelliteBlock as a part of some larger problem, it may
  * be difficult to fully exploit this property: even if some Solver can
  * exploit it, not all of them may be able to (one example are Interior-Point
  * approaches, which require both flow and cost variables to be continuous),
@@ -174,7 +176,7 @@ public:
 /*------------------------------- FRIENDS ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- friend SatelliteSolution_discrete;  ///< make SatelliteSolution_discrete friend
+ friend DiscreteSatelliteSolution;  ///< make DiscreteSatelliteSolution friend
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
@@ -184,19 +186,19 @@ public:
 /** @name Constructor and Destructor
  *  @{ */
 
- /// constructor of SatelliteBlock_discrete, taking a pointer to the father (generic) Block
- /** Constructor of SatelliteBlock_discrete. It accepts a pointer to the father Block, which
+ /// constructor of DiscreteSatelliteBlock, taking a pointer to the father (generic) Block
+ /** Constructor of DiscreteSatelliteBlock. It accepts a pointer to the father Block, which
   * can be of any type, defaulting to nullptr so that this can also be used as
   * the void constructor. */
 
- explicit SatelliteBlock_discrete( Block *father = nullptr )
+ explicit DiscreteSatelliteBlock( Block *father = nullptr )
   : Block( father ) , AR1(0), AR2(0), AR3(0) { }
                
 
 /*--------------------------------------------------------------------------*/
- /// destructor of SatelliteBlock_discrete: deletes the abstract representation, if any
+ /// destructor of DiscreteSatelliteBlock: deletes the abstract representation, if any
 
- virtual ~SatelliteBlock_discrete() { guts_of_destructor(); }
+ virtual ~DiscreteSatelliteBlock() { guts_of_destructor(); }
 
 /** @} ---------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
@@ -205,7 +207,7 @@ public:
  *  @{ */
   /*
   * Like load( std::istream & ), if there is any Solver attached to this
-  * SatelliteBlock_discrete then a NBModification (the "nuclear option") is issued. */
+  * DiscreteSatelliteBlock then a NBModification (the "nuclear option") is issued. */
 
  void load( FNumber n , FNumber ell );
 
@@ -236,9 +238,9 @@ public:
  //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SatelliteBlock_discrete --------------*/
+/*-------------- Methods for reading the data of the DiscreteSatelliteBlock */
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the SatelliteBlock_discrete
+/** @name Methods for reading the data of the DiscreteSatelliteBlock
  *  @{ */
 
  /// getting the current sense of the Objective, which is minimization
@@ -256,8 +258,8 @@ public:
 /*--------------------------------------------------------------------------*/
  /// returns true if the current solution is approximately feasible
  /** Returns true if the solution encoded in the current value of the flow
-  * (x) Variable of the SatelliteBlock_discrete is approximately feasible. This clearly
-  * requires the Variable of the SatelliteBlock_discrete to have been defined, i.e., that
+  * (x) Variable of the DiscreteSatelliteBlock is approximately feasible. This clearly
+  * requires the Variable of the DiscreteSatelliteBlock to have been defined, i.e., that
   * generate_abstract_variables() has been called prior to this method.
   *
   * The parameter for deciding what "approximately feasible" exactly means is
@@ -281,13 +283,13 @@ public:
 /*--------------------------------------------------------------------------*/
  /// returns true if the current solution is (approximately) optimal
  /** Returns true if the solution encoded in the current value of the flow
-  * (x) Variable of the SatelliteBlock_discrete is approximately optimal, which means that
+  * (x) Variable of the DiscreteSatelliteBlock is approximately optimal, which means that
   * it is approximately feasible, that the dual solution encoded in the
   * current value of the dual multipliers of both the flow conservation and
   * bound constraints is approximately feasible, and that the two
   * approximately satisfies the Complementary Slackness Conditions. This
   * clearly requires that both the Variable and the Constraint of the
-  * SatelliteBlock_discrete to have been defined, i.e., that generate_abstract_variables()
+  * DiscreteSatelliteBlock to have been defined, i.e., that generate_abstract_variables()
   * and generate_abstract_constraints() have been called prior to this method.
   *
   * This requires two parameters for deciding what "approximately feasible"
@@ -327,7 +329,7 @@ public:
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
- /// returns a SatelliteSolution_discrete representing the current solution of this SatelliteBlock_discrete
+ /// returns a DiscreteSatelliteSolution representing the current solution of this DiscreteSatelliteBlock
 
  Solution * get_Solution( Configuration *solc = nullptr ,
  			  bool emptys = true ) override;
@@ -339,9 +341,9 @@ public:
 /** @name Methods for handling Modification
  *  @{ */
 
- /// returns true if there is any Solver "listening to this SatelliteBlock_discrete"
- /** Returns true if there is any Solver "listening to this SatelliteBlock_discrete", or if
-  * the SatelliteBlock_discrete has to "listen" anyway because the "abstract" representation
+ /// returns true if there is any Solver "listening to this DiscreteSatelliteBlock"
+ /** Returns true if there is any Solver "listening to this DiscreteSatelliteBlock", or if
+  * the DiscreteSatelliteBlock has to "listen" anyway because the "abstract" representation
   * is constructed, and therefore "abstract" Modification have to be generated
   * anyway to keep the two representations in sync.
   *
@@ -362,24 +364,24 @@ public:
   }
  */
 /*--------------------------------------------------------------------------*/
- /// adding a new Modification to the SatelliteBlock_discrete
+ /// adding a new Modification to the DiscreteSatelliteBlock
  /** Method for handling Modification.
   *
-  * The version of SatelliteBlock_discrete has to intercept any "abstract Modification" that
-  * modifies the "abstract representation" of the SatelliteBlock_discrete, and "translate"
+  * The version of DiscreteSatelliteBlock has to intercept any "abstract Modification" that
+  * modifies the "abstract representation" of the DiscreteSatelliteBlock, and "translate"
   * them into both changes of the actual data structures and corresponding
   * "physical Modification". These Modification are those for which
   * Modification::concerns_Block() is true. Note, however, that before sending
   * the Modification to the Solver and/or the father Block, the
   * concerns_Block() value is set to false. This is because once it is passed
   * through this method, the "abstract Modification" has "already done its
-  * duty" of providing the information to the SatelliteBlock_discrete, and this must not be
+  * duty" of providing the information to the DiscreteSatelliteBlock, and this must not be
   * repeated. In particular, this would be an issue if the Modification would
   * be [map_forward or map_back]-ed, because inside of this method a "physical
   * Modification" doing the same job is surely issued. That Modification would
   * also be [map_forward or map_back]-ed, together with the original "abstract
   * Modification" that would pass again through this method (in the other
-  * SatelliteBlock_discrete), which would mean that the "physical Modification" would be
+  * DiscreteSatelliteBlock), which would mean that the "physical Modification" would be
   * issued twice.
   *
   * The following "abstract Modification" are handled:
@@ -402,7 +404,7 @@ public:
   *   zero*, because that corresponds to closing the arc, exception being
   *   thrown otherwise.
   *
-  * Any other Modification reaching the SatelliteBlock_discrete will lead to exception
+  * Any other Modification reaching the DiscreteSatelliteBlock will lead to exception
   * being thrown.
   *
   * Note: any "physical" Modification resulting from processing an "abstract"
@@ -411,14 +413,14 @@ public:
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE SatelliteBlock_discrete ---------------*/
+/*--------------- METHODS FOR PRINTING & SAVING THE DiscreteSatelliteBlock ---------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the SatelliteBlock_discrete
+/** @name Methods for printing & saving the DiscreteSatelliteBlock
  *  @{ */
 
- /// print the SatelliteBlock_discrete on an ostream with the given verbosity
- /** Protected method to print information about the SatelliteBlock_discrete; with the
-  * "complete" level ('C') it outputs the SatelliteBlock_discrete in DIMACS format. */
+ /// print the DiscreteSatelliteBlock on an ostream with the given verbosity
+ /** Protected method to print information about the DiscreteSatelliteBlock; with the
+  * "complete" level ('C') it outputs the DiscreteSatelliteBlock in DIMACS format. */
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
@@ -465,9 +467,9 @@ public:
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// register SatelliteBlock_discrete methods into the method factories
+/// register DiscreteSatelliteBlock methods into the method factories
 /** Although in general private methods should not be commented, this one is
- * because it does the registration of the following SatelliteBlock_discrete methods*/
+ * because it does the registration of the following DiscreteSatelliteBlock methods*/
 
  void guts_of_destructor( void );
 
@@ -478,52 +480,52 @@ public:
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- SMSpp_insert_in_factory_h;  // insert SatelliteBlock_discrete in the Block factory
+ SMSpp_insert_in_factory_h;  // insert DiscreteSatelliteBlock in the Block factory
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlock_discrete ) )
+ };  // end( class( DiscreteSatelliteBlock ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteBlock_discreteMod -----------------------*/
+/*-------------------------- CLASS DiscreteSatelliteBlockMod -----------------------*/
 /*--------------------------------------------------------------------------*/
-/// derived class from Modification for modifications to a SatelliteBlock_discrete
-/** Derived class from Modification to describe modifications to a SatelliteBlock_discrete.
+/// derived class from Modification for modifications to a DiscreteSatelliteBlock
+/** Derived class from Modification to describe modifications to a DiscreteSatelliteBlock.
  *  This is actually "sort of abstract", since it does not say exactly what
  *  is changed, this being demanded to derived classes (which do this in
  *  different ways). Note that it is derived from Modification rather than,
  *  say, BlockMod (which has the same structure) because this is a class of
- *  "physical Modification". This means that a SatelliteBlock_discreteMod refers to changes
- *  in the "physical representation" of the SatelliteBlock_discrete; the corresponding
- *  changes in the "abstract representation" of the SatelliteBlock_discrete are dealt with
+ *  "physical Modification". This means that a DiscreteSatelliteBlockMod refers to changes
+ *  in the "physical representation" of the DiscreteSatelliteBlock; the corresponding
+ *  changes in the "abstract representation" of the DiscreteSatelliteBlock are dealt with
  *  by means of "abstract Modification", i.e., derived classes from
- *  AModification (as is BlockMod, which is why SatelliteBlock_discreteMod is not derived
+ *  AModification (as is BlockMod, which is why DiscreteSatelliteBlockMod is not derived
  *  from BlockMod). */
 
-class SatelliteBlock_discreteMod : public Modification
+class DiscreteSatelliteBlockMod : public Modification
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
  public:
 
 /*---------------------------- PUBLIC TYPES --------------------------------*/
- /// public enum for the types of SatelliteBlock_discreteMod
+ /// public enum for the types of DiscreteSatelliteBlockMod
 
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
- /// constructor: takes the SatelliteBlock_discrete and the type
+ /// constructor: takes the DiscreteSatelliteBlock and the type
 
- SatelliteBlock_discreteMod( SatelliteBlock_discrete * fblock , int type )
+ DiscreteSatelliteBlockMod( DiscreteSatelliteBlock * fblock , int type )
   : f_Block( fblock ) , f_type( type ) {}
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SatelliteBlock_discreteMod() = default;   ///< destructor, does nothing
+ virtual ~DiscreteSatelliteBlockMod() = default;   ///< destructor, does nothing
 
 /*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 
- /// returns the [DCR]Block to which the SatelliteBlock_discreteMod refers
+ /// returns the [DCR]Block to which the DiscreteSatelliteBlockMod refers
 
  Block * get_Block( void ) const override  { return( f_Block ); }
 
@@ -537,7 +539,7 @@ class SatelliteBlock_discreteMod : public Modification
  protected:
 
 /*-------------------------- PROTECTED METHODS -----------------------------*/
- /// print the SatelliteBlock_discreteMod
+ /// print the DiscreteSatelliteBlockMod
 
  void print( std::ostream &output ) const override {
 
@@ -545,24 +547,21 @@ class SatelliteBlock_discreteMod : public Modification
 
 /*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
 
- SatelliteBlock_discrete *f_Block;
-               ///< pointer to the SatelliteBlock_discrete to which the SatelliteBlock_discreteMod refers
+ DiscreteSatelliteBlock *f_Block;
+          ///< pointer to the DiscreteSatelliteBlock to which the DiscreteSatelliteBlockMod refers
 
  int f_type;   ///< type of Modification
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlock_discreteMod ) )
+ };  // end( class( DiscreteSatelliteBlockMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*------------------------ CLASS SatelliteBlock_discreteRngdMod ---------------------*/
+/*------------------------ CLASS DiscreteSatelliteBlockRngdMod ---------------------*/
 /*--------------------------------------------------------------------------*/
-/// derived from SatelliteBlock_discreteMod for "ranged" modifications
-/** Derived class from SatelliteBlock_discreteMod to describe "ranged"
- * modifications to a SatelliteBlock_discrete, i.e., modifications that apply to an interval
- * of either arcs or nodes. */
+/// derived from DiscreteSatelliteBlockMod for "ranged" modifications
 
-class SatelliteBlock_discreteRngdMod : public SatelliteBlock_discreteMod
+class DiscreteSatelliteBlockRngdMod : public DiscreteSatelliteBlockMod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
@@ -570,14 +569,14 @@ class SatelliteBlock_discreteRngdMod : public SatelliteBlock_discreteMod
 
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
- /// constructor: takes the SatelliteBlock_discrete, the type, and the range
+ /// constructor: takes the DiscreteSatelliteBlock, the type, and the range
 
- SatelliteBlock_discreteRngdMod( SatelliteBlock_discrete * fblock , int type , Block::Range rng )
-  : SatelliteBlock_discreteMod( fblock , type ) , f_rng( rng ) {}
+ DiscreteSatelliteBlockRngdMod( DiscreteSatelliteBlock * fblock , int type , Block::Range rng )
+  : DiscreteSatelliteBlockMod( fblock , type ) , f_rng( rng ) {}
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SatelliteBlock_discreteRngdMod() = default;   ///< destructor, does nothing
+ virtual ~DiscreteSatelliteBlockRngdMod() = default;   ///< destructor, does nothing
 
 /*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 
@@ -590,10 +589,10 @@ class SatelliteBlock_discreteRngdMod : public SatelliteBlock_discreteMod
  protected:
 
 /*-------------------------- PROTECTED METHODS -----------------------------*/
- /// print the SatelliteBlock_discreteRngdMod
+ /// print the DiscreteSatelliteBlockRngdMod
 
  void print( std::ostream &output ) const override {
-  SatelliteBlock_discreteMod::print( output );
+  DiscreteSatelliteBlockMod::print( output );
   output << "[ " << f_rng.first << ", " << f_rng.second << " )" << std::endl;
   }
 
@@ -603,17 +602,17 @@ class SatelliteBlock_discreteRngdMod : public SatelliteBlock_discreteMod
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlock_discreteRngdMod ) )
+ };  // end( class( DiscreteSatelliteBlockRngdMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*------------------------ CLASS SatelliteBlock_discreteSbstMod ---------------------*/
+/*------------------------ CLASS DiscreteSatelliteBlockSbstMod ---------------------*/
 /*--------------------------------------------------------------------------*/
-/// derived from SatelliteBlock_discreteMod for "subset" modifications
+/// derived from DiscreteSatelliteBlockMod for "subset" modifications
 /** Derived class from Modification to describe "subset" modifications to a
- *  SatelliteBlock_discrete, i.e., modifications that apply to an arbitrary subset of either
+ *  DiscreteSatelliteBlock, i.e., modifications that apply to an arbitrary subset of either
  * the arcs or the nodes. */
 
-class SatelliteBlock_discreteSbstMod : public SatelliteBlock_discreteMod
+class DiscreteSatelliteBlockSbstMod : public DiscreteSatelliteBlockMod
 {
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
 
@@ -622,21 +621,21 @@ class SatelliteBlock_discreteSbstMod : public SatelliteBlock_discreteMod
 
 /*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
 
- ///< constructor: takes the SatelliteBlock_discrete, the type, and the subset
- /**< Constructor: takes the SatelliteBlock_discrete, the type, and the subset. As the the
+ ///< constructor: takes the DiscreteSatelliteBlock, the type, and the subset
+ /**< Constructor: takes the DiscreteSatelliteBlock, the type, and the subset. As the the
   * && tells, nms is "consumed" by the constructor and its resources become
-  * property of the SatelliteBlock_discreteSbstMod object.
+  * property of the DiscreteSatelliteBlockSbstMod object.
   *
   *   NOTE THAT nms IS REQUIRED TO BE ORDERED IN INCREASING SENSE
   *
   * although this is not checked by the class. */
 
- SatelliteBlock_discreteSbstMod( SatelliteBlock_discrete * fblock , int type , Block::Subset && nms )
-  : SatelliteBlock_discreteMod( fblock , type ) , f_nms( std::move( nms ) ) {}
+ DiscreteSatelliteBlockSbstMod( DiscreteSatelliteBlock * fblock , int type , Block::Subset && nms )
+  : DiscreteSatelliteBlockMod( fblock , type ) , f_nms( std::move( nms ) ) {}
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- virtual ~SatelliteBlock_discreteSbstMod() = default;  ///< destructor, does nothing
+ virtual ~DiscreteSatelliteBlockSbstMod() = default;  ///< destructor, does nothing
 
 /*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
 
@@ -649,10 +648,10 @@ class SatelliteBlock_discreteSbstMod : public SatelliteBlock_discreteMod
  protected:
 
 /*-------------------------- PROTECTED METHODS -----------------------------*/
- /// print the SatelliteBlock_discreteSbstMod
+ /// print the DiscreteSatelliteBlockSbstMod
 
  void print( std::ostream &output ) const override {
-  SatelliteBlock_discreteMod::print( output );
+  DiscreteSatelliteBlockMod::print( output );
   output << "(# " << f_nms.size() << ")" << std::endl;
   }
 
@@ -662,13 +661,13 @@ class SatelliteBlock_discreteSbstMod : public SatelliteBlock_discreteMod
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( SatelliteBlock_discreteSbstMod ) )
+ };  // end( class( DiscreteSatelliteBlockSbstMod ) )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS SatelliteSolution_discrete -----------------------------*/
+/*-------------------------- CLASS DiscreteSatelliteSolution --------------*/
 /*--------------------------------------------------------------------------*/
 
-class SatelliteSolution_discrete : public Solution {
+class DiscreteSatelliteSolution : public Solution {
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
@@ -678,19 +677,19 @@ public:
 
 /*------------------------------- FRIENDS ----------------------------------*/
 
-friend SatelliteBlock_discrete;  ///< make SatelliteBlock_discrete friend
+friend DiscreteSatelliteBlock;  ///< make DiscreteSatelliteBlock friend
 
-/*---------------- CONSTRUCTING AND DESTRUCTING SatelliteSolution_discrete ----------------*/
+/*---------------- CONSTRUCTING AND DESTRUCTING DiscreteSatelliteSolution -*/
 
-  explicit SatelliteSolution_discrete( void ) { }  /// constructor, it has nothing to do
+  explicit DiscreteSatelliteSolution( void ) { }  /// constructor, it has nothing to do
 
   void deserialize( const netCDF::NcGroup & group ) override final;
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
- ~SatelliteSolution_discrete() = default;  ///< destructor: it is virtual, and empty
+ ~DiscreteSatelliteSolution() = default;  ///< destructor: it is virtual, and empty
 
-/*------------- METHODS DESCRIBING THE BEHAVIOR OF A SatelliteSolution_discrete -----------*/
+/*------------- METHODS DESCRIBING THE BEHAVIOR OF A DiscreteSatelliteSolution --*/
 
   void read( const Block * block ) override final;
 
@@ -698,11 +697,11 @@ friend SatelliteBlock_discrete;  ///< make SatelliteBlock_discrete friend
 
   void serialize( netCDF::NcGroup & group ) const override final;
 
-  SatelliteSolution_discrete * scale( double factor ) const override final;
+  DiscreteSatelliteSolution * scale( double factor ) const override final;
 
   void sum( const Solution * solution , double multiplier ) override final;
 
-  SatelliteSolution_discrete * clone( bool empty = false ) const override final;
+  DiscreteSatelliteSolution * clone( bool empty = false ) const override final;
   
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
 
@@ -711,7 +710,7 @@ friend SatelliteBlock_discrete;  ///< make SatelliteBlock_discrete friend
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 
  void print( std::ostream &output ) const override final {
-   //output << "SatelliteSolution_discrete";
+   //output << "DiscreteSatelliteSolution";
  }
   
 /*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
@@ -720,7 +719,7 @@ friend SatelliteBlock_discrete;  ///< make SatelliteBlock_discrete friend
 
 /*---------------------------- PRIVATE FIELDS ------------------------------*/
 
-SatelliteBlock_discrete::Vec_FNumber v_zeta;   ///< the arc flows
+DiscreteSatelliteBlock::Vec_FNumber v_zeta;   ///< the arc flows
   
 /*--------------------------------------------------------------------------*/
 
@@ -728,9 +727,9 @@ SMSpp_insert_in_factory_h;
 
 /*--------------------------------------------------------------------------*/
 
-};  // end( class( SatelliteSolution_discrete ) )
+};  // end( class( DiscreteSatelliteSolution ) )
 
-/** @} end( group( SatelliteBlock_discrete_CLASSES ) ) --------------------------*/
+/** @} end( group( DiscreteSatelliteBlock_CLASSES ) ) ----------------------*/
 /*--------------------------------------------------------------------------*/
 
  };  // end( namespace SMSpp_di_unipi_it )
@@ -738,8 +737,8 @@ SMSpp_insert_in_factory_h;
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* SatelliteBlock_discrete.h included */
+#endif  /* DiscreteSatelliteBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*------------------- End File SatelliteBlock_discrete.h ------------------------*/
+/*------------------- End File DiscreteSatelliteBlock.h --------------------*/
 /*--------------------------------------------------------------------------*/

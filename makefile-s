@@ -16,10 +16,10 @@
 #           $(SMS++INC)  = the -I$( core SMS++ directory )                   #
 #           $(SMS++OBJ)  = the core SMS++ library                            #
 #           $(SBkSDR)  = the directory where SatellitesBlock source is       #
-#        $(SBkODR)  = the directory where the objects have to be put         #
+#           $(SBkODR)  = the directory where the objects have to be put      #
 #                                                                            #
 #   Output: $(SBkOBJ)  = the final object(s) / library                       #
-#              $(SBkLIB)  = external libraries + -L< libdirs >               #
+#           $(SBkLIB)  = external libraries + -L< libdirs >                  #
 #           $(SBkH)    = the .h files to include for SatellitesBlock         #
 #           $(SBkINC)  = the -I$( SatellitesBlock directory )                #
 #                                                                            #

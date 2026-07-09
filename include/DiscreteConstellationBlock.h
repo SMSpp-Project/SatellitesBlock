@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*---------------------------- File ConstellationBlock_discrete.h ----------------------------*/
+/*---------------------------- File DiscreteConstellationBlock.h -----------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the *concrete* class ConstellationBlock_discrete, which implements the
+ * Header file for the *concrete* class DiscreteConstellationBlock, which implements the
  * Block concept [see Block.h] for a Multicommodity Min Cost Flow problem.
  *
  * \author Luca Mencarelli \n
@@ -15,15 +15,15 @@
 /*----------------------------- DEFINITIONS --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#ifndef __ConstellationBlock_discrete
- #define __ConstellationBlock_discrete  /* self-identification: #endif at the end of the file */
+#ifndef __DiscreteConstellationBlock
+ #define __DiscreteConstellationBlock  /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #include "Block.h"
-#include "SatelliteBlock_discrete.h"
+#include "DiscreteSatelliteBlock.h"
 #include "ColVariable.h"
 #include "FRowConstraint.h"
 #include "Configuration.h"
@@ -37,19 +37,19 @@
 namespace SMSpp_di_unipi_it
 {
 /*--------------------------------------------------------------------------*/
-/*----------------------- ConstellationBlock_discrete-RELATED TYPES --------------------------*/
+/*----------------------- DiscreteConstellationBlock-RELATED TYPES ---------*/
 /*--------------------------------------------------------------------------*/
 /** @name Public Types
  *
- * "Import" basic types from SatelliteBlock_discrete.
+ * "Import" basic types from DiscreteSatelliteBlock.
  *
  *  @{ */
 
- using CNumber = SatelliteBlock_discrete::CNumber;
+ using CNumber = DiscreteSatelliteBlock::CNumber;
  using c_RHSValue = RowConstraint::c_RHSValue;
- using Vec_CNumber = SatelliteBlock_discrete::Vec_CNumber;
- using FNumber = SatelliteBlock_discrete::FNumber;
- using Vec_FNumber = SatelliteBlock_discrete::Vec_FNumber;
+ using Vec_CNumber = DiscreteSatelliteBlock::Vec_CNumber;
+ using FNumber = DiscreteSatelliteBlock::FNumber;
+ using Vec_FNumber = DiscreteSatelliteBlock::Vec_FNumber;
 
  using FMultiVector = std::vector< Vec_FNumber >;
  using CMultiVector = std::vector< Vec_CNumber >;
@@ -61,17 +61,17 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /*------------------------------- CLASSES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @defgroup ConstellationBlock_discrete_CLASSES Classes in ConstellationBlock_discrete.h
+/** @defgroup DiscreteConstellationBlock_CLASSES Classes in DiscreteConstellationBlock.h
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS ConstellationBlock_discrete ------------------------------*/
+/*-------------------------- CLASS DiscreteConstellationBlock --------------*/
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple MMCF Block concept.
 
-class ConstellationBlock_discrete : public Block
+class DiscreteConstellationBlock : public Block
 {
 /*--------------------------------------------------------------------------*/
 /*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
@@ -93,16 +93,16 @@ class ConstellationBlock_discrete : public Block
 /** @name Constructor and Destructor
  *  @{ */
 
- /// constructor of ConstellationBlock_discrete
- /** Constructor of ConstellationBlock_discrete. It accepts a pointer to the father
+ /// constructor of DiscreteConstellationBlock
+ /** Constructor of DiscreteConstellationBlock. It accepts a pointer to the father
   * Block, which can be of any type. */
 
- ConstellationBlock_discrete( Block *father = nullptr ) : Block( father ) , AR( 0 ) { }
+ DiscreteConstellationBlock( Block *father = nullptr ) : Block( father ) , AR( 0 ) { }
 
 /*--------------------------------------------------------------------------*/
- /// destructor of ConstellationBlock_discrete
+ /// destructor of DiscreteConstellationBlock
 
- virtual ~ConstellationBlock_discrete() { guts_of_destructor(); }
+ virtual ~DiscreteConstellationBlock() { guts_of_destructor(); }
 
 /*@} -----------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
@@ -111,72 +111,16 @@ class ConstellationBlock_discrete : public Block
  *  @{ */
 
  /// loads the instance from the given file in the given format
- /** Loads a MMCF instance using filename as the "base filename". This method
-  * supports several formats depending on \p frmt, that is case-insensitive.
-  * In particular, for two single-file formats
-  *
-  * - frmt == 0 (default) or frmt == 'c': PPRN format
-  *
-  * - frmt == 's': Canad format
-  *
-  * it behaves just as the Block method (just open an ifstream and
-  * dispatch it load( std::istream & ). However, it also supports 5
-  * multi-file formats:
-  *
-  * - 'm': Mnetgen format
-  * - 'p': Jones-Lustig PSP (product-specific problem) format
-  * - 'o': Jones-Lustig OSP (origin-specific problem) format
-  * - 'd': Jones-Lustig OSP (origin-destination problem) format
-  * - 'u': same as 'd' but supply information is looked at in file
-  *        input + ".od" rather than input + ".sup" as in all the
-  *        other cases
-  *
-  * where input (prefixed as set by set_filename_prefix(), if any) is
-  * completed by the appropriate suffixes ".nod", ".arc", ".mut", ".sup"
-  * or ".od" to load different parts of the description of the MMCF
-  * instance.
-  *
-  * TODO: properly document all the formats.
-  *
-  * If there is any Solver attached to this ConstellationBlock_discrete then a NBModification
-  * (the "nuclear option") is issued. */
 
  void load( const std::string & input , char frmt = 0 ) override;
 
 /*--------------------------------------------------------------------------*/
- /// load the ConstellationBlock_discrete out of an istream
- /** Load the ConstellationBlock_discrete out of an istream. Handles the two single-file
-  * formats, i.e., Canad and PPRN.
-  *
-  * TODO: properly document the formats.
-  *
-  * If there is any Solver attached to this ConstellationBlock_discrete then a NBModification
-  * (the "nuclear option") is issued. */
+ /// load the DiscreteConstellationBlock out of an istream
 
  void load( std::istream & input , char frmt = 0 ) override;
 
 /*--------------------------------------------------------------------------*/
  /// generate the "abstract representation" of the Variable of the Block
- /** This method generates the "abstract representation" of the Variable of
-  * the ConstellationBlock_discrete, and in fact it decides which formulation of the MMCF
-  * problem is implemented. This is controlled by the parameter stvv. If stvv
-  * is not nullptr and it is a SimpleConfiguration< int >, or if
-  * f_BlockConfig->f_static_variables_Configuration is not nullptr and it is a
-  * SimpleConfiguration< int >, then the f_value (an int) dictates which
-  * MMCF formulation as follows:
-  *
-  * - [1]: the standard knapsack formulation in which get_NArcs()
-  *   BinaryKnapsackBlock sub-Block are constructed, one for each commodity,
-  *   and the flow constraints are handled in the father ConstellationBlock_discrete;
-  *
-  * - [0]: the standard flow formulation in which get_NComm() SatelliteBlock_discrete
-  *   sub-Block are constructed, one for each commodity, and the
-  *   linking constraints are handled in the father ConstellationBlock_discrete;
-  *
-  * - [other ones possibly to follow].
-  * 
-  *  by default is considered the Flow relaxation
-  */
 
  void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
@@ -193,13 +137,13 @@ class ConstellationBlock_discrete : public Block
                    Configuration * fsbc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE ConstellationBlock_discrete -----*/
+/*--------------- METHODS FOR PRINTING & SAVING THE DiscreteConstellationBlock -----*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for printing & saving the ConstellationBlock_discrete
+/** @name Methods for printing & saving the DiscreteConstellationBlock
  *  @{ */
 
- /// print the ConstellationBlock_discrete on an ostream with the given verbosity
- /** Print the ConstellationBlock_discrete on an ostream. So far vlvl is ignored and only very
+ /// print the DiscreteConstellationBlock on an ostream with the given verbosity
+ /** Print the DiscreteConstellationBlock on an ostream. So far vlvl is ignored and only very
   * basic information is printed.
   *
   * TODO: implement some verbosity level that produce output files in at
@@ -210,9 +154,9 @@ class ConstellationBlock_discrete : public Block
  void print( std::ostream & output , char vlvl = 0 ) const override;
   
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the SatelliteBlock_discrete ---------*/
+/*-------------- Methods for reading the data of the DiscreteSatelliteBlock ---------*/
 /*--------------------------------------------------------------------------*/
-/** @name Methods for reading the data of the ConstellationBlock_discrete
+/** @name Methods for reading the data of the DiscreteConstellationBlock
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
@@ -224,9 +168,13 @@ class ConstellationBlock_discrete : public Block
 
   Index get_numSat( void ) const { return( satellites ); }
 
-  Index get_orbits( int j ) const { return( static_cast< SatelliteBlock_discrete * >( v_Block[ j ] )->get_orbits() ); }
-  Index get_ell( int j ) const { return( static_cast< SatelliteBlock_discrete * >( v_Block[ j ] )->get_ell() ); }
-  FNumber get_solution( int k, int j, int tt ) const { return((static_cast< SatelliteBlock_discrete * >( v_Block[ k ] )->i2p_y(j,tt))->get_value() ); }
+  Index get_orbits( int j ) const { return( static_cast< DiscreteSatelliteBlock * >( v_Block[ j ] )->get_orbits() ); }
+  
+  Index get_ell( int j ) const { return( static_cast< DiscreteSatelliteBlock * >( v_Block[ j ] )->get_ell() ); }
+  
+  FNumber get_solution( int k, int j, int tt ) const { 
+    return((static_cast< DiscreteSatelliteBlock * >( v_Block[ k ] )->i2p_y(j,tt))->get_value() ); 
+  }
 
 /** @} ---------------------------------------------------------------------*/
 /*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
@@ -239,15 +187,6 @@ class ConstellationBlock_discrete : public Block
 /*--------------------------------------------------------------------------*/
 /** @name Protected methods for inserting and extracting
  *  @{ */
-
-
-/*--------------------------------------------------------------------------*/
- /** called at the end of any constructor, does some initializations that are
-  * common to them all: it is "protected" for allowing derived classes that
-  * use the "void" constructor to call it. */
-
- //void CmnIntlz( void );
-
 /* @} ----------------------------------------------------------------------*/
 /*--------------------------- PROTECTED FIELDS  ----------------------------*/
 /*--------------------------------------------------------------------------*/
@@ -301,11 +240,11 @@ class ConstellationBlock_discrete : public Block
 
  bool AR;
   
- };  // end( class( ConstellationBlock_discrete ) )
+ };  // end( class( DiscreteConstellationBlock ) )
 
 /*--------------------------------------------------------------------------*/
 
-/*@}  end( group( ConstellationBlock_discrete_CLASSES ) ) ---------------------------*/
+/*@}  end( group( DiscreteConstellationBlock_CLASSES ) ) -------------------*/
 /*--------------------------------------------------------------------------*/
 
  }  // end( namespace SMSpp_di_unipi_it )
@@ -313,9 +252,9 @@ class ConstellationBlock_discrete : public Block
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* ConstellationBlock_discrete.h included */
+#endif  /* DiscreteConstellationBlock.h included */
 
 /*--------------------------------------------------------------------------*/
-/*---------------------- End File ConstellationBlock_discrete.h ----------------------*/
+/*---------------------- End File DiscreteConstellationBlock.h -------------*/
 /*--------------------------------------------------------------------------*/
 

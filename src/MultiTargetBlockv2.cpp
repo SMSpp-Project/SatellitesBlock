@@ -1173,40 +1173,7 @@ void MultiTargetBlockv2::guts_of_destructor( void )
 void MultiTargetBlockv2::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 {
  // process abstract Modification - - - - - - - - - - - - - - - - - - - - - -
- /* This requires to patiently sift through the possible Modification types
-  * to find what this Modification exactly is and appropriately mirror the
-  * changes to the "abstract representation" to the "physical one".
-  *
-  * Note that since MultiTargetBlockv2 is a "leaf" Block (has no sub-Block), this
-  * method does not have to deal with GroupModification since these are
-  * produced by Block::add_Modification(), but this method is called
-  * *before* that one is.
-  *
-  * As an important consequence,
-  *
-  *   THE STATE OF THE DATA STRUCTURE IN MultiTargetBlockv2 WHEN THIS METHOD IS
-  *   EXECUTED IS PRECISELY THE ONE IN WHICH THE Modification WAS ISSUED:
-  *   NO COMPLICATED OPERATIONS (Variable AND/OR Constraint BEING
-  *   ADDED/REMOVED ...) CAN HAVE BEEN PERFORMED IN THE MEANTIME
-  *
-  * This assumption drastically simplifies some of the logic here.*/
-
- // C05FunctionModLinRngd - - - - - - - - - - - - - - - - - - - - - - - - - -
- /*
- if( const auto tmod = dynamic_cast< C05FunctionModLinRngd * >( mod ) ) {
-
-  auto lfo = static_cast< LinearFunction * const >( tmod->function() );
-  if( static_cast< LinearFunction * const >( c.get_function() ) != lfo )
-   throw( std::invalid_argument( "Modification to non-Objective" ) );
-
-  // note: in the following we can assume that the Range in tmod is
-  //       precisely the one we have to use since no Variable can have
-  //       been added or deleted, which saves *a lot* of trouble
-
-  return;
-  }
-*/
-
+ 
  //throw( std::invalid_argument( "unsupported Modification to MultiTargetBlockv2" ) );
 
 } // end( MultiTargetBlockv2::guts_of_add_Modification )

@@ -2,16 +2,13 @@
 /*------------------------- File SatelliteSolver.h -------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the SatelliteSolver class, implementing a
- * Solver for Delay-Constrained Routing problems (DCR) relative to a Single
- * Flow, as set by SatelliteBlock, via a "Benders with nested Lagrange"
- * approach.
+ * Header file for the SatelliteSolver class
  *
- * \author Antonio Frangioni \n
+ * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
  *         Universita' di Pisa \n
  *
- * \copyright &copy; by Antonio Frangioni
+ * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
 /*----------------------------- DEFINITIONS --------------------------------*/

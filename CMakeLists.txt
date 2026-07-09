@@ -72,7 +72,10 @@ target_sources(${modName} PRIVATE
         src/MultiTargetBlockv2.cpp
         src/SatelliteBlock.cpp
         src/SatelliteSolver.cpp
-        src/SingleTargetBlock.cpp)
+        src/SingleTargetBlock.cpp
+	src/DiscreteConstellationBlock.cpp
+	src/DiscreteSatelliteBlock.cpp
+	src/DiscreteSatelliteSolver.cpp)
 
 # When using target_include_directories(), PUBLIC means that any targets
 # that link to this target also need that include directory.

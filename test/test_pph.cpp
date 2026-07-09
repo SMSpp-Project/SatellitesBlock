@@ -3,7 +3,7 @@
 /*--------------------------------------------------------------------------*/
 /** @file
  * MILP test for SatellitesBlock: loads a small SCDP instance into a
- * ConstellationBlock, configures a *MILPSolver on it out of a
+ * ConstellationBlock, configures a *PrimalProximalHeur Solver on it out of a
  * BlockSolverConfig txt file and solves it, checking that a finite optimum
  * is found. The instance and the configuration can be overridden on the
  * command line.
@@ -24,7 +24,7 @@
 
 #include "BlockSolverConfig.h"
 
-#include "DiscreteConstellationBlock.h"
+#include "ConstellationBlock_discrete.h"
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------------- USING -----------------------------------*/
@@ -39,13 +39,13 @@ using namespace SMSpp_di_unipi_it;
 int main( int argc , char ** argv )
 {
  std::string instance = argc > 1 ? argv[ 1 ] : "inputheur-const";
- std::string config = argc > 2 ? argv[ 2 ] : "MILPPar.txt";
+ std::string config = argc > 2 ? argv[ 2 ] : "ProxHeur.txt";
 
  // construct a ConstellationBlock via the factory and load the instance
- auto block = dynamic_cast< DiscreteConstellationBlock * >(
-                                    Block::new_Block( "DiscreteConstellationBlock" ) );
+ auto block = dynamic_cast< ConstellationBlock_discrete * >(
+                                    Block::new_Block( "ConstellationBlock_discrete" ) );
  if( ! block ) {
-  std::cerr << "DiscreteConstellationBlock not present in Block factory" << std::endl;
+  std::cerr << "ConstellationBlock_discrete not present in Block factory" << std::endl;
   return( 1 );
   }
 

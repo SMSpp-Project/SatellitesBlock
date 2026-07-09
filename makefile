@@ -13,11 +13,11 @@
 #           $(SW)        = compiler options                                  #
 #           $(SMS++INC)  = the -I$( core SMS++ directory )                   #
 #           $(SMS++OBJ)  = the libSMS++ library itself                       #
-#               $(SBkSDR)  = the directory where the source is               #
+#           $(SBkSDR)  = the directory where the source is                   #
 #                                                                            #
 #   Output: $(SBkOBJ)  = the final object(s) / library                       #
-#                    $(SBkH)    = the .h files to include                    #
-#                  $(SBkINC)  = the -I$( source directory )                  #
+#           $(SBkH)    = the .h files to include                    		 #
+#           $(SBkINC)  = the -I$( source directory )                         #
 #                                                                            #
 #                             Antonio Frangioni                              #
 #                         Dipartimento di Informatica                        #
@@ -33,9 +33,9 @@ SBkOBJ = $(SBkSDR)/obj/ConstellationBlock.o \
          $(SBkSDR)/obj/SatelliteBlock.o \
          $(SBkSDR)/obj/SatelliteSolver.o \
          $(SBkSDR)/obj/SingleTargetBlock.o \
-		 $(SBkSDR)/obj/ConstellationBlock_discrete.o \
-		 $(SBkSDR)/obj/SatelliteBlock_discrete.o \
-         $(SBkSDR)/obj/SatelliteSolver_discrete.o 
+		 $(SBkSDR)/obj/DiscreteConstellationBlock.o \
+		 $(SBkSDR)/obj/DiscreteSatelliteBlock.o \
+         $(SBkSDR)/obj/DiscreteSatelliteSolver.o 
 
 SBkINC = -I$(SBkSDR)/include
 
@@ -45,9 +45,9 @@ SBkH   = $(SBkSDR)/include/ConstellationBlock.h \
          $(SBkSDR)/include/SatelliteBlock.h \
          $(SBkSDR)/include/SatelliteSolver.h \
          $(SBkSDR)/include/SingleTargetBlock.h \
-		 $(SBkSDR)/include/ConstellationBlock_discrete.h \
-		 $(SBkSDR)/include/SatelliteBlock_discrete.h \
-         $(SBkSDR)/include/SatelliteSolver_discrete.h 
+		 $(SBkSDR)/include/DiscreteConstellationBlock.h \
+		 $(SBkSDR)/include/DiscreteSatelliteBlock.h \
+         $(SBkSDR)/include/DiscreteSatelliteSolver.h 
 
 # clean - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -80,16 +80,16 @@ $(SBkSDR)/obj/SingleTargetBlock.o: $(SBkSDR)/src/SingleTargetBlock.cpp $(SBkH) $
 	$(CC) -c $(SBkSDR)/src/SingleTargetBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/ConstellationBlock_discrete.o: $(SBkSDR)/src/ConstellationBlock_discrete.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
-	$(CC) -c $(SBkSDR)/src/ConstellationBlock_discrete.cpp -o $@ \
+$(SBkSDR)/obj/DiscreteConstellationBlock.o: $(SBkSDR)/src/DiscreteConstellationBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+	$(CC) -c $(SBkSDR)/src/DiscreteConstellationBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/SatelliteBlock_discrete.o: $(SBkSDR)/src/SatelliteBlock_discrete.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
-	$(CC) -c $(SBkSDR)/src/SatelliteBlock_discrete.cpp -o $@ \
+$(SBkSDR)/obj/DiscreteSatelliteBlock.o: $(SBkSDR)/src/DiscreteSatelliteBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+	$(CC) -c $(SBkSDR)/src/DiscreteSatelliteBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/SatelliteSolver_discrete.o: $(SBkSDR)/src/SatelliteSolver_discrete.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
-	$(CC) -c $(SBkSDR)/src/SatelliteSolver_discrete.cpp -o $@ \
+$(SBkSDR)/obj/DiscreteSatelliteSolver.o: $(SBkSDR)/src/DiscreteSatelliteSolver.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+	$(CC) -c $(SBkSDR)/src/DiscreteSatelliteSolver.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
 ########################## End of makefile ###################################

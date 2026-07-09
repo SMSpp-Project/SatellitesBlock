@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*--------------------- File SatelliteBlock_discrete.cpp ------------------------*/
+/*--------------------- File DiscreteSatelliteBlock.cpp --------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Implementation of the SatelliteBlock_discrete class.
+ * Implementation of the DiscreteSatelliteBlock class.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -16,7 +16,7 @@
 /*------------------------------ INCLUDES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#include "SatelliteBlock_discrete.h"
+#include "DiscreteSatelliteBlock.h"
 #include "DQuadFunction.h"
 #include <iomanip>
 #include <cmath>
@@ -53,7 +53,7 @@ using c_Range = Block::c_Range;
 using Subset = Block::Subset;
 using c_Subset = Block::c_Subset;
 
-using FNumber = SatelliteBlock_discrete::FNumber;
+using FNumber = DiscreteSatelliteBlock::FNumber;
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------------- CONSTANTS -------------------------------*/
@@ -144,21 +144,21 @@ static void copyidx( std::vector< T > & vec , c_Subset & nms ,
 /*----------------------------- STATIC MEMBERS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
-// register SatelliteBlock_discrete to the Block factory
+// register DiscreteSatelliteBlock to the Block factory
 
-SMSpp_insert_in_factory_cpp_1( SatelliteBlock_discrete );
+SMSpp_insert_in_factory_cpp_1( DiscreteSatelliteBlock );
 
-// register SatelliteSolution_discrete to the Solution factory
+// register DiscreteSatelliteSolution to the Solution factory
 
-SMSpp_insert_in_factory_cpp_0( SatelliteSolution_discrete );
+SMSpp_insert_in_factory_cpp_0( DiscreteSatelliteSolution );
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- METHODS OF SatelliteBlock_discrete --------------------------*/
+/*--------------------------- METHODS OF DiscreteSatelliteBlock ------------*/
 /*--------------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::load( FNumber indOrbit , FNumber indTheta )
+void DiscreteSatelliteBlock::load( FNumber indOrbit , FNumber indTheta )
 {
  // sanity checks - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -182,11 +182,11 @@ void SatelliteBlock_discrete::load( FNumber indOrbit , FNumber indTheta )
  //if( anyone_there() )
  // add_Modification( std::make_shared< NBModification >( this ) );
 
- }  // end( SatelliteBlock_discrete::load( memory ) )
+ }  // end( DiscreteSatelliteBlock::load( memory ) )
 
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::load( std::istream & input , char frmt )
+void DiscreteSatelliteBlock::load( std::istream & input , char frmt )
 {
  // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
 
@@ -206,11 +206,11 @@ void SatelliteBlock_discrete::load( std::istream & input , char frmt )
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
 
- }  // end( SatelliteBlock_discrete::load( istream ) )
+ }  // end( DiscreteSatelliteBlock::load( istream ) )
 
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::generate_abstract_variables( Configuration *stvv )
+void DiscreteSatelliteBlock::generate_abstract_variables( Configuration *stvv )
 {
 
   if( AR3 & HasVar )  // the variables are there already
@@ -225,11 +225,11 @@ void SatelliteBlock_discrete::generate_abstract_variables( Configuration *stvv )
 
   AR3 |= HasVar;
 
- }  // end( SatelliteBlock_discrete::generate_abstract_variables )
+ }  // end( DiscreteSatelliteBlock::generate_abstract_variables )
 
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::generate_abstract_constraints( Configuration *stcc )
+void DiscreteSatelliteBlock::generate_abstract_constraints( Configuration *stcc )
 {
 
   if( AR2 & HasCnst )  // the constraints are there already
@@ -250,11 +250,11 @@ void SatelliteBlock_discrete::generate_abstract_constraints( Configuration *stcc
 
   AR2 |= HasCnst;
 
- }  // end( SatelliteBlock_discrete::generate_abstract_constraints )
+ }  // end( DiscreteSatelliteBlock::generate_abstract_constraints )
 
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::generate_objective( Configuration *objc )
+void DiscreteSatelliteBlock::generate_objective( Configuration *objc )
 {
 
  if( AR1 & HasObj )  // the objective is there already
@@ -276,11 +276,11 @@ void SatelliteBlock_discrete::generate_objective( Configuration *objc )
 
   AR1 |= HasObj;
 
- }  // end( SatelliteBlock_discrete::generate_objective )
+ }  // end( DiscreteSatelliteBlock::generate_objective )
 
 /*--------------------------------------------------------------------------*/
 
- bool SatelliteBlock_discrete::is_feasible( bool useabstract , Configuration *fsbc )
+ bool DiscreteSatelliteBlock::is_feasible( bool useabstract , Configuration *fsbc )
 {
  FNumber eps = 0;
  auto tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >( fsbc );
@@ -294,11 +294,11 @@ void SatelliteBlock_discrete::generate_objective( Configuration *objc )
 
  return( 0 );
 
- }  // end( SatelliteBlock_discrete::is_feasible )
+ }  // end( DiscreteSatelliteBlock::is_feasible )
 
 /*--------------------------------------------------------------------------*/
 
-bool SatelliteBlock_discrete::is_optimal( bool useabstract , Configuration *optc )
+bool DiscreteSatelliteBlock::is_optimal( bool useabstract , Configuration *optc )
 {
  CNumber ceps = 0;
  FNumber feps = 0;
@@ -342,14 +342,14 @@ bool SatelliteBlock_discrete::is_optimal( bool useabstract , Configuration *optc
 
  return( 0 );
 
- }  //  end( SatelliteBlock_discrete::is_optimal )
+ }  //  end( DiscreteSatelliteBlock::is_optimal )
 
 /*--------------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
 
 
- Solution * SatelliteBlock_discrete::get_Solution( Configuration * solc , bool emptys )
+ Solution * DiscreteSatelliteBlock::get_Solution( Configuration * solc , bool emptys )
 {
    
  int wsol = 0;
@@ -359,20 +359,20 @@ bool SatelliteBlock_discrete::is_optimal( bool useabstract , Configuration *optc
  if( auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc ) )
   wsol = tsolc->f_value;
  
- auto *sol = new SatelliteSolution_discrete();
+ auto *sol = new DiscreteSatelliteSolution();
 
  if( ! emptys )
   sol->read( this );
  
  return( sol );
 
- }  // end( SatelliteBlock_discrete::get_Solution )
+ }  // end( DiscreteSatelliteBlock::get_Solution )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::add_Modification( sp_Mod mod , ChnlName chnl )
+void DiscreteSatelliteBlock::add_Modification( sp_Mod mod , ChnlName chnl )
 {
  //!! std::cout << *mod << std::endl;
 
@@ -386,19 +386,19 @@ void SatelliteBlock_discrete::add_Modification( sp_Mod mod , ChnlName chnl )
  }
 
 /*--------------------------------------------------------------------------*/
-/*------------ METHODS FOR LOADING, PRINTING & SAVING THE SatelliteBlock_discrete ---*/
+/*------------ METHODS FOR LOADING, PRINTING & SAVING THE DiscreteSatelliteBlock ---*/
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::print( std::ostream  & output , char vlvl ) const
+void DiscreteSatelliteBlock::print( std::ostream  & output , char vlvl ) const
 {
  
- }  // end( SatelliteBlock_discrete::print )
+ }  // end( DiscreteSatelliteBlock::print )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PRIVATE METHODS -------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::guts_of_destructor( void )
+void DiscreteSatelliteBlock::guts_of_destructor( void )
 {
  // clear() all Constraint to ensure that they do not bother to un-register
  // themselves from Variable that are going to be deleted anyway
@@ -417,94 +417,60 @@ void SatelliteBlock_discrete::guts_of_destructor( void )
  //reset_dynamic_variables();
  reset_objective();
 
- }  // end( SatelliteBlock_discrete::guts_of_destructor )
+ }  // end( DiscreteSatelliteBlock::guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/
 
-void SatelliteBlock_discrete::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
+void DiscreteSatelliteBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 {
  // process abstract Modification - - - - - - - - - - - - - - - - - - - - - -
- /* This requires to patiently sift through the possible Modification types
-  * to find what this Modification exactly is and appropriately mirror the
-  * changes to the "abstract representation" to the "physical one".
-  *
-  * Note that since SatelliteBlock_discrete is a "leaf" Block (has no sub-Block), this
-  * method does not have to deal with GroupModification since these are
-  * produced by Block::add_Modification(), but this method is called
-  * *before* that one is.
-  *
-  * As an important consequence,
-  *
-  *   THE STATE OF THE DATA STRUCTURE IN SatelliteBlock_discrete WHEN THIS METHOD IS
-  *   EXECUTED IS PRECISELY THE ONE IN WHICH THE Modification WAS ISSUED:
-  *   NO COMPLICATED OPERATIONS (Variable AND/OR Constraint BEING
-  *   ADDED/REMOVED ...) CAN HAVE BEEN PERFORMED IN THE MEANTIME
-  *
-  * This assumption drastically simplifies some of the logic here.*/
+ //throw( std::invalid_argument( "unsupported Modification to DiscreteSatelliteBlock" ) );
 
-  // C05FunctionModLinRngd - - - - - - - - - - - - - - - - - - - - - - - - - -
-  /*
- if( const auto tmod = dynamic_cast< C05FunctionModLinRngd * >( mod ) ) {
-
-  auto lfo = static_cast< LinearFunction * const >( tmod->function() );
-  if( static_cast< LinearFunction * const >( c.get_function() ) != lfo )
-   throw( std::invalid_argument( "Modification to non-Objective" ) );
-
-  // note: in the following we can assume that the Range in tmod is
-  //       precisely the one we have to use since no Variable can have
-  //       been added or deleted, which saves *a lot* of trouble
-
-  return;
-  }
-*/
-
- //throw( std::invalid_argument( "unsupported Modification to SatelliteBlock_discrete" ) );
-
- }  // end( SatelliteBlock_discrete::guts_of_add_Modification )
+ }  // end( DiscreteSatelliteBlock::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------- METHODS OF DCRSolution ------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void SatelliteSolution_discrete::deserialize( const netCDF::NcGroup & group )
+void DiscreteSatelliteSolution::deserialize( const netCDF::NcGroup & group )
 {}
 
-void SatelliteSolution_discrete::read( const Block * block )
+void DiscreteSatelliteSolution::read( const Block * block )
 {
- auto SATB = dynamic_cast< const SatelliteBlock_discrete * >( block );
+ auto SATB = dynamic_cast< const DiscreteSatelliteBlock * >( block );
  if( ! SATB )
-  throw( std::invalid_argument( "block is not a SatelliteBlock_discrete" ) );
+  throw( std::invalid_argument( "block is not a DiscreteSatelliteBlock" ) );
 
 }
 
-void SatelliteSolution_discrete::write( Block * block ) 
+void DiscreteSatelliteSolution::write( Block * block ) 
 {
 
- auto SATB = dynamic_cast<SatelliteBlock_discrete * >( block );
+ auto SATB = dynamic_cast<DiscreteSatelliteBlock * >( block );
  if( ! SATB )
-  throw( std::invalid_argument( "block is not a SatelliteBlock_discrete" ) );
+  throw( std::invalid_argument( "block is not a DiscreteSatelliteBlock" ) );
 
 }
 
-void SatelliteSolution_discrete::serialize( netCDF::NcGroup & group ) const
+void DiscreteSatelliteSolution::serialize( netCDF::NcGroup & group ) const
 {}
 
-SatelliteSolution_discrete * SatelliteSolution_discrete::scale( double factor ) const
+DiscreteSatelliteSolution * DiscreteSatelliteSolution::scale( double factor ) const
 {
-  auto * sol = SatelliteSolution_discrete::clone( true );
+  auto * sol = DiscreteSatelliteSolution::clone( true );
   return( sol );
 }
 
-void SatelliteSolution_discrete::sum( const Solution * solution , double multiplier )
+void DiscreteSatelliteSolution::sum( const Solution * solution , double multiplier )
 {}
 
-SatelliteSolution_discrete * SatelliteSolution_discrete::clone( bool empty ) const
+DiscreteSatelliteSolution * DiscreteSatelliteSolution::clone( bool empty ) const
 {
-  auto * sol = new SatelliteSolution_discrete();
+  auto * sol = new DiscreteSatelliteSolution();
  
  return( sol );
 }
 
 /*--------------------------------------------------------------------------*/
-/*------------------- End File SatelliteBlock_discrete.cpp --------------------------*/
+/*------------------- End File DiscreteSatelliteBlock.cpp --------------------------*/
 /*--------------------------------------------------------------------------*/
