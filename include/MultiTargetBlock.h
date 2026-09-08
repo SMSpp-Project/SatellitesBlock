@@ -69,17 +69,33 @@ using Vec_Bool = std::vector< bool >;
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Implementation of a simple MultiTargetBlock concept.
-/* MultiTargetBlock is composed of some SingleBlocks linked by the
-* configuration constraints for the satellites, indicating that each satellite
-must have a unique orbital configuration
-* \f[
-    \sum_{i \in [C]} pi[ i ][ c ] = 1, \forall i \in [s],
-* \f]
-* where [s] = \{1,2,...,s\} is the set of the satellites in the constellation.
-* Variables pi[ i ][ c ] indicating whether the sallite i is in orbital
-configuration c (the possible configuration are pre-computed when loading the
-problem instance, see SingleTargetBlock.h).
-*/
+/** MultiTargetBlock decomposes the constellation design problem *by
+ * target* rather than by satellite (as ConstellationBlock does): it is
+ * composed of one SingleTargetBlock [see SingleTargetBlock.h] per target,
+ * each holding its own full copy of the satellite orbit-selection
+ * Variable activation (there called pi[ j ][ c ], j indexing satellites
+ * and c the candidate orbital configuration, common to all targets since
+ * the candidate orbits [C] are computed once for the whole constellation,
+ * see load()) and observability threshold theta[ j ]. Since physically
+ * there is only one orbital configuration and one threshold per satellite,
+ * shared by all targets, MultiTargetBlock links every pair of consecutive
+ * SingleTargetBlock with "duplicate" consistency constraints
+ *
+ * \f[
+ *  \pi_i[ j ][ c ] = \pi_{i+1}[ j ][ c ] , \quad \forall i \in
+ *  \{ 1 , ... , targets - 1 \} , \; j \in [s] , \; c \in [C]
+ * \f]
+ * \f[
+ *  \theta_i[ j ] = \theta_{i+1}[ j ] , \quad \forall i \in
+ *  \{ 1 , ... , targets - 1 \} , \; j \in [s]
+ * \f]
+ *
+ * where [s] = \{ 1 , 2 , ... , s \} is the set of the satellites. Since
+ * MultiTargetBlock defines no Objective of its own, and each
+ * SingleTargetBlock's own objective is (a normalized fraction of) its
+ * worst-case target revisit time, the overall problem minimizes the
+ * average worst-case revisit time over all targets, subject to every
+ * SingleTargetBlock agreeing on the same satellite configuration. */
 
 class MultiTargetBlock : public Block
 {
@@ -92,7 +108,7 @@ public:
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- enum MCFType { kMCF, kSPT };
+ enum MCFType { kMCF, kSPT };  // unused leftover from the MCFBlock template
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/

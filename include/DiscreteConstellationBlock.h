@@ -69,7 +69,24 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// Implementation of a simple MMCF Block concept.
+/// Implementation of a simple ConstellationBlock concept, discretized form
+/** DiscreteConstellationBlock is the counterpart of ConstellationBlock [see
+ * ConstellationBlock.h] built out of DiscreteSatelliteBlock [see
+ * DiscreteSatelliteBlock.h] instead of SatelliteBlock: it builds the same
+ * candidate orbits via the same ground-track propagation as
+ * ConstellationBlock::load() (see there for the details), but additionally
+ * discretizes the observability threshold theta^{\max} into "ell" levels
+ * per satellite (see thetaValF in the .cpp), so that whether a satellite k
+ * observes target i at time stamp j, for candidate orbit o and threshold
+ * level l, is entirely precomputed into the 0/1 array obs[ k ][ j ][ i ]
+ * [ o ][ l ] rather than being determined via a big-M linearization at
+ * solve time. The observability constraints (1) of SatelliteBlock.h /
+ * ConstellationBlock.h are then expressed directly in terms of the
+ * DiscreteSatelliteBlock y[][] Variable (see
+ * generate_abstract_constraints()), weighted by these precomputed
+ * coefficients, together with a "thetaM" constraint bounding the selected
+ * threshold level for each satellite, and (currently disabled) symmetry-
+ * breaking constraints among satellites sharing the same altitude band. */
 
 class DiscreteConstellationBlock : public Block
 {
@@ -83,7 +100,7 @@ class DiscreteConstellationBlock : public Block
 /*---------------------------- PUBLIC TYPES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- enum MCFType { kMCF , kSPT };
+ enum MCFType { kMCF , kSPT };  // unused leftover from the MCFBlock template
 
 /*--------------------------------------------------------------------------*/
 /*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/

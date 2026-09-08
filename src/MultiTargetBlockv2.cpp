@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*-------------------------- File MultiTarget.cpp --------------------------*/
+/*------------------------ File MultiTargetBlockv2.cpp -----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Implementation of the MultiTargetBlockv2 class.
@@ -84,6 +84,14 @@ SMSpp_insert_in_factory_cpp_0( MultiTargetSolution );
 /*--------------------------------------------------------------------------*/
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
+
+// reads the instance and builds the candidate orbits exactly as
+// MultiTargetBlock::load() does [see there for the details of the shared,
+// single-altitude ground-track propagation]: the only difference is that,
+// having no per-target sub-Block to create, this just stores the resulting
+// CoverageSatLat/CoverageSatLong and the problem sizes (n, t, OrbitSet,
+// targets, ...) directly as members, deferring Variable/Constraint
+// creation to generate_abstract_variables()/generate_abstract_constraints()
 
 void MultiTargetBlockv2::load( const std::string & input , char frmt )
 {
@@ -384,6 +392,15 @@ void MultiTargetBlockv2::load( std::istream & input , char frmt )
 
 /*--------------------------------------------------------------------------*/
 
+// creates the static Variable of the model: these are exactly the ones of
+// SingleTargetBlock.h (theta, Deltat, Deltat_k1/k2 and their b1/b2/d1/d2
+// linearization helpers, zeta, h, xi), each carrying an extra "targets"
+// dimension (the last index) since a single MultiTargetBlockv2 covers all
+// targets at once, with the sole exception of activation[ i ][ j ] (the
+// per-satellite orbit selection), which is *not* replicated per target,
+// being shared by construction (cf. the class comments in
+// MultiTargetBlockv2.h on why no "duplicate" constraints are needed here)
+
 void MultiTargetBlockv2::generate_abstract_variables( Configuration * stvv )
 {
  if( AR3 & HasVar ) // the variables are there already
@@ -493,6 +510,16 @@ void MultiTargetBlockv2::generate_abstract_variables( Configuration * stvv )
 
 /*--------------------------------------------------------------------------*/
 
+// generates the same static Constraint families as
+// SingleTargetBlock::generate_abstract_constraints() [see there for the
+// full explanation, referring to the numbered constraints (1)-(10) of
+// SingleTargetBlock.h], each now built once per target (the extra "[ k ]"
+// / "targets" loop) rather than once per SingleTargetBlock instance; since
+// activation[][] is shared (not duplicated) across targets, no counterpart
+// to MultiTargetBlock's duplicate_pi/duplicate_theta constraints is needed
+// (the dead code below is what such a duplicate_pi would have looked like,
+// kept only for reference, cf. MultiTargetBlock::generate_abstract_constraints())
+
 void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
 {
  if( AR2 & HasCnst ) // the constraints are there already
@@ -512,17 +539,19 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
        }
     }
 */
+ // orbitSelection[ i ]: sum_{j} activation[ i ][ j ] == 1 for satellite i;
+ // since activation[][] has no target dimension, this constraint does not
+ // depend on k and is therefore built only once (not once per target)
+
  orbitSelection.resize( n );
- for( Index k = 0 ; k < targets ; ++k ) {
-  for( Index i = 0 ; i < n ; ++i ) {
-   LinearFunction::v_coeff_pair orbit_var;
-   for( Index j = 0 ; j < OrbitSet ; ++j )
-    orbit_var.push_back( std::make_pair( &activation[ i ][ j ] , 1.0 ) );
-   LinearFunction * FunctAnm = new LinearFunction( std::move( orbit_var ) );
-   orbitSelection[ i ].set_rhs( 1.0 , eNoBlck );
-   orbitSelection[ i ].set_lhs( 1.0 , eNoBlck );
-   orbitSelection[ i ].set_function( FunctAnm , eNoBlck );
-  }
+ for( Index i = 0 ; i < n ; ++i ) {
+  LinearFunction::v_coeff_pair orbit_var;
+  for( Index j = 0 ; j < OrbitSet ; ++j )
+   orbit_var.push_back( std::make_pair( &activation[ i ][ j ] , 1.0 ) );
+  LinearFunction * FunctAnm = new LinearFunction( std::move( orbit_var ) );
+  orbitSelection[ i ].set_rhs( 1.0 , eNoBlck );
+  orbitSelection[ i ].set_lhs( 1.0 , eNoBlck );
+  orbitSelection[ i ].set_function( FunctAnm , eNoBlck );
  }
 
  add_static_constraint( orbitSelection , "orbitSelection" );
@@ -976,6 +1005,10 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
 
 /*--------------------------------------------------------------------------*/
 
+// the objective is the average of the per-target maximum revisit times
+// Deltat[ k ] (weight 1/targets each), directly summed here since there
+// are no per-target sub-Block to sum objectives over, unlike MultiTargetBlock
+
 void MultiTargetBlockv2::generate_objective( Configuration * objc )
 {
  if( AR1 & HasObj ) // the objective is there already
@@ -998,6 +1031,8 @@ void MultiTargetBlockv2::generate_objective( Configuration * objc )
 
 /*--------------------------------------------------------------------------*/
 
+// TODO: not implemented yet, cf. SatelliteBlock::is_feasible()
+
 bool MultiTargetBlockv2::is_feasible( bool useabstract , Configuration * fsbc )
 {
  FNumber eps = 0;
@@ -1015,6 +1050,8 @@ bool MultiTargetBlockv2::is_feasible( bool useabstract , Configuration * fsbc )
 } // end( MultiTargetBlockv2::is_feasible )
 
 /*--------------------------------------------------------------------------*/
+
+// TODO: not implemented yet, cf. SatelliteBlock::is_optimal()
 
 bool MultiTargetBlockv2::is_optimal( bool useabstract , Configuration * optc )
 {
@@ -1062,7 +1099,9 @@ bool MultiTargetBlockv2::is_optimal( bool useabstract , Configuration * optc )
 /*--------------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
-
+// creates a new MultiTargetSolution, read from the current status of the
+// MultiTargetBlockv2 unless an empty one (emptys == true) is asked for;
+// wsol is extracted but currently unused, cf. SatelliteBlock::get_Solution()
 
 Solution * MultiTargetBlockv2::get_Solution( Configuration * solc ,
                                              bool emptys )
@@ -1083,40 +1122,44 @@ Solution * MultiTargetBlockv2::get_Solution( Configuration * solc ,
 
 } // end( MultiTargetBlockv2::get_Solution )
 
-/*
- void MultiTargetBlockv2::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
+// sets the values of the Deltat ColVariable-s (one per target, unlike the
+// single scalar Deltat/zeta of SingleTargetBlock/SatelliteBlock) from the
+// range [ rng.first , rng.second ) of fstrt
+
+void MultiTargetBlockv2::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
 {
- if( ! ( AR3 & HasVar ) )  // nowhere to put the value in
-  return;                 // cowardly (and silently) return
+ if( !( AR3 & HasVar ) ) // nowhere to put the value in
+  return; // cowardly (and silently) return
 
  Index i = rng.first;
+ Index stop = std::min( Index( rng.second ) , Index( Deltat.size() ) );
 
- for( auto xi = Deltat.begin() + i ;
-       i < 1 ; ++i )
-   (xi++)->set_value( *(fstrt++) );
-}
- */
+ for( auto xi = Deltat.begin() + i ; i < stop ; ++i )
+  ( xi++ )->set_value( *( fstrt++ ) );
 
+} // end( MultiTargetBlockv2::set_zeta )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
 /*--------------------------------------------------------------------------*/
+// intercepts Modification concerning this Block before forwarding them to
+// Block::add_Modification(), cf. SatelliteBlock::add_Modification()
 
 void MultiTargetBlockv2::add_Modification( sp_Mod mod , ChnlName chnl )
 {
- //!! std::cout << *mod << std::endl;
-
  if( mod->concerns_Block() ) {
   mod->concerns_Block( false );
   guts_of_add_Modification( mod.get() , chnl );
  }
 
  Block::add_Modification( mod , chnl );
-}
+
+} // end( MultiTargetBlockv2::add_Modification )
 
 /*--------------------------------------------------------------------------*/
 /*----- METHODS FOR LOADING, PRINTING & SAVING THE MultiTargetBlockv2 ------*/
 /*--------------------------------------------------------------------------*/
+// TODO: printing the MultiTargetBlockv2 instance is not implemented yet
 
 void MultiTargetBlockv2::print( std::ostream & output , char vlvl ) const {
 
@@ -1132,11 +1175,19 @@ void MultiTargetBlockv2::guts_of_destructor( void )
  // themselves from Variable that are going to be deleted anyway
 
  // clear the bound constraints
+ // note: as in SingleTargetBlock::guts_of_destructor(), Deltat_max3 is
+ // never populated by generate_abstract_constraints() and is therefore
+ // intentionally not cleared here; obs1_cnst and obs3_cnst are likewise
+ // declared and filled in but never actually added as static constraints
+ // (see the commented-out add_static_constraint() calls there), so they
+ // are not registered against any Variable and do not need clear() either
 
  Constraint::clear( orbitSelection );
  Constraint::clear( Deltat_max1 );
+ Constraint::clear( Deltat_max11 );
  Constraint::clear( Deltat_max2 );
- Constraint::clear( Deltat_max3 );
+ Constraint::clear( Deltat_max22 );
+ Constraint::clear( Deltat_max_dt1 );
  Constraint::clear( Deltat_min_k1_1 );
  Constraint::clear( Deltat_min_k1_2 );
  Constraint::clear( Deltat_min_k2_1 );
@@ -1149,10 +1200,15 @@ void MultiTargetBlockv2::guts_of_destructor( void )
  Constraint::clear( h_cnst_2 );
  Constraint::clear( h_cnst_3 );
  Constraint::clear( activationSat_cnst );
+ Constraint::clear( activationSat1_cnst );
+ Constraint::clear( theta_UB );
  //Constraint::clear( obs1_cnst );
  Constraint::clear( obs2_cnst );
  //Constraint::clear( obs3_cnst );
  Constraint::clear( obs4_cnst );
+ Constraint::clear( obs_cnst_h );
+ Constraint::clear( obs_cnst_xi );
+ Constraint::clear( observation1 );
 
  c.clear(); // clear the Objective
 
@@ -1170,19 +1226,29 @@ void MultiTargetBlockv2::guts_of_destructor( void )
 
 /*--------------------------------------------------------------------------*/
 
+// no Modification is currently supported on a MultiTargetBlockv2, hence
+// this is a no-op stub, cf. SatelliteBlock::guts_of_add_Modification()
+
 void MultiTargetBlockv2::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 {
  // process abstract Modification - - - - - - - - - - - - - - - - - - - - - -
- 
- //throw( std::invalid_argument( "unsupported Modification to MultiTargetBlockv2" ) );
 
 } // end( MultiTargetBlockv2::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- METHODS OF DCRSolution ------------------------*/
+/*------------------------ METHODS OF MultiTargetSolution --------------------*/
 /*--------------------------------------------------------------------------*/
+// a MultiTargetSolution stores in v_zeta the value of Deltat[ k ] (the
+// revisit time) for each of the targets k; deserialize()/serialize() are
+// currently no-ops, i.e., loading/saving a MultiTargetSolution to/from a
+// netCDF::NcGroup is not implemented yet
 
 void MultiTargetSolution::deserialize( const netCDF::NcGroup & group ) {}
+
+/*--------------------------------------------------------------------------*/
+// reads the current value of Deltat[] out of the given MultiTargetBlockv2
+// into v_zeta; note that this only happens if v_zeta is already non-empty
+// (i.e., this MultiTargetSolution has previously been sized to hold it)
 
 void MultiTargetSolution::read( const Block * block )
 {
@@ -1191,11 +1257,16 @@ void MultiTargetSolution::read( const Block * block )
   throw( std::invalid_argument( "block is not a MultiTargetBlockv2" ) );
 
  if( !v_zeta.empty() ) {
-  v_zeta.resize( 1 );
+  v_zeta.resize( SATB->targets );
 
-  //SATB->get_zeta();
+  for( Index k = 0 ; k < v_zeta.size() ; ++k )
+   v_zeta[ k ] = SATB->get_zeta( k );
  }
 }
+
+/*--------------------------------------------------------------------------*/
+// writes the values of Deltat[] stored in v_zeta into the given
+// MultiTargetBlockv2
 
 void MultiTargetSolution::write( Block * block )
 {
@@ -1203,12 +1274,15 @@ void MultiTargetSolution::write( Block * block )
  if( !SATB )
   throw( std::invalid_argument( "block is not a MultiTargetBlockv2" ) );
 
- if( !v_zeta.empty() ) {
-  //SATB->set_zeta( v_zeta.begin() );
- }
+ if( !v_zeta.empty() )
+  SATB->set_zeta( v_zeta.begin() );
 }
 
+/*--------------------------------------------------------------------------*/
+
 void MultiTargetSolution::serialize( netCDF::NcGroup & group ) const {}
+
+/*--------------------------------------------------------------------------*/
 
 MultiTargetSolution * MultiTargetSolution::scale( double factor ) const
 {
@@ -1216,9 +1290,14 @@ MultiTargetSolution * MultiTargetSolution::scale( double factor ) const
  return ( sol );
 }
 
+/*--------------------------------------------------------------------------*/
+// TODO: not implemented yet
+
 void MultiTargetSolution::sum( const Solution * solution , double multiplier )
 {
 }
+
+/*--------------------------------------------------------------------------*/
 
 MultiTargetSolution * MultiTargetSolution::clone( bool empty ) const
 {
@@ -1226,7 +1305,7 @@ MultiTargetSolution * MultiTargetSolution::clone( bool empty ) const
 
  if( empty ) {
   if( !v_zeta.empty() )
-   sol->v_zeta.resize( 1 );
+   sol->v_zeta.resize( v_zeta.size() );
  } else {
   sol->v_zeta = v_zeta;
  }

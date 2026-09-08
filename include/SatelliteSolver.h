@@ -52,6 +52,36 @@ namespace SMSpp_di_unipi_it {
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Solver for SatelliteBlock
+/** SatelliteSolver is a specialized Solver that exploits the very simple
+ * structure of a single SatelliteBlock to solve it "by inspection", without
+ * calling any general-purpose (I)LP/MILP solver. This is meant to be used
+ * as the *pricing* Solver attached to each SatelliteBlock while the
+ * corresponding ConstellationBlock is tackled by a Lagrangian decomposition
+ * approach (e.g., LagrangianDualSolver / BundleSolver): the observability
+ * constraints of ConstellationBlock, which are the only ones linking
+ * different SatelliteBlock together, are dualized, so that the Lagrangian
+ * function decomposes into one independent subproblem per SatelliteBlock,
+ * each amounting to "does this satellite reduce the Lagrangian cost by
+ * being active, and if so with which one of its (finitely many) candidate
+ * orbits [C]?"
+ *
+ * Precisely, once the observability constraints are dualized with
+ * multipliers lambda11[ j ][ tt ] (one per target j and time stamp tt) and
+ * the LinearFunction of the SatelliteBlock Objective is correspondingly
+ * updated by whoever performs the dualization (lambdaz being the
+ * (dualized) coefficient of zeta, lambda3 that of thetaVar, and
+ * lambda1[][] those of the bound constraints, currently unused here), the
+ * subproblem is solved by brute-force enumeration over all the candidate
+ * orbits c \in [C] of get_numOrbit(): for each c, the corresponding xi[][]
+ * pattern is exactly determined by comparing the precomputed coverage
+ * distances Delta_lat/Delta_long against the fixed threshold theta (see
+ * SatelliteBlock::get_theta()), and the resulting Lagrangian cost is
+ * xi_sum1 = sum_{j,tt} lambda11[ j ][ tt ] * xi[ j ][ tt ]. The orbit
+ * yielding the smallest (i.e., most negative) such cost is retained in
+ * orbit_opt only if it improves on the "do nothing" alternative (whose
+ * cost is 0, i.e., zeta = 0 and no target observed): orbit_opt stays -1,
+ * and the satellite is reported inactive, whenever no candidate orbit
+ * achieves a strictly negative Lagrangian cost. */
 
 class SatelliteSolver : public Solver
 {
@@ -147,6 +177,15 @@ public:
   process_outstanding_Modification();
 
   /****** COMPUTE PROCEDURE ******/
+  // the Lagrangian multipliers dualizing the ConstellationBlock-level
+  // observability / thetaM constraints are read directly out of the
+  // coefficients of the (dense) LinearFunction of the SatelliteBlock
+  // Objective, in the fixed order in which generate_objective() /
+  // whoever dualizes the constraints is assumed to have laid them out:
+  // coefficient 0 is lambdaz (dual price of zeta), coefficient 1 is
+  // lambda3 (dual price of thetaVar), and the following ones (extracted
+  // into lambda1[][], currently unused below) and lambda11[][] are the
+  // per-(target,revisit-window)/per-(target,time-stamp) multipliers
 
   auto SATB = dynamic_cast< SatelliteBlock * >( f_Block );
   auto t = SATB->get_t();
@@ -239,7 +278,11 @@ public:
   auto sum_p = 0.0;
   orbit_opt = -1;
 
-  //std::cout << "NUM_ORBIT: " << SATB->get_numOrbit() << std::endl;
+  // brute-force enumeration over the (small) set [C] of candidate orbits:
+  // for orbit i, xi_new1[ j ][ tt ] is 1 iff. target j is within the fixed
+  // threshold theta at time tt for that orbit (both in latitude and
+  // longitude), and xi_sum1 accumulates the corresponding dualized
+  // observability cost sum_{j,tt} lambda11[ j ][ tt ] * xi[ j ][ tt ]
 
   for( int i = 0 ; i < SATB->get_numOrbit() ; i++ ) {
    xi_sum1 = 0.0;
@@ -259,6 +302,9 @@ public:
     }
    }
 
+   // keep orbit i only if it strictly improves on the best cost found so
+   // far (objective_opt1, initialized to 0 == the "do nothing" cost)
+
    if( xi_sum1 < objective_opt1 ) {
     objective_opt1 = xi_sum1;
     orbit_opt = i;
@@ -268,6 +314,10 @@ public:
     flag = 1;
    }
   }
+
+  // the Lagrangian value of the subproblem also includes the (dualized)
+  // cost of zeta and of the fixed threshold theta; std::min( ... , 0.0 )
+  // enforces that "doing nothing" (cost 0) is always a feasible fallback
 
   objective_opt = std::min( lambdaz + objective_opt1 + lambda3 * theta , 0.0 );
 
@@ -283,6 +333,8 @@ public:
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
+// the subproblem is solved to optimality by brute-force enumeration (see
+// compute()), so the lower and upper bound on its optimal value coincide
 
  OFValue get_lb( void ) override
  {
@@ -311,6 +363,12 @@ public:
  bool has_var_solution( void ) override { return ( true ); }
 
 /*--------------------------------------------------------------------------*/
+
+ // writes the solution found by compute() back into the SatelliteBlock:
+ // zeta is 1 iff. some orbit improved the Lagrangian cost (orbit_opt > -1,
+ // re-checked here against objective_opt for consistency), that orbit's
+ // activation[] entry is set to 1 (all others to 0), and its corresponding
+ // xi_new[][] pattern is copied into the xi[][] Variable
 
  void get_var_solution( Configuration * solc = nullptr ) override
  {

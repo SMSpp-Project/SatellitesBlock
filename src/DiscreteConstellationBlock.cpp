@@ -67,6 +67,19 @@ static const auto angle0 = -1.3882860164509252;
 void  DiscreteConstellationBlock::load( std::istream & input , char frmt ){
 }
 
+/*--------------------------------------------------------------------------*/
+// this load() is the discretized-theta counterpart of
+// ConstellationBlock::load( const std::string & ) [see there for a full
+// account of the orbital-mechanics computations, which are identical here
+// up to and including the discretization of inclination/RAAN/mean anomaly
+// and the ground-track propagation]: the only substantial addition is that,
+// besides the candidate orbits [C], the observability threshold theta^{\max}
+// is here also discretized into ell (== 3) decreasing levels thetaValF[ l ],
+// and, for every satellite / time stamp / target / orbit / level quintuple,
+// the corresponding 0/1 observability outcome is precomputed once and for
+// all into obs[][][][][], to be used directly (as a constraint coefficient,
+// not as a big-M linearization) by generate_abstract_constraints() below
+
 void DiscreteConstellationBlock::load( const std::string & input , char frmt )
 {
 
@@ -215,6 +228,9 @@ void DiscreteConstellationBlock::load( const std::string & input , char frmt )
  boost::multi_array< double , 3 > CoverageSatLat1(boost::extents[targets][t][incSet*ascSet*anmSet]);
  boost::multi_array< double , 3 > CoverageSatLong1(boost::extents[targets][t][incSet*ascSet*anmSet]);
 
+ // ell discretized observability-threshold levels are used for every
+ // satellite; thetaValF[] is (re)computed per-satellite a few lines below
+
  int ell = 3;
  thetaValF.resize(ell);
 
@@ -262,6 +278,11 @@ for(Index isat = 0; isat < satellites; ++isat){
  indexOrbit1 = 0;
  //double thetaValF = FACTOR*(satellites-isat)/satellites * thetaValFinal;
  //double thetaValF = (satellites - isat)/satellites * thetaValFinal;
+ // level 0 is the loosest (largest) threshold, level ell-1 the tightest;
+ // note that only thetaValF[ 0 ] is actually used below to decide whether
+ // an orbit is worth keeping at all (indexOrbit1), while all ell levels
+ // are used afterwards to fill in obs[][][][][]
+
  for(double l = 0; l < ell; l++){
    thetaValF[l] = (ell-l)/ell * thetaValFinal/10.0;
    std::cout << "theta=" << thetaValF[l] << std::endl;
@@ -312,10 +333,19 @@ for(Index isat = 0; isat < satellites; ++isat){
                   indexOrbit1 += 1;
              }
             }
+            // as in ConstellationBlock::load(), an orbit is only kept if it
+            // observes at least one target at some time stamp (indexOrbit1
+            // uses the loosest threshold thetaValF[ 0 ]); for every kept
+            // orbit, obs[ isat ][ j ][ i ][ indexOrbit ][ l1 ] is set to 1
+            // iff. the coverage distance is within threshold level l1, for
+            // every one of the ell levels: this is the precomputed
+            // observability outcome used directly, as a coefficient, by
+            // generate_abstract_constraints() below
+
             if (indexOrbit1>=1){
-               for( Index j = 0 ; j < t ; ++j ) 
+               for( Index j = 0 ; j < t ; ++j )
                {
-                  for( Index i = 0 ; i < targets ; ++i ) 
+                  for( Index i = 0 ; i < targets ; ++i )
                   {
                   CoverageSatLat[ i ][ j ][ indexOrbit ] = CoverageSatLat1[ i ][ j ][ index1 ];
                   CoverageSatLong[ i ][ j ][ indexOrbit ] = CoverageSatLong1[ i ][ j ][ index1 ];
@@ -334,11 +364,18 @@ for(Index isat = 0; isat < satellites; ++isat){
        }
     }
 
+      // record, for this satellite, how many orbits survived (indexOrbit)
+      // and its threshold levels (thetaValSat[]), then create and load()
+      // its DiscreteSatelliteBlock with the corresponding (orbit, level)
+      // grid size; note the ground-track coverage itself (obs[][][][][])
+      // is not passed to the DiscreteSatelliteBlock, but kept here and
+      // used directly when building the observability constraints below
+
       indexOrbitSat[isat] = indexOrbit;
       for (Index lll = 0; lll < ell; ++lll)
          thetaValSat[isat][lll] = thetaValF[lll];
       ellSat[isat] = ell;
-      std::cout << "number Orbits: " << indexOrbit << " " << ell << "\n"; 
+      std::cout << "number Orbits: " << indexOrbit << " " << ell << "\n";
       auto SB = new DiscreteSatelliteBlock( this );
       SB->load( indexOrbit , ell );
       v_Block[ isat ] = SB;
@@ -354,6 +391,8 @@ for(Index isat = 0; isat < satellites; ++isat){
 
 /*--------------------------------------------------------------------------*/
 
+// simply delegates to each nested DiscreteSatelliteBlock
+
 void DiscreteConstellationBlock::generate_abstract_variables( Configuration * stvv )
 {
 
@@ -362,28 +401,44 @@ void DiscreteConstellationBlock::generate_abstract_variables( Configuration * st
  }
 
 /*--------------------------------------------------------------------------*/
+// first delegates to each nested DiscreteSatelliteBlock (its own
+// "at most one (orbit,level)" constraint), then adds the
+// DiscreteConstellationBlock-level constraints linking them together:
+// thetaM, observation / observation1 (as in ConstellationBlock, but
+// expressed via y[][] and the precomputed obs[][][][][] coefficients
+// rather than via xi[][] and a big-M linearization), and symmetry breaking
 
 void DiscreteConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 {
 
- if( ! ( AR ) ) {   
+ if( ! ( AR ) ) {
    for( auto blck : v_Block )
     blck->generate_abstract_constraints();
+
+   // thetaM: for every satellite k and every selected (orbit,level) pair
+   // y[ o ][ l ], penalizes/forbids levels l whose threshold thetaValSat[k][l]
+   // exceeds 0.9 times the loosest level thetaValSat[k][0], mirroring the
+   // per-satellite thetaM bound of ConstellationBlock
 
    LinearFunction::v_coeff_pair v_var12;
    for( Index k = 0 ; k < satellites ; ++k )
       for( Index o = 0 ; o < indexOrbitSat[k] ; ++o )
          for( Index l = 0 ; l < ellSat[k] ; ++l )
-         v_var12.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( 
+         v_var12.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >(
                   v_Block[ k ] )->i2p_y(o,l), thetaValSat[k][l] - 0.9 * thetaValSat[k][0] ));
 
    thetaM.set_function( new LinearFunction( std::move( v_var12 )));
-   thetaM.set_rhs( 0.0 );//Inf< double >()
+   thetaM.set_rhs( 0.0 );
    thetaM.set_lhs( -Inf< double >() );
 
    add_static_constraint( thetaM , "thetaM" );
 
   // generate the observability constraints  - - - - - - - - - - - - - - -
+  // same revisit-time semantics as ConstellationBlock::observation, but
+  // the coefficient of y[ o ][ l ] for satellite k, target i and revisit
+  // window j is obb = sum_{tt in window} obs[ k ][ tt ][ i ][ o ][ l ],
+  // i.e., how many time stamps of that window orbit/level (o,l) of
+  // satellite k would observe target i
 
    double maxPeriods = *max_element(periods.begin(), periods.end());
    observation.resize(boost::multi_array< FRowConstraint , 2 >::extent_gen()[ targets ][ maxPeriods ]);
@@ -433,6 +488,9 @@ void DiscreteConstellationBlock::generate_abstract_constraints( Configuration * 
 
    add_static_constraint( observation , "observation" );
 
+   // observation1: per-time-stamp version, mirroring ConstellationBlock's
+   // observation1 (at most one satellite observes each target at each
+   // time stamp), again expressed via the obs[][][][][] coefficients
 
    observation1.resize(boost::multi_array< FRowConstraint , 2 >::extent_gen()[ targets ][ horizon/time_step ]);
 
@@ -462,23 +520,33 @@ void DiscreteConstellationBlock::generate_abstract_constraints( Configuration * 
 
    int ialt = std::floor(satellites/3);
 
+   // (currently disabled, see add_static_constraint() being commented out
+   // below) symmetry-breaking: for every pair of consecutive satellites i,
+   // i+1 belonging to the same altitude-band third (cf. the "ii" grouping
+   // in load()), forces sum_{o,l} y_i[o][l] <= sum_{o,l} y_{i+1}[o][l], to
+   // cut away solutions that only differ by which interchangeable satellite
+   // within the group is the active one; note that symmetry[ i ] is left
+   // completely unset (no function/rhs/lhs) whenever i and i+1 are *not*
+   // in the same group, which would need to be fixed before re-enabling
+   // add_static_constraint() below
+
    symmetry.resize( satellites-1 );
-   
+
    for( Index i = 0 ; i < satellites-1 ; ++i ) {
       LinearFunction::v_coeff_pair v_vars;
       if(std::floor(i/3)==std::floor((i+1)/3)){
-         for( Index o = 0 ; o < indexOrbitSat[i] ; ++o ) 
-            for( Index l = 0 ; l < ellSat[i] ; ++l ) 
+         for( Index o = 0 ; o < indexOrbitSat[i] ; ++o )
+            for( Index l = 0 ; l < ellSat[i] ; ++l )
                   v_vars.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ i ] )->i2p_y( o , l ), 1.0 ));
-         for( Index o = 0 ; o < indexOrbitSat[i+1] ; ++o ) 
-            for( Index l = 0 ; l < ellSat[i+1] ; ++l ) 
+         for( Index o = 0 ; o < indexOrbitSat[i+1] ; ++o )
+            for( Index l = 0 ; l < ellSat[i+1] ; ++l )
                   v_vars.push_back( std::make_pair( static_cast< DiscreteSatelliteBlock * >( v_Block[ i+1 ] )->i2p_y( o , l ), -1.0 ));
       symmetry[i].set_function( new LinearFunction( std::move( v_vars )));
-      symmetry[i].set_rhs( 0.0 ); 
+      symmetry[i].set_rhs( 0.0 );
       symmetry[i].set_lhs( -Inf< double >() );
       }
    }
- 
+
    //////add_static_constraint( symmetry , "symmetry" );
 
    AR = true;
@@ -491,6 +559,8 @@ void DiscreteConstellationBlock::generate_abstract_constraints( Configuration * 
 /*--------------------------------------------------------------------------*/
 /*---------------- METHODS FOR CHECKING THE DiscreteConstellationBlock -----*/
 /*--------------------------------------------------------------------------*/
+// checks feasibility of the DiscreteConstellationBlock-level constraints
+// only (thetaM, observation, observation1), cf. ConstellationBlock::is_feasible()
 
 bool DiscreteConstellationBlock::is_feasible( bool useabstract , Configuration * fsbc )
 {
@@ -532,6 +602,7 @@ bool DiscreteConstellationBlock::is_feasible( bool useabstract , Configuration *
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
+// TODO: printing the DiscreteConstellationBlock instance is not implemented yet
 
 void DiscreteConstellationBlock::print( std::ostream & output , char vlvl ) const
 {

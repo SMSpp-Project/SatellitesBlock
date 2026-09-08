@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*------------------------- File SingleTarget.cpp --------------------------*/
+/*----------------------- File SingleTargetBlock.cpp ------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * Implementation of the SingleTargetBlock class.
@@ -158,6 +158,14 @@ SMSpp_insert_in_factory_cpp_0( SingleTargetSolution );
 /*-------------------------- OTHER INITIALIZATIONS -------------------------*/
 /*--------------------------------------------------------------------------*/
 
+// loads the size/geometry data for a single target: the number of
+// satellites n (== MultiTargetBlock's satellites) with their OrbitSet
+// candidate orbits, the time discretization (dt, T, hence t = T/dt), the
+// observability threshold thetaValues, and the precomputed per-(time
+// stamp, orbit) coverage distances CoverageLat/CoverageLong (typically
+// built by MultiTargetBlock::load(), see there); as in SatelliteBlock::load(),
+// neither the abstract Variable nor the Objective are generated here
+
 void SingleTargetBlock::load( FNumber num_targets , FNumber num_satellites ,
                               FNumber time_step, FNumber horizon,
                               FNumber altValues, FNumber thetaValues,
@@ -236,6 +244,15 @@ void SingleTargetBlock::load( std::istream & input , char frmt )
 } // end( SingleTargetBlock::load( istream ) )
 
 /*--------------------------------------------------------------------------*/
+
+// creates all the static Variable of the model described in
+// SingleTargetBlock.h: theta (per-satellite observability threshold),
+// Deltat/Deltat_k1/Deltat_k2 (the max revisit time and its forward/backward
+// auxiliary terms), the b1/b2/d1/d2 indicator Variable used to linearize
+// the min operators of constraints (2)-(3), zeta (per-time-stamp target
+// observation), activation (per-satellite orbit selection), h (pairwise
+// "observed at both k and j" indicator) and xi (per-satellite,
+// per-time-stamp observation)
 
 void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
 {
@@ -359,6 +376,14 @@ void SingleTargetBlock::generate_abstract_variables( Configuration * stvv )
 } // end( SingleTargetBlock::generate_abstract_variables )
 
 /*--------------------------------------------------------------------------*/
+
+// generates the full set of static Constraint implementing the model of
+// SingleTargetBlock.h: orbit selection, the linking between xi/zeta (each
+// with its "activation" and "deactivation" direction), the three families
+// of constraints linearizing h[ ] = zeta[i] * zeta[j] (constraints (8)-(10)
+// in the header), the observability big-M constraints (5), and the whole
+// machinery computing the maximum revisit time Deltat via Deltat_k1/
+// Deltat_k2 and their own linearized-minimum constraints (2)-(4)
 
 void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
 {
@@ -848,6 +873,13 @@ void SingleTargetBlock::generate_abstract_constraints( Configuration * stcc )
 
 /*--------------------------------------------------------------------------*/
 
+// the objective is (1) of the header: minimize Deltat, the maximum revisit
+// time for this target; the coefficient 1/targets normalizes it so that,
+// once the objectives of all the per-target SingleTargetBlock are summed up
+// by MultiTargetBlock (which defines no Objective of its own), the overall
+// objective is the *average* rather than the *sum* of the per-target
+// maximum revisit times
+
 void SingleTargetBlock::generate_objective( Configuration * objc )
 {
  if( AR1 & HasObj ) // the objective is there already
@@ -869,6 +901,8 @@ void SingleTargetBlock::generate_objective( Configuration * objc )
 
 /*--------------------------------------------------------------------------*/
 
+// TODO: not implemented yet, cf. SatelliteBlock::is_feasible()
+
 bool SingleTargetBlock::is_feasible( bool useabstract , Configuration * fsbc )
 {
  FNumber eps = 0;
@@ -886,6 +920,8 @@ bool SingleTargetBlock::is_feasible( bool useabstract , Configuration * fsbc )
 } // end( SingleTargetBlock::is_feasible )
 
 /*--------------------------------------------------------------------------*/
+
+// TODO: not implemented yet, cf. SatelliteBlock::is_optimal()
 
 bool SingleTargetBlock::is_optimal( bool useabstract , Configuration * optc )
 {
@@ -933,7 +969,9 @@ bool SingleTargetBlock::is_optimal( bool useabstract , Configuration * optc )
 /*--------------------------------------------------------------------------*/
 /*----------------------- Methods for handling Solution --------------------*/
 /*--------------------------------------------------------------------------*/
-
+// creates a new SingleTargetSolution, read from the current status of the
+// SingleTargetBlock unless an empty one (emptys == true) is asked for; wsol
+// is extracted but currently unused, cf. SatelliteBlock::get_Solution()
 
 Solution * SingleTargetBlock::get_Solution( Configuration * solc ,
                                             bool emptys )
@@ -954,6 +992,13 @@ Solution * SingleTargetBlock::get_Solution( Configuration * solc ,
 
 } // end( SingleTargetBlock::get_Solution )
 
+/*--------------------------------------------------------------------------*/
+// despite its name (kept for symmetry with SatelliteBlock::set_zeta(), of
+// which this is a straight adaptation), this actually sets the value of
+// the scalar Deltat ColVariable from the range [ rng.first , rng.second )
+// of fstrt; the loop variable is named xi purely as a local iterator,
+// unrelated to the xi[][] member Variable
+
 void SingleTargetBlock::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
 {
  if( !( AR3 & HasVar ) ) // nowhere to put the value in
@@ -963,28 +1008,30 @@ void SingleTargetBlock::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
 
  for( auto xi = Deltat.begin() + i ; i < 1 ; ++i )
   ( xi++ )->set_value( *( fstrt++ ) );
-}
 
+} // end( SingleTargetBlock::set_zeta )
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
 /*--------------------------------------------------------------------------*/
+// intercepts Modification concerning this Block before forwarding them to
+// Block::add_Modification(), cf. SatelliteBlock::add_Modification()
 
 void SingleTargetBlock::add_Modification( sp_Mod mod , ChnlName chnl )
 {
- //!! std::cout << *mod << std::endl;
-
  if( mod->concerns_Block() ) {
   mod->concerns_Block( false );
   guts_of_add_Modification( mod.get() , chnl );
  }
 
  Block::add_Modification( mod , chnl );
-}
+
+} // end( SingleTargetBlock::add_Modification )
 
 /*--------------------------------------------------------------------------*/
 /*------ METHODS FOR LOADING, PRINTING & SAVING THE SingleTargetBlock ------*/
 /*--------------------------------------------------------------------------*/
+// TODO: printing the SingleTargetBlock instance is not implemented yet
 
 void SingleTargetBlock::print( std::ostream & output , char vlvl ) const {
 
@@ -1000,11 +1047,16 @@ void SingleTargetBlock::guts_of_destructor( void )
  // themselves from Variable that are going to be deleted anyway
 
  // clear the bound constraints
+ // note: Deltat_max3 is a declared member never populated by
+ // generate_abstract_constraints() (Deltat_max1/11/2/22 are the ones
+ // actually used), so it is intentionally not cleared here
 
  Constraint::clear( orbitSelection );
  Constraint::clear( Deltat_max1 );
+ Constraint::clear( Deltat_max11 );
  Constraint::clear( Deltat_max2 );
- Constraint::clear( Deltat_max3 );
+ Constraint::clear( Deltat_max22 );
+ Constraint::clear( Deltat_max_dt1 );
  Constraint::clear( Deltat_min_k1_1 );
  Constraint::clear( Deltat_min_k1_2 );
  Constraint::clear( Deltat_min_k2_1 );
@@ -1015,8 +1067,13 @@ void SingleTargetBlock::guts_of_destructor( void )
  Constraint::clear( h_cnst_2 );
  Constraint::clear( h_cnst_3 );
  Constraint::clear( activationSat_cnst );
+ Constraint::clear( activationSat1_cnst );
+ Constraint::clear( theta_UB );
  Constraint::clear( obs2_cnst );
  Constraint::clear( obs4_cnst );
+ Constraint::clear( obs_cnst_h );
+ Constraint::clear( obs_cnst_xi );
+ Constraint::clear( observation1 );
 
  c.clear(); // clear the Objective
 
@@ -1034,19 +1091,29 @@ void SingleTargetBlock::guts_of_destructor( void )
 
 /*--------------------------------------------------------------------------*/
 
+// no Modification is currently supported on a SingleTargetBlock, hence
+// this is a no-op stub, cf. SatelliteBlock::guts_of_add_Modification()
+
 void SingleTargetBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
 {
  // process abstract Modification - - - - - - - - - - - - - - - - - - - - - -
 
- //throw( std::invalid_argument( "unsupported Modification to SingleTargetBlock" ) );
-
 } // end( SingleTargetBlock::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- METHODS OF DCRSolution ------------------------*/
+/*----------------------- METHODS OF SingleTargetSolution -------------------*/
 /*--------------------------------------------------------------------------*/
+// a SingleTargetSolution only stores the value of v_zeta which, like
+// SingleTargetBlock::set_zeta() (see there), actually refers to the scalar
+// Deltat Variable rather than to zeta[]; deserialize()/serialize() are
+// currently no-ops
 
 void SingleTargetSolution::deserialize( const netCDF::NcGroup & group ) {}
+
+/*--------------------------------------------------------------------------*/
+// reads the current value of Deltat out of the given SingleTargetBlock;
+// note the value returned by SATB->get_zeta() is presently discarded:
+// TODO store it into v_zeta[ 0 ]
 
 void SingleTargetSolution::read( const Block * block )
 {
@@ -1061,6 +1128,8 @@ void SingleTargetSolution::read( const Block * block )
  }
 }
 
+/*--------------------------------------------------------------------------*/
+
 void SingleTargetSolution::write( Block * block )
 {
  auto SATB = dynamic_cast< SingleTargetBlock * >( block );
@@ -1072,7 +1141,11 @@ void SingleTargetSolution::write( Block * block )
  }
 }
 
+/*--------------------------------------------------------------------------*/
+
 void SingleTargetSolution::serialize( netCDF::NcGroup & group ) const {}
+
+/*--------------------------------------------------------------------------*/
 
 SingleTargetSolution * SingleTargetSolution::scale( double factor ) const
 {
@@ -1080,9 +1153,14 @@ SingleTargetSolution * SingleTargetSolution::scale( double factor ) const
  return ( sol );
 }
 
+/*--------------------------------------------------------------------------*/
+// TODO: not implemented yet
+
 void SingleTargetSolution::sum( const Solution * solution , double multiplier )
 {
 }
+
+/*--------------------------------------------------------------------------*/
 
 SingleTargetSolution * SingleTargetSolution::clone( bool empty ) const
 {

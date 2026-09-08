@@ -77,6 +77,42 @@ using c_Vec_MultiTargetBlockv2_it = c_Vec_MultiTargetBlockv2::iterator;
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
+/// implementation of the Block concept for the "flat", non-decomposed
+/// multi-target constellation-design problem
+/** MultiTargetBlockv2 solves exactly the same problem as MultiTargetBlock
+ * [see MultiTargetBlock.h], namely minimizing the average worst-case
+ * revisit time over all targets subject to a common satellite orbit
+ * configuration, but as a *single monolithic Block* rather than as one
+ * MultiTargetBlock containing one SingleTargetBlock per target linked by
+ * "duplicate" consistency constraints [see SingleTargetBlock.h for the
+ * detailed mathematical model, which applies verbatim here]. Concretely:
+ *
+ * - the satellite orbit-selection Variable activation[ j ][ c ] (one per
+ *   satellite j and candidate orbit c) is a *single* shared copy, since
+ *   there is no decomposition by target requiring it to be duplicated and
+ *   equated across per-target copies;
+ *
+ * - every other Variable and Constraint of SingleTargetBlock.h that used
+ *   to live once per SingleTargetBlock (theta, Deltat, Deltat_k1/k2, zeta,
+ *   b1/b2, d1/d2, h, xi, and all constraints built out of them) instead
+ *   gains an explicit target dimension tgt, so that e.g. what was
+ *   SingleTargetBlock::xi[ i ][ j ] (satellite i, time j, for one target)
+ *   becomes MultiTargetBlockv2::xi[ i ][ j ][ m ] (satellite i, time j,
+ *   target m);
+ *
+ * - consequently no "duplicate" constraints are needed at all: sharing is
+ *   automatic since activation[][] is not replicated in the first place.
+ *
+ * Being avoided the overhead (and, for some Solver, the added complexity)
+ * of nested sub-Block, MultiTargetBlockv2 is meant to be solved directly
+ * by a general-purpose MILP Solver rather than through the decomposition
+ * approach that MultiTargetBlock (and, similarly, ConstellationBlock with
+ * its own SatelliteBlock) is designed for. Unlike its sibling classes,
+ * MultiTargetBlockv2 also defines a full set of "physical Modification"
+ * classes (MultiTargetBlockv2Mod and its Rngd/Sbst specializations, see
+ * below), mirroring the ones of MCFBlock; however, as of now
+ * guts_of_add_Modification() never actually issues one, so this machinery
+ * is currently unused. */
 
 class MultiTargetBlockv2 : public Block
 {
@@ -324,6 +360,15 @@ public:
  Solution * get_Solution( Configuration * solc = nullptr ,
                           bool emptys = true ) override;
 
+ /// returns the current value of Deltat[ k ], the revisit time of target k
+
+ FNumber get_zeta( Index k ) const { return( Deltat[ k ].get_value() ); }
+
+ /// sets the values of the Deltat ColVariable-s, one per target, in the
+ /// range [ rng.first , rng.second ) from fstrt
+
+ void set_zeta( c_Vec_FNumber_it fstrt ,
+                Range rng = Range( 0 , Inf< Index >() ) );
 
  /** @} ---------------------------------------------------------------------*/
 /*-------------------- Methods for handling Modification -------------------*/
@@ -604,7 +649,11 @@ private:
  *  changes in the "abstract representation" of the MultiTargetBlockv2 are dealt with
  *  by means of "abstract Modification", i.e., derived classes from
  *  AModification (as is BlockMod, which is why MultiTargetBlockv2Mod is not derived
- *  from BlockMod). */
+ *  from BlockMod).
+ *
+ * NOTE: as of now, MultiTargetBlockv2::guts_of_add_Modification() never
+ * actually constructs any MultiTargetBlockv2Mod (or its Rngd/Sbst
+ * specializations below), so this class is currently unused. */
 
 class MultiTargetBlockv2Mod : public Modification
 {

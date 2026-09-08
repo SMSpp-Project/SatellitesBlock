@@ -4,7 +4,7 @@
 /** @file
  * Header file for the DiscreteSatelliteSolver class.
  *
- * \author Luca Frangioni \n
+ * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
  *         Universita' di Pisa \n
  *
@@ -50,6 +50,22 @@ namespace SMSpp_di_unipi_it
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Solver for DiscreteSatelliteBlock
+/** DiscreteSatelliteSolver plays, for a DiscreteSatelliteBlock, the same
+ * role that SatelliteSolver [see SatelliteSolver.h] plays for a
+ * SatelliteBlock: it is meant to be the pricing Solver attached to each
+ * DiscreteSatelliteBlock while the corresponding DiscreteConstellationBlock
+ * is tackled by a Lagrangian decomposition approach, and it solves the
+ * subproblem "by inspection" rather than via a general-purpose solver.
+ *
+ * Since the only Variable of a DiscreteSatelliteBlock are the binary
+ * y[ i ][ j ] (i indexing the candidate orbit, j the discretized
+ * observability level, see DiscreteSatelliteBlock.h) subject to the single
+ * constraint sum_{i,j} y[ i ][ j ] <= 1, and its (dualized) Objective is a
+ * plain LinearFunction with one coefficient eta per y[ i ][ j ] (laid out
+ * in row-major (i,j) order), the subproblem trivially reduces to picking
+ * the single most negative coefficient eta_min (if any is negative; doing
+ * nothing, i.e., all y == 0, otherwise), which is exactly what compute()
+ * does by linear scan. */
 
 class DiscreteSatelliteSolver : public Solver {
 
@@ -155,6 +171,12 @@ public:
   auto o = SATB->get_orbits();
   auto ell = SATB->get_ell();
 
+  // linear scan of the o * ell coefficients of the (dense) Objective, one
+  // per y[ j ][ tt ], in the same row-major order in which
+  // DiscreteSatelliteBlock::generate_objective() laid them out; eta_min
+  // (initialized to 0, i.e., the "do nothing" cost) and (o_min,ell_min)
+  // track the best (y , orbit) pair found so far
+
   for(int j = 0; j < o ; j++){
     for(int tt = 0; tt < ell ; tt++){
       eta = static_cast< LinearFunction *>(static_cast< FRealObjective *>
@@ -219,7 +241,10 @@ bool has_var_solution( void ) override {
   auto o = SATB->get_orbits();
   auto ell = SATB->get_ell();
 
-  
+  // resets all y[][] to 0, then activates only the single (orbit, level)
+  // pair found by compute(), and only if it actually improved on "do
+  // nothing" (eta_min < 0); otherwise the all-zero solution is left in place
+
   for(int j = 0; j < o ; j++)
     for(int tt = 0; tt < ell ; tt++)
       SATB->set_y(j , tt , 0.0);

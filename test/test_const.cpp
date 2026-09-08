@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------*/
-/*--------------------------- File test_milp.cpp ---------------------------*/
+/*--------------------------- File test_const.cpp ---------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * MILP test for SatellitesBlock: loads a small SCDP instance into a
@@ -7,6 +7,11 @@
  * BlockSolverConfig txt file and solves it, checking that a finite optimum
  * is found. The instance and the configuration can be overridden on the
  * command line.
+ *
+ * NOTE: this is functionally identical to test_milp.cpp (same
+ * ConstellationBlock, same default instance/config); unlike test_milp.cpp,
+ * however, it is NOT wired into test/CMakeLists.txt nor into the plain
+ * makefile in this directory, so it is not part of the standard test suite.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -97,5 +102,5 @@ int main( int argc , char ** argv )
  }
 
 /*--------------------------------------------------------------------------*/
-/*------------------------- End File test_milp.cpp -------------------------*/
+/*------------------------- End File test_const.cpp -------------------------*/
 /*--------------------------------------------------------------------------*/

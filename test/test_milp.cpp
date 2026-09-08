@@ -8,6 +8,11 @@
  * is found. The instance and the configuration can be overridden on the
  * command line.
  *
+ * This is built as the "${modName}_milp_test" target by test/CMakeLists.txt,
+ * conditional on a MILPSolver being available; the analogous test based on
+ * the discretized-theta DiscreteConstellationBlock is test.cpp, built
+ * unconditionally as the default "${modName}_test" target.
+ *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
  *         Universita' di Pisa \n

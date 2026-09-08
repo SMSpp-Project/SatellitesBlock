@@ -79,6 +79,41 @@ namespace SMSpp_di_unipi_it
 /*--------------------------------------------------------------------------*/
 /*--------------------------- GENERAL NOTES --------------------------------*/
 /*--------------------------------------------------------------------------*/
+/// implementation of the Block concept for a single satellite of a
+/// DiscreteConstellationBlock, in "fully discretized" form
+/** DiscreteSatelliteBlock is the counterpart of SatelliteBlock [see
+ * SatelliteBlock.h] used by DiscreteConstellationBlock [see
+ * DiscreteConstellationBlock.h] instead of ConstellationBlock: rather than
+ * modeling the observability threshold theta^{\max} as a continuous
+ * Variable linked to the orbit/target-observation Variable via a big-M
+ * linearization (as SatelliteBlock does), the set of candidate orbits
+ * [C] (of size OrbitSet) is crossed with a further discretization of the
+ * observability threshold into "ell" levels, so that every possible
+ * (orbit, threshold level) pair becomes a single binary decision
+ *
+ * \f[
+ *  y[ i ][ j ] \in \{ 0 , 1 \} , \quad i \in [C] , \; j \in \{ 0 , ... ,
+ *  ell - 1 \}
+ * \f]
+ *
+ * indicating whether orbit i is selected together with threshold level j.
+ * Since at most one such combination can be active, the only static
+ * constraint is
+ *
+ * \f[
+ *  \sum_{ i \in [C] } \sum_{ j = 0 }^{ ell - 1 } y[ i ][ j ] \leq 1 .
+ * \f]
+ *
+ * All the "physics" of the problem (which targets are observed, at which
+ * time stamps, for a given (orbit, level) pair) is precomputed outside of
+ * this class by DiscreteConstellationBlock, which uses the corresponding
+ * y[][] Variable directly in its own observability constraints (see
+ * DiscreteConstellationBlock::generate_abstract_constraints()); as a
+ * consequence, a "bare" DiscreteSatelliteBlock objective is a plain
+ * LinearFunction over the y[][] with (initially) unit coefficients, which
+ * only takes its actual meaning as an activation cost once dualized (see
+ * DiscreteSatelliteSolver.h, which solves exactly this Block "by
+ * inspection" as a Lagrangian pricing subproblem). */
 
 class DiscreteSatelliteBlock : public Block
 {

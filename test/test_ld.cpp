@@ -9,6 +9,12 @@
  * checking that a finite optimum is found. The instance and the
  * configuration can be overridden on the command line.
  *
+ * NOTE: this file is not wired into test/CMakeLists.txt nor into the plain
+ * makefile in this directory (unlike test.cpp and test_milp.cpp), so it is
+ * not built as part of the standard test suite; it must be compiled and
+ * linked manually against MultiTargetBlock, LagrangianDualSolver and
+ * BundleSolver.
+ *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
  *         Universita' di Pisa \n

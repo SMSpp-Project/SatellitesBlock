@@ -1,12 +1,22 @@
 /*--------------------------------------------------------------------------*/
-/*--------------------------- File test_milp.cpp ---------------------------*/
+/*----------------------- File test_const_discrete.cpp -----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * MILP test for SatellitesBlock: loads a small SCDP instance into a
- * ConstellationBlock, configures a *MILPSolver on it out of a
+ * "ConstellationBlock_discrete", configures a *MILPSolver on it out of a
  * BlockSolverConfig txt file and solves it, checking that a finite optimum
  * is found. The instance and the configuration can be overridden on the
  * command line.
+ *
+ * NOTE: this file is currently BROKEN / stale. There is no
+ * "ConstellationBlock_discrete.h" header nor "ConstellationBlock_discrete"
+ * class anywhere in this codebase; the discretized-theta counterpart of
+ * ConstellationBlock is named DiscreteConstellationBlock (see
+ * DiscreteConstellationBlock.h), which is what test.cpp actually exercises.
+ * This file looks like it predates a rename and was never updated; it is
+ * also not wired into test/CMakeLists.txt nor into the plain makefile in
+ * this directory, so it is not built as part of the standard test suite
+ * and would fail to compile if it were.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -41,7 +51,8 @@ int main( int argc , char ** argv )
  std::string instance = argc > 1 ? argv[ 1 ] : "inputheur-const";
  std::string config = argc > 2 ? argv[ 2 ] : "MILPPar.txt";
 
- // construct a ConstellationBlock via the factory and load the instance
+ // construct a ConstellationBlock_discrete via the factory and load the
+ // instance -- NOTE: this class/header does not currently exist, see above
  auto block = dynamic_cast< ConstellationBlock_discrete * >(
                                     Block::new_Block( "ConstellationBlock_discrete" ) );
  if( ! block ) {
@@ -97,5 +108,5 @@ int main( int argc , char ** argv )
  }
 
 /*--------------------------------------------------------------------------*/
-/*------------------------- End File test_milp.cpp -------------------------*/
+/*--------------------- End File test_const_discrete.cpp ---------------------*/
 /*--------------------------------------------------------------------------*/

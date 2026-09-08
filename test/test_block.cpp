@@ -1,10 +1,15 @@
 /*--------------------------------------------------------------------------*/
-/*------------------------------ File test.cpp -----------------------------*/
+/*-------------------------- File test_block.cpp ----------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Smoke test for SatellitesBlock: constructs a SatellitesBlock via the Block
- * factory, checking that the module links correctly and the class is
+ * Smoke test for SatellitesBlock: constructs a ConstellationBlock via the
+ * Block factory, checking that the module links correctly and the class is
  * registered. Replace it with real tests exercising the module.
+ *
+ * NOTE: this file is currently NOT wired into test/CMakeLists.txt nor into
+ * the plain makefile in this directory (both instead build test.cpp as the
+ * "smoke"/default test); it is kept here but not built as part of the
+ * standard test suite.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -32,8 +37,8 @@ using namespace SMSpp_di_unipi_it;
 
 int main( int argc , char ** argv )
 {
- // construct a SatellitesBlock via the Block factory: this checks that the
- // class is registered and the library is linked in (whole-archive)
+ // construct a ConstellationBlock via the Block factory: this checks that
+ // the class is registered and the library is linked in (whole-archive)
  auto block = Block::new_Block( "ConstellationBlock" );
 
  if( ! block ) {
@@ -55,5 +60,5 @@ int main( int argc , char ** argv )
  }
 
 /*--------------------------------------------------------------------------*/
-/*---------------------------- End File test.cpp ---------------------------*/
+/*------------------------ End File test_block.cpp --------------------------*/
 /*--------------------------------------------------------------------------*/

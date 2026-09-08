@@ -70,6 +70,38 @@ void ConstellationBlock::load( std::istream & input , char frmt )
  // from input file (for the file format, see next load() method)
 }
 
+/*--------------------------------------------------------------------------*/
+// this load() reads the instance description (time horizon, targets with
+// their revisit periods and coordinates, number of satellites) from file
+// and then, for each satellite, builds a discretized set of candidate
+// circular orbits (varying inclination, right ascension of the ascending
+// node and mean anomaly) together with the corresponding target coverage
+// distances, and uses them to construct and load() the satellite's
+// SatelliteBlock (see SatelliteBlock::load()). The overall algorithm is:
+//
+// 1) determine, among all orbital periods compatible with an integer number
+//    of orbits within the time horizon, those whose corresponding altitude
+//    (via Kepler's third law) falls in the "usable" LEO band [400,1400] Km;
+//
+// 2) compute aHalf (half the Earth central angle subtended by the sensor
+//    swath) and the corresponding observability threshold theta^{\max} for
+//    each candidate altitude, out of the (worst-case) angular resolution
+//    Theta_min imposed by the revisit requirement time_step;
+//
+// 3) discretize inclination in [0,PI], and RAAN / mean anomaly in
+//    [0,2*PI], each into numbOfDiscretize samples, so that the Cartesian
+//    product of the three angles (together with the altitude "band" ii,
+//    see below) defines the candidate orbital configurations [C];
+//
+// 4) for each satellite (partitioned into three altitude bands so as to
+//    diversify the constellation) and for each candidate configuration,
+//    propagate the (simplified, J2-perturbed) ground track over all time
+//    stamps and compute the geodesic latitude/longitude distance to every
+//    target (CoverageSatLat1/CoverageSatLong1); configurations that never
+//    bring any target within the threshold are discarded so as to keep the
+//    number of columns [C] of the resulting SatelliteBlock manageable, and
+//    the surviving ones are compacted into CoverageSatLat/CoverageSatLong.
+
 void ConstellationBlock::load( const std::string & input , char frmt )
 {
  /* The structure of the input file to load the instance data should be the
@@ -91,7 +123,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  std::ifstream iFile( input );
 
  iFile >> horizon;
- horizon *= 3600.0;
+ horizon *= 3600.0;  // from hours to seconds
  iFile >> time_step;
  iFile >> targets;
 
@@ -107,6 +139,11 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  int indexLen = 0;
  double j = 0.0;
 
+ // scan all the (integer) numbers j of orbits that fit within the horizon
+ // and, via Kepler's third law, back out the corresponding altitude
+ // altitudeSetVal = cbrt( MU * ( horizon / j )^2 / ( 4 pi^2 ) ) - RAYON;
+ // only altitudes in the usable LEO range [400,1400] Km are kept
+
  for( Index i = 0 ; i < horizon / 3600.0 ; ++i ) {
   j++;
   altitudeSetVal =
@@ -116,6 +153,9 @@ void ConstellationBlock::load( const std::string & input , char frmt )
    indexLen++;
   }
  }
+
+ // same loop as above, this time actually storing the altitude / orbital
+ // period pairs that were only counted before
 
  FNumber altSet = indexLen;
  altitude.resize( indexLen );
@@ -128,7 +168,6 @@ void ConstellationBlock::load( const std::string & input , char frmt )
   altitudeSetVal =
    cbrt( ( MU * pow( ( horizon ) / j , 2.0 ) ) / ( 4.0 * pow( PI , 2.0 ) ) ) -
    RAYON;
-  //std::cout << altitudeSetVal << "\n";
   if( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 ) {
    altitude[ indexLen ] = altitudeSetVal;
    periodSat[ indexLen ] = horizon / j;
@@ -157,6 +196,12 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  t_GM.resize( altSet );
  thetaVal.resize( altSet );
 
+ // Theta_min is the angular resolution (scaled by FACTOR as a safety
+ // margin) that the constellation must achieve to guarantee the revisit
+ // time_step at the largest computed orbital period; aHalf is the
+ // corresponding half-cone angle of the sensor as seen from the satellite,
+ // obtained by inverting the (planar) visibility geometry
+
  double alphalim;
  double Theta_min =
   ( ( 2 * PI * time_step ) / ( 2 * periodSat[ indexLen - 1 ] ) ) * FACTOR;
@@ -165,6 +210,10 @@ void ConstellationBlock::load( const std::string & input , char frmt )
   atan( sin( Theta_min ) /
         ( ( RAYON + altitude[ indexLen - 1 ] ) / RAYON - cos( Theta_min ) ) );
 
+ // guard against aHalf being geometrically infeasible (asin argument > 1)
+ // at some candidate altitude: if so, aHalf is capped to the largest value
+ // for which the sensor cone still reaches the Earth's limb at that altitude
+
  for( Index ii = 0 ; ii < altSet ; ++ii ) {
   if( ( ( RAYON + altitude[ ii ] ) / RAYON ) * sin( aHalf ) > 1 ) {
    aHalf = asin( ( RAYON / ( RAYON + altitude[ ii ] ) ) );
@@ -172,6 +221,11 @@ void ConstellationBlock::load( const std::string & input , char frmt )
    break;
   }
  }
+
+ // for every candidate altitude, precompute the mean motion (t_p), orbital
+ // velocity (t_u) and its inverse scaled by sqrt(a) (t_GM) used below in
+ // the ground-track propagation, as well as the Earth central angle
+ // theta^{\max} (thetaVal) subtended by the sensor swath at that altitude
 
  double alt = altitude[ altSet - 1 ];
  for( Index ii = 0 ; ii < altSet ; ++ii ) {
@@ -185,6 +239,12 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  double Theta_max = thetaVal[ altSet - 1 ];
  std::cout << "theta_min: " << Theta_min << "\n";
  Theta_max = Theta_min;
+
+ // the number of discretization points for each orbital angle (inclination,
+ // RAAN, mean anomaly) is chosen so that a full turn (2*PI) is sampled at a
+ // resolution no coarser than Theta_min, i.e., consecutive samples are at
+ // most Theta_min apart
+
  double numbOfDiscretize = ceil( PI / Theta_min );
 
  std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
@@ -192,6 +252,8 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  FNumber incSet = numbOfDiscretize;
  FNumber ascSet = numbOfDiscretize;
  FNumber anmSet = numbOfDiscretize;
+
+ // inclination is sampled uniformly in [0,PI] ...
 
  double start_in = 0;
  double end_in = PI;
@@ -204,7 +266,9 @@ void ConstellationBlock::load( const std::string & input , char frmt )
                 [ & ] { return start_in + ( iter++ ) * dx; } );
 
  Vec_CNumber inclination = x;
- //std::cout << inclination;
+
+ // ... while RAAN and mean anomaly are (independently) sampled uniformly
+ // in [0,2*PI], reusing the same number of discretization points
 
  end_in = 2 * PI;
  dx = ( end_in - start_in ) / ( num_in - 1 );
@@ -217,9 +281,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 
  double thetaValFinal = Theta_min;
  double altitudeFinal = altitude[ indexLen - 1 ];
- ///double altitudeFinal = altitude[0];
 
- //std::cout << "theta_min: " << Theta_min << "\n";
  std::cout << "alpha_half: " << aHalf * 180 / PI << "\n";
  std::cout << "theta: " << thetaValFinal << "\n";
  std::cout << "altitude: " << altitudeFinal << "\n";
@@ -242,18 +304,16 @@ void ConstellationBlock::load( const std::string & input , char frmt )
  int indexOrbit1;
 
  iFile >> satellites;
- //std::cout << "number Orbits: " << indexOrbit << "\n";
- /*
- satellites = 0;
- for( Index i = 0 ; i < targets ; ++i )
- {
-   satellites += periods[i];
- }
- */
+
  v_Block.resize( satellites );
  std::cout << "SATELLITES: " << satellites << "\n";
 
  int satellites1 = satellites;
+
+ // satellites are split into three equally-sized groups, each assigned a
+ // different altitude index ii (2, 1 or 0, i.e., roughly high/mid/low
+ // altitude among the candidates found above), so that the constellation
+ // is not confined to a single altitude band
 
  for( Index isat = 0 ; isat < satellites ; ++isat ) {
   int ialt = std::floor( satellites / 3 );
@@ -271,6 +331,12 @@ void ConstellationBlock::load( const std::string & input , char frmt )
   indexOrbit1 = 0;
   thetaValF = thetaValFinal / 3.0;
   std::cout << thetaValF << std::endl;
+
+  // enumerate the full Cartesian product of the discretized inclination
+  // (jj), RAAN (k) and mean anomaly (l): each triple, combined with the
+  // altitude band ii fixed above, is one candidate orbital configuration
+  // for the current satellite; index1 numbers them all (kept or discarded)
+
   for( Index jj = 0 ; jj < incSet ; ++jj ) {
    for( Index k = 0 ; k < ascSet ; ++k ) {
     for( Index l = 0 ; l < anmSet ; ++l ) {
@@ -352,14 +418,16 @@ void ConstellationBlock::load( const std::string & input , char frmt )
    }
   }
   std::cout << "number Orbits: " << indexOrbit << "\n";
+
+  // indexOrbit surviving configurations (out of incSet*ascSet*anmSet) are
+  // passed to the isat-th SatelliteBlock as its set [C] of candidate
+  // orbits, together with their precomputed coverage distances
+
   auto SB = new SatelliteBlock( this );
   SB->load( targets , time_step , horizon , altitudeFinal , thetaValF , indexOrbit ,
             aHalf, CoverageSatLat, CoverageSatLong, periods );
   v_Block[ isat ] = SB;
  }
-
- //std::cout << satellites1 << std::endl;
- //satellites = satellites1;
 
  // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
  // note: this is a NBModification, the "nuclear option"
@@ -370,6 +438,7 @@ void ConstellationBlock::load( const std::string & input , char frmt )
 } // end( ConstellationBlock::load( const std::string & input )
 
 /*--------------------------------------------------------------------------*/
+// simply delegates to each nested SatelliteBlock
 
 void ConstellationBlock::generate_abstract_variables( Configuration * stvv )
 {
@@ -378,12 +447,21 @@ void ConstellationBlock::generate_abstract_variables( Configuration * stvv )
 }
 
 /*--------------------------------------------------------------------------*/
+// first delegates to each nested SatelliteBlock (its own per-satellite
+// constraints), then adds the two families of ConstellationBlock-level
+// constraints that link them together: a global bound on theta (thetaM)
+// and the target observability constraints (observation / observation1)
 
 void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 {
  if( !AR ) {
   for( auto blck : v_Block )
    blck->generate_abstract_constraints();
+
+  // thetaM: for every satellite k, thetaVar[ k ] <= 0.9 * thetaValF * zeta[ k ]
+  // i.e., caps the per-satellite observability threshold, when the
+  // satellite is active, to (a safety-scaled fraction of) the reference
+  // value thetaValF used while generating the candidate orbits
 
   thetaM.resize( 1 );
 
@@ -397,7 +475,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
   }
   thetaM[ 0 ].set_function( new LinearFunction( std::move( v_var12 ) ) ,
                             eNoBlck );
-  thetaM[ 0 ].set_rhs( 0.0 , eNoBlck ); //Inf< double >()
+  thetaM[ 0 ].set_rhs( 0.0 , eNoBlck );
   thetaM[ 0 ].set_lhs( -Inf< double >() , eNoBlck );
 
   add_static_constraint( thetaM , "thetaM" );
@@ -412,6 +490,16 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
   * the set of the time step corresponding to the interval, in which target m
   * should be observed by the constellation.
   */
+
+  // observation[ i ][ j ] enforces the revisit-time requirement (1) of the
+  // class comments for target i in its j-th revisit window: since each
+  // target may have a different period[ i ], the number of time stamps
+  // pp = t / periods[ i ] making up one revisit window also differs across
+  // targets, hence the per-target loop bound "j < periods[ i ]" below;
+  // rows are allocated up to maxPeriods (the largest periods[] over all
+  // targets) so that boost::multi_array can hold them all, and rows with
+  // j >= periods[ i ] (which do not correspond to an actual revisit window
+  // for target i) are filled in with the harmless "fake" constraint below
 
   double maxPeriods = *max_element( periods.begin() , periods.end() );
   observation.resize(
@@ -457,6 +545,11 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 
   add_static_constraint( observation , "observation" );
 
+  // observation1[ i ][ j ] is a *stronger*, per-time-stamp version of the
+  // same idea: at most one satellite observes target i at time stamp j
+  // (sum_k xi[ k ][ i ][ j ] <= 1), which rules out redundant simultaneous
+  // observations of the same target by several satellites
+
   FNumber t = horizon / time_step;
 
   observation1.resize(
@@ -471,7 +564,7 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 
     observation1[ i ][ j ].set_function(
      new LinearFunction( std::move( v_var1 ) ), eNoBlck );
-    observation1[ i ][ j ].set_rhs( 1.0 , eNoBlck ); //Inf< double >()
+    observation1[ i ][ j ].set_rhs( 1.0 , eNoBlck );
     observation1[ i ][ j ].set_lhs( -Inf< double >() , eNoBlck );
    }
   }
@@ -485,8 +578,12 @@ void ConstellationBlock::generate_abstract_constraints( Configuration * stcc )
 } // end( ConstellationBlock::generate_abstract_constraints() )
 
 /*--------------------------------------------------------------------------*/
-/*---------------- METHODS FOR CHECKING THE UCBlock ------------------------*/
+/*------------------- METHODS FOR CHECKING THE ConstellationBlock ----------*/
 /*--------------------------------------------------------------------------*/
+// checks feasibility of the ConstellationBlock-level constraints only
+// (thetaM, observation and observation1); feasibility of each nested
+// SatelliteBlock is not checked here, as it is assumed each of them is
+// individually verified via its own is_feasible()
 
 bool ConstellationBlock::is_feasible( bool useabstract , Configuration * fsbc )
 {
@@ -528,6 +625,7 @@ bool ConstellationBlock::is_feasible( bool useabstract , Configuration * fsbc )
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
+// TODO: printing the ConstellationBlock instance is not implemented yet
 
 void ConstellationBlock::print( std::ostream & output , char vlvl ) const {}
 

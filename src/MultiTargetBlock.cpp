@@ -66,6 +66,20 @@ static const auto angle0 = -1.3882860164509252;
 
 void MultiTargetBlock::load( std::istream & input , char frmt ) {}
 
+/*--------------------------------------------------------------------------*/
+// reads the instance (time horizon, targets with coordinates, number of
+// satellites) and builds candidate orbits via the same ground-track
+// propagation as ConstellationBlock::load() [see there for the details of
+// the orbital-mechanics computations, which are otherwise identical] —
+// with one key difference: here a *single* reference altitude
+// ii = indexLen - 1 (the largest one found) is used for every candidate
+// orbit, rather than splitting satellites into three altitude bands as
+// ConstellationBlock does, since here the candidate orbit set [C] must be
+// exactly the same for every satellite (see the class comments in
+// MultiTargetBlock.h on why). Once the candidate orbits and their coverage
+// distances are computed, one SingleTargetBlock per target is created,
+// each receiving the full (indexOrbit, t) coverage slice for that target
+
 void MultiTargetBlock::load( const std::string & input , char frmt )
 {
  // ensure starting from clean slate
@@ -231,10 +245,11 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  double lat_Sat;
  double long_Sat;
 
- //for( Index ii = 0 ; ii < altSet ; ++ii )
- //{
+ // note the single fixed altitude index ii (the highest altitude found),
+ // shared by all candidate orbits, unlike ConstellationBlock which varies
+ // it per-satellite
+
  int ii = indexLen - 1;
- //int ii = 0;
  int index1 = -1;
  indexOrbit = 0;
  int addOrbit = 0;
@@ -328,6 +343,13 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
  v_Block.resize( targets );
  std::cout << "SATELLITES: " << satellites << "\n";
 
+ // extract, for target i, its own 2-D (time stamp, orbit) coverage slice
+ // out of the 3-D (target, time stamp, orbit) array computed above, and
+ // use it to create and load() the i-th SingleTargetBlock; note that the
+ // same candidate orbit set [C] (of size indexOrbit) and the same number
+ // of satellites is passed to every SingleTargetBlock, consistently with
+ // the "duplicate" constraints added in generate_abstract_constraints()
+
  for( Index i = 0 ; i < targets ; ++i ) {
   boost::multi_array< double, 2 > CoverageSatLatThis(
    boost::extents[ t ][ indexOrbit ] );
@@ -358,6 +380,8 @@ void MultiTargetBlock::load( const std::string & input , char frmt )
 
 /*--------------------------------------------------------------------------*/
 
+// simply delegates to each nested SingleTargetBlock
+
 void MultiTargetBlock::generate_abstract_variables( Configuration * stvv )
 {
  for( auto blck : v_Block )
@@ -367,6 +391,10 @@ void MultiTargetBlock::generate_abstract_variables( Configuration * stvv )
 }
 
 /*--------------------------------------------------------------------------*/
+// first delegates to each nested SingleTargetBlock, then adds the
+// MultiTargetBlock-level "duplicate" constraints (see the class comments
+// in MultiTargetBlock.h) tying together consecutive targets' copies of the
+// per-satellite orbit-activation and threshold Variable
 
 void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
 {
@@ -374,6 +402,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
   blck->generate_abstract_constraints();
 
  std::cout << "Constraints TARGETS generated!\n";
+
+ // duplicate_pi[ i ][ j ][ k ]: activation_i[ j ][ k ] == activation_{i+1}[ j ][ k ]
+ // for every satellite j and candidate orbit k, linking target i to i+1
 
  duplicate_pi.resize(
   boost::multi_array_types::extent_gen()[ targets - 1 ][ satellites ]
@@ -398,6 +429,9 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
 
  add_static_constraint( duplicate_pi , "duplicate_pi" );
 
+ // duplicate_theta[ i ][ j ]: theta_i[ j ] == theta_{i+1}[ j ] for every
+ // satellite j, linking target i to i+1
+
  duplicate_theta.resize(
   boost::multi_array_types::extent_gen()[ targets - 1 ][ satellites ] );
  for( Index i = 0 ; i < targets - 1 ; ++i ) {
@@ -417,6 +451,13 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
  }
 
  add_static_constraint( duplicate_theta , "duplicate_theta" );
+
+ // (dead code) an earlier, discarded alternative to duplicate_pi/
+ // duplicate_theta above: rather than pairwise-equating consecutive
+ // targets, it would have summed activation[ j ][ k ] over all targets and
+ // bounded the sum by 1 -- a materially different (and incorrect, since
+ // activation would then only be constrained for the *sum* across
+ // targets, not equal in each) formulation, kept here only for reference
 
  /*
    duplicate_pi.resize( boost::multi_array_types::extent_gen()[ satellites ][ indexOrbit ] );
@@ -443,6 +484,7 @@ void MultiTargetBlock::generate_abstract_constraints( Configuration * stcc )
 /*--------------------------------------------------------------------------*/
 /*-------------------------- PROTECTED METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
+// TODO: printing the MultiTargetBlock instance is not implemented yet
 
 void MultiTargetBlock::print( std::ostream & output , char vlvl ) const {}
 

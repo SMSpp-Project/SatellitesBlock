@@ -1,12 +1,18 @@
 /*--------------------------------------------------------------------------*/
-/*--------------------------- File test_milp.cpp ---------------------------*/
+/*----------------------------- File test.cpp -------------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
  * MILP test for SatellitesBlock: loads a small SCDP instance into a
- * ConstellationBlock, configures a *MILPSolver on it out of a
+ * DiscreteConstellationBlock, configures a *MILPSolver on it out of a
  * BlockSolverConfig txt file and solves it, checking that a finite optimum
  * is found. The instance and the configuration can be overridden on the
  * command line.
+ *
+ * This is the file built as the default "${modName}_test" target by
+ * test/CMakeLists.txt (and as SatellitesBlock_test by the plain makefile
+ * in this directory); the analogous test based on the "continuous"
+ * ConstellationBlock is test_milp.cpp, built as "${modName}_milp_test"
+ * (only when a MILPSolver is available).
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -41,7 +47,7 @@ int main( int argc , char ** argv )
  std::string instance = argc > 1 ? argv[ 1 ] : "inputheur-const";
  std::string config = argc > 2 ? argv[ 2 ] : "MILPPar.txt";
 
- // construct a ConstellationBlock via the factory and load the instance
+ // construct a DiscreteConstellationBlock via the factory and load the instance
  auto block = dynamic_cast< DiscreteConstellationBlock * >(
                                     Block::new_Block( "DiscreteConstellationBlock" ) );
  if( ! block ) {
@@ -97,5 +103,5 @@ int main( int argc , char ** argv )
  }
 
 /*--------------------------------------------------------------------------*/
-/*------------------------- End File test_milp.cpp -------------------------*/
+/*--------------------------- End File test.cpp -----------------------------*/
 /*--------------------------------------------------------------------------*/
