@@ -16,7 +16,7 @@
 #           $(SBkSDR)  = the directory where the source is                   #
 #                                                                            #
 #   Output: $(SBkOBJ)  = the final object(s) / library                       #
-#           $(SBkH)    = the .h files to include                    		 #
+#           $(SBkH)    = the .h files to include                             #
 #           $(SBkINC)  = the -I$( source directory )                         #
 #                                                                            #
 #                             Antonio Frangioni                              #
@@ -28,26 +28,26 @@
 # macros to be exported - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 SBkOBJ = $(SBkSDR)/obj/ConstellationBlock.o \
+         $(SBkSDR)/obj/DiscreteConstellationBlock.o \
+         $(SBkSDR)/obj/DiscreteSatelliteBlock.o \
+         $(SBkSDR)/obj/DiscreteSatelliteSolver.o \
          $(SBkSDR)/obj/MultiTargetBlock.o \
          $(SBkSDR)/obj/MultiTargetBlockv2.o \
          $(SBkSDR)/obj/SatelliteBlock.o \
          $(SBkSDR)/obj/SatelliteSolver.o \
-         $(SBkSDR)/obj/SingleTargetBlock.o \
-		 $(SBkSDR)/obj/DiscreteConstellationBlock.o \
-		 $(SBkSDR)/obj/DiscreteSatelliteBlock.o \
-         $(SBkSDR)/obj/DiscreteSatelliteSolver.o 
+         $(SBkSDR)/obj/SingleTargetBlock.o
 
 SBkINC = -I$(SBkSDR)/include
 
 SBkH   = $(SBkSDR)/include/ConstellationBlock.h \
+         $(SBkSDR)/include/DiscreteConstellationBlock.h \
+         $(SBkSDR)/include/DiscreteSatelliteBlock.h \
+         $(SBkSDR)/include/DiscreteSatelliteSolver.h \
          $(SBkSDR)/include/MultiTargetBlock.h \
          $(SBkSDR)/include/MultiTargetBlockv2.h \
          $(SBkSDR)/include/SatelliteBlock.h \
          $(SBkSDR)/include/SatelliteSolver.h \
-         $(SBkSDR)/include/SingleTargetBlock.h \
-		 $(SBkSDR)/include/DiscreteConstellationBlock.h \
-		 $(SBkSDR)/include/DiscreteSatelliteBlock.h \
-         $(SBkSDR)/include/DiscreteSatelliteSolver.h 
+         $(SBkSDR)/include/SingleTargetBlock.h
 
 # clean - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

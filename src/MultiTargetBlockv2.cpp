@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
-/*------------------------ File MultiTargetBlockv2.cpp -----------------------*/
+/*---------------------- File MultiTargetBlockv2.cpp -----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Implementation of the MultiTargetBlockv2 class.
+ * Implementation of the MultiTargetBlockv2 and MultiTargetSolution classes.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -11,61 +11,43 @@
  * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
-/*---------------------------- IMPLEMENTATION ------------------------------*/
+/*----------------------------- IMPLEMENTATION -----------------------------*/
 /*--------------------------------------------------------------------------*/
-/*------------------------------ INCLUDES ----------------------------------*/
+/*-------------------------------- INCLUDES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #include "MultiTargetBlockv2.h"
-#include <iomanip>
+
 #include <cmath>
 
-/*--------------------------------------------------------------------------*/
-/*--------------------------------- MACROS ---------------------------------*/
-/*--------------------------------------------------------------------------*/
-
-#ifndef NDEBUG
-#define CHECK_DS 0
-/* Perform long and costly checks on the data structures representing the
-  * abstract and the physical representations agree. */
-#else
-#define CHECK_DS 0
-// never change this
-#endif
+#include <fstream>
 
 /*--------------------------------------------------------------------------*/
-/*------------------------- NAMESPACE AND USING ----------------------------*/
+/*-------------------------- NAMESPACE AND USING ---------------------------*/
 /*--------------------------------------------------------------------------*/
 
 using namespace SMSpp_di_unipi_it;
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------------- TYPES -----------------------------------*/
+/*--------------------------------- TYPES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 using Index = Block::Index;
-using c_Index = Block::c_Index;
 
 using Range = Block::Range;
-using c_Range = Block::c_Range;
-
-using Subset = Block::Subset;
-using c_Subset = Block::c_Subset;
 
 using FNumber = MultiTargetBlockv2::FNumber;
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------------- CONSTANTS -------------------------------*/
+/*------------------------------- CONSTANTS --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
-static const double RAYON = 6378136.3;
-static const double M_limit = 10 * 3.14159265;
+static const auto RAYON = 6378136.3; // mean Earth radius [m]
 static const auto PI = 3.14159265;
-static const auto MU = 3.986004418e14; //[m^3/s^2]
-static const auto WE = 7.2921e-5;
-static const auto FACTOR = 1.2;
-static const auto angle0 = -1.3882860164509252;
+static const auto MU = 3.986004418e14; // Earth gravity constant [m^3/s^2]
+static const auto WE = 7.2921e-5;      // Earth rotation speed [rad/s]
+static const auto FACTOR = 1.2;        // safety factor on Theta_min
+static const auto angle0 = -1.3882860164509252; // Greenwich angle at t = 0
 
 /*--------------------------------------------------------------------------*/
 /*----------------------------- STATIC MEMBERS -----------------------------*/
@@ -80,293 +62,24 @@ SMSpp_insert_in_factory_cpp_1( MultiTargetBlockv2 );
 SMSpp_insert_in_factory_cpp_0( MultiTargetSolution );
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- METHODS OF MultiTargetBlockv2 ----------------*/
+/*--------------------- METHODS OF MultiTargetBlockv2 ----------------------*/
 /*--------------------------------------------------------------------------*/
-/*-------------------------- OTHER INITIALIZATIONS -------------------------*/
+/*------------------------- OTHER INITIALIZATIONS --------------------------*/
 /*--------------------------------------------------------------------------*/
-
-// reads the instance and builds the candidate orbits exactly as
-// MultiTargetBlock::load() does [see there for the details of the shared,
-// single-altitude ground-track propagation]: the only difference is that,
-// having no per-target sub-Block to create, this just stores the resulting
-// CoverageSatLat/CoverageSatLong and the problem sizes (n, t, OrbitSet,
-// targets, ...) directly as members, deferring Variable/Constraint
-// creation to generate_abstract_variables()/generate_abstract_constraints()
 
 void MultiTargetBlockv2::load( const std::string & input , char frmt )
 {
- // ensure starting from clean slate
- guts_of_destructor();
-
  std::ifstream iFile( input );
+ if( ! iFile.is_open() )
+  throw( std::invalid_argument(
+   "MultiTargetBlockv2::load: cannot open file " + input ) );
 
- iFile >> horizon;
- horizon *= 3600.0;
- iFile >> time_step;
- iFile >> targets;
+ load( iFile , frmt );
 
- std::cout << "TARGETS: " << targets << "\n";
- std::cout << "TIME STEP: " << time_step << "\n";
-
- Vec_CNumber Latitude;
- Vec_CNumber Longitude;
-
- double altitudeSetVal;
- Vec_CNumber altitude;
- Vec_CNumber periodSat;
- int indexLen = 0;
- double j = 0.0;
-
- for( Index i = 0 ; i < horizon / 3600.0 ; ++i ) {
-  j++;
-  altitudeSetVal =
-   cbrt( ( MU * pow( ( horizon ) / j , 2.0 ) ) / ( 4.0 * pow( PI , 2.0 ) ) ) -
-   RAYON;
-  if( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 ) {
-   indexLen++;
-  }
- }
-
- FNumber altSet = indexLen;
- altitude.resize( indexLen );
- periodSat.resize( indexLen );
- indexLen = 0;
-
- j = 0.0;
- for( Index i = 0 ; i < horizon / 3600.0 ; ++i ) {
-  j++;
-  altitudeSetVal =
-   cbrt( ( MU * pow( ( horizon ) / j , 2.0 ) ) / ( 4.0 * pow( PI , 2.0 ) ) ) -
-   RAYON;
-  //std::cout << altitudeSetVal << "\n";
-  if( altitudeSetVal >= 400000.0 && altitudeSetVal <= 1400000.0 ) {
-   altitude[ indexLen ] = altitudeSetVal;
-   periodSat[ indexLen ] = horizon / j;
-   indexLen++;
-  }
- }
-
- Latitude.resize( targets );
- Longitude.resize( targets );
- for( Index i = 0 ; i < targets ; ++i ) {
-  iFile >> Latitude[ i ];
-  iFile >> Longitude[ i ];
-  Latitude[ i ] *= PI / 180;
-  Longitude[ i ] *= PI / 180;
- }
-
- Vec_CNumber t_p;
- Vec_CNumber t_u;
- Vec_CNumber t_GM;
- Vec_CNumber thetaVal;
-
- t_p.resize( altSet );
- t_u.resize( altSet );
- t_GM.resize( altSet );
- thetaVal.resize( altSet );
-
- double alphalim;
- double Theta_min =
-  ( ( 2 * PI * time_step ) / ( 2 * periodSat[ indexLen - 1 ] ) ) * FACTOR;
- std::cout << "theta_min: " << Theta_min << "\n";
- double aHalf =
-  atan( sin( Theta_min ) /
-        ( ( RAYON + altitude[ indexLen - 1 ] ) / RAYON - cos( Theta_min ) ) );
-
- int alpha_lim_flag = 0;
-
- for( Index ii = 0 ; ii < altSet ; ++ii ) {
-  if( ( ( RAYON + altitude[ ii ] ) / RAYON ) * sin( aHalf ) > 1 ) {
-   aHalf = asin( ( RAYON / ( RAYON + altitude[ ii ] ) ) );
-   std::cout << "WARNING: computed alpha_lim\n";
-   alpha_lim_flag = 1;
-   break;
-  }
- }
-
- double alt = altitude[ altSet - 1 ];
- //double alt = altitude[0];
- for( Index ii = 0 ; ii < altSet ; ++ii ) {
-  t_p[ ii ] = sqrt( MU / ( pow( RAYON + altitude[ ii ] , 3 ) ) );
-  t_u[ ii ] = sqrt( MU / ( RAYON + altitude[ ii ] ) );
-  t_GM[ ii ] = sqrt( ( RAYON + altitude[ ii ] ) / MU );
-  thetaVal[ ii ] =
-   -aHalf + asin( ( ( RAYON + altitude[ ii ] ) / RAYON ) * sin( aHalf ) );
- }
-
- //double Theta_max = thetaVal[altSet-1];
- std::cout << "alpha_flag=" << alpha_lim_flag << "\n";
-
- /***********************/
- if( alpha_lim_flag == 1 ) {
-  /////Theta_min = thetaVal[altSet-1];//*1.2;
-  std::cout << "theta_min: " << Theta_min << "\n";
- }
- /***********************/
-
- //Theta_max = Theta_min;
- double numbOfDiscretize = ceil( PI / Theta_min );
-
- std::cout << "numbOfDiscretize: " << numbOfDiscretize << "\n";
-
- FNumber incSet = numbOfDiscretize;
- FNumber ascSet = numbOfDiscretize;
- FNumber anmSet = numbOfDiscretize;
-
- double start_in = 0;
- double end_in = PI;
- size_t num_in = numbOfDiscretize;
-
- double dx = ( end_in - start_in ) / ( num_in - 1 );
- std::vector< double > x( num_in );
- int iter = 0;
- std::generate( x.begin() , x.end() ,
-                [ & ] { return start_in + ( iter++ ) * dx; } );
-
- Vec_CNumber inclination = x;
- //std::cout << inclination;
-
- end_in = 2 * PI;
- dx = ( end_in - start_in ) / ( num_in - 1 );
- iter = 0;
- std::generate( x.begin() , x.end() ,
-                [ & ] { return start_in + ( iter++ ) * dx; } );
-
- Vec_CNumber nodeAscendant = x;
- Vec_CNumber meanAnomaly = x;
-
- thetaValFinal = Theta_min;
- double altitudeFinal = altitude[ indexLen - 1 ];
- //double altitudeFinal = altitude[0];
-
- //std::cout << "theta_min: " << Theta_min << "\n";
- std::cout << "alpha_half: " << aHalf * 180 / PI << "\n";
- std::cout << "theta: " << thetaValFinal << "\n";
- std::cout << "altitude: " << altitudeFinal << "\n";
-
- t = horizon / time_step;
-
- CoverageSatLat.resize(
-  boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ] );
- CoverageSatLong.resize(
-  boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ] );
- boost::multi_array< double, 3 > CoverageSatLat1(
-  boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ] );
- boost::multi_array< double, 3 > CoverageSatLong1(
-  boost::extents[ targets ][ t ][ incSet * ascSet * anmSet ] );
-
- double lat_Sat;
- double long_Sat;
-
- //for( Index ii = 0 ; ii < altSet ; ++ii )
- //{
- int ii = indexLen - 1;
- //int ii = 0;
- int index1 = -1;
- indexOrbit = 0;
- int addOrbit = 0;
- int indexOrbit1 = 0;
- for( Index jj = 0 ; jj < incSet ; ++jj ) {
-  for( Index k = 0 ; k < ascSet ; ++k ) {
-   for( Index l = 0 ; l < anmSet ; ++l ) {
-    index1 += 1;
-    indexOrbit1 = 0;
-    for( Index j = 0 ; j < t ; ++j ) {
-     lat_Sat = asin(
-      ( ( sin( inclination[ jj ] ) * ( altitude[ ii ] + RAYON ) *
-          sin( meanAnomaly[ l ] ) ) *
-        cos( t_p[ ii ] * ( (j)*time_step ) ) / ( altitude[ ii ] + RAYON ) ) +
-      ( ( sin( inclination[ jj ] ) * t_u[ ii ] * cos( meanAnomaly[ l ] ) ) *
-        sin( t_p[ ii ] * ( (j)*time_step ) ) * t_GM[ ii ] ) );
-
-     long_Sat = fmod(
-      -( angle0 + ( WE * ( (j)*time_step ) ) ) +
-       atan2(
-        ( ( ( sin( nodeAscendant[ k ] ) * ( altitude[ ii ] + RAYON ) *
-              cos( meanAnomaly[ l ] ) ) +
-            ( cos( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) *
-              ( altitude[ ii ] + RAYON ) * sin( meanAnomaly[ l ] ) ) ) *
-          cos( t_p[ ii ] * ( (j)*time_step ) ) /
-          ( altitude[ ii ] + RAYON ) ) +
-         ( ( -( sin( nodeAscendant[ k ] ) * t_u[ ii ] *
-                sin( meanAnomaly[ l ] ) ) +
-             ( cos( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) *
-               t_u[ ii ] * cos( meanAnomaly[ l ] ) ) ) *
-           sin( t_p[ ii ] * ( (j)*time_step ) ) * t_GM[ ii ] ),
-        ( ( ( ( cos( nodeAscendant[ k ] ) * ( altitude[ ii ] + RAYON ) *
-                cos( meanAnomaly[ l ] ) ) -
-              ( sin( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) *
-                ( altitude[ ii ] + RAYON ) * sin( meanAnomaly[ l ] ) ) ) *
-            cos( t_p[ ii ] * ( j * time_step ) ) /
-            ( altitude[ ii ] + RAYON ) ) +
-          ( ( -( cos( nodeAscendant[ k ] ) * t_u[ ii ] *
-                 sin( meanAnomaly[ l ] ) ) -
-              ( sin( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) *
-                t_u[ ii ] * cos( meanAnomaly[ l ] ) ) ) *
-            sin( ( t_p[ ii ] * ( j * time_step ) ) ) * t_GM[ ii ] ) ) ),
-      ( 2 * PI ) );
-     if( long_Sat <= 0 )
-      long_Sat += 2 * PI;
-     /*
-             for( Index i = 0 ; i < targets ; ++i )
-             {
-                CoverageSatLat[ i ][ j ][ index1 ] = std::abs(Latitude[i] - lat_Sat);
-                CoverageSatLong[ i ][ j ][ index1 ] = std::abs(Longitude[i] - long_Sat) * cos(Latitude[i]);
-             }}
-             indexOrbit += 1;
-             */
-     for( Index i = 0 ; i < targets ; ++i ) {
-      CoverageSatLat1[ i ][ j ][ index1 ] =
-       //        std::abs(2 * asin( 0.5 * sqrt(1 - cos(Latitude[i]-lat_Sat))));
-       std::abs( Latitude[ i ] - lat_Sat );
-      CoverageSatLong1[ i ][ j ][ index1 ] =
-       //        std::abs(2 * asin( 0.5 * sqrt(cos(Latitude[i]) * cos(Latitude[i]) * (1 - cos(Longitude[i] - long_Sat))))) * cos(Latitude[i]);
-       std::abs( Longitude[ i ] - long_Sat ) * cos( Latitude[ i ] );
-      if( cos( Latitude[ i ] ) < 0 )
-       std::cout << "ERROR!" << "\n";
-      //std::cout << CoverageSatLat1[ i ][ j ][ index1 ] << " " << CoverageSatLong1[ i ][ j ][ index1 ] << std::endl;
-      //std::cout << i << " " << j << " " << ii << " " << jj << " " << k << " " << l << " " << "\n";
-      if( CoverageSatLat1[ i ][ j ][ index1 ] <= thetaValFinal and
-          CoverageSatLong1[ i ][ j ][ index1 ] <= thetaValFinal ) {
-       //std::cout << i << " " << j << " " << index1 << " " << "\n";
-       indexOrbit1 += 1;
-      }
-     }
-    }
-    if( indexOrbit1 >= 1 ) {
-     for( Index j = 0 ; j < t ; ++j ) {
-      for( Index i = 0 ; i < targets ; ++i ) {
-       CoverageSatLat[ i ][ j ][ indexOrbit ] =
-        CoverageSatLat1[ i ][ j ][ index1 ];
-       CoverageSatLong[ i ][ j ][ indexOrbit ] =
-        CoverageSatLong1[ i ][ j ][ index1 ];
-      }
-     }
-     indexOrbit += 1;
-    }
-   }
-  }
- }
- //}
-
- iFile >> satellites;
- std::cout << "number Orbits: " << indexOrbit << "\n";
- std::cout << "SATELLITES: " << satellites << "\n";
-
- n = satellites;
- dt = time_step;
- T = horizon;
- t = T / dt;
- alphaHalf = aHalf;
-
- OrbitSet = indexOrbit;
-
- //thetaVal = thetaValues;
- //std::cout << "thetaVal=" << thetaValues << "\n";
-
-} // end( MultiTargetBlockv2::load( memory ) )
+ } // end( MultiTargetBlockv2::load( std::string ) )
 
 /*--------------------------------------------------------------------------*/
+// the candidate orbits are built as in MultiTargetBlock::load() [see there]
 
 void MultiTargetBlockv2::load( std::istream & input , char frmt )
 {
@@ -374,13 +87,200 @@ void MultiTargetBlockv2::load( std::istream & input , char frmt )
 
  guts_of_destructor();
 
- // allocate memory - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ // read the instance - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
- // read problem data - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ double horizon;
+ if( ! ( input >> eatcomments >> horizon ) || ( horizon <= 0 ) )
+  throw( std::invalid_argument(
+   "MultiTargetBlockv2::load: error reading the horizon" ) );
+ horizon *= 3600.0; // from hours to seconds
 
- // allocate observability variables - - - - - - - - - - - - - - - - - - - - -
+ double time_step;
+ if( ! ( input >> eatcomments >> time_step ) || ( time_step <= 0 ) )
+  throw( std::invalid_argument(
+   "MultiTargetBlockv2::load: error reading the time step" ) );
 
- //generate_abstract_variables();
+ if( ! ( input >> eatcomments >> targets ) || ( ! targets ) )
+  throw( std::invalid_argument(
+   "MultiTargetBlockv2::load: error reading the number of targets" ) );
+
+ std::vector< double > Latitude( targets );
+ std::vector< double > Longitude( targets );
+ for( Index i = 0 ; i < targets ; ++i ) {
+  if( ! ( input >> eatcomments >> Latitude[ i ] >> Longitude[ i ] ) )
+   throw( std::invalid_argument(
+    "MultiTargetBlockv2::load: error reading the targets" ) );
+  if( std::abs( Latitude[ i ] ) > 90 )
+   throw( std::invalid_argument(
+    "MultiTargetBlockv2::load: latitude out of [ -90 , 90 ]" ) );
+  Latitude[ i ] *= PI / 180;
+  Longitude[ i ] *= PI / 180;
+  }
+
+ if( ! ( input >> eatcomments >> n ) || ( ! n ) )
+  throw( std::invalid_argument(
+   "MultiTargetBlockv2::load: error reading the number of satellites" ) );
+
+ // the altitudes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ // the circular orbits making j revolutions within the horizon, for every
+ // integer j, have period horizon / j and altitude (by Kepler's third law)
+ // cbrt( MU ( horizon / j )^2 / ( 4 pi^2 ) ) - RAYON: only those in the
+ // range [ 400 , 1400 ] km are kept
+
+ std::vector< double > altitude;
+ std::vector< double > periodSat;
+ for( Index i = 0 ; i < horizon / 3600.0 ; ++i ) {
+  const double j1 = i + 1;
+  const double altitudeSetVal =
+   cbrt( ( MU * pow( horizon / j1 , 2.0 ) ) / ( 4.0 * pow( PI , 2.0 ) ) ) -
+   RAYON;
+  if( ( altitudeSetVal >= 400000.0 ) && ( altitudeSetVal <= 1400000.0 ) ) {
+   altitude.push_back( altitudeSetVal );
+   periodSat.push_back( horizon / j1 );
+   }
+  }
+
+ if( altitude.empty() )
+  throw(
+   std::invalid_argument( "MultiTargetBlockv2::load: the horizon "
+                          "allows no orbit altitude in [ 400 , 1400 ] km" ) );
+
+ const Index altSet = altitude.size();
+
+ // Theta_min is the angle swept by the satellite on the lowest orbit in one
+ // time step, times FACTOR; aHalf is the corresponding half-aperture of the
+ // sensor, seen from the satellite
+
+ const double Theta_min =
+  ( ( 2 * PI * time_step ) / ( 2 * periodSat[ altSet - 1 ] ) ) * FACTOR;
+ double aHalf =
+  atan( sin( Theta_min ) /
+        ( ( RAYON + altitude[ altSet - 1 ] ) / RAYON - cos( Theta_min ) ) );
+
+ // if the sensor cone with half-aperture aHalf does not intersect the
+ // Earth at some altitude, aHalf is reduced to reach the Earth's limb
+
+ for( Index ii = 0 ; ii < altSet ; ++ii )
+  if( ( ( RAYON + altitude[ ii ] ) / RAYON ) * sin( aHalf ) > 1 ) {
+   aHalf = asin( ( RAYON / ( RAYON + altitude[ ii ] ) ) );
+   break;
+   }
+
+ // mean motion (t_p), orbital speed (t_u) and sqrt( a / MU ) (t_GM) of
+ // the circular orbit at the (single) altitude used
+
+ const Index ii = altSet - 1;
+ const double t_p = sqrt( MU / ( pow( RAYON + altitude[ ii ] , 3 ) ) );
+ const double t_u = sqrt( MU / ( RAYON + altitude[ ii ] ) );
+ const double t_GM = sqrt( ( RAYON + altitude[ ii ] ) / MU );
+
+ // inclination is sampled uniformly in [ 0 , PI ], RAAN and mean anomaly
+ // in [ 0 , 2 PI ], each with numbOfDiscretize points
+
+ const Index numbOfDiscretize = ceil( PI / Theta_min );
+ if( numbOfDiscretize < 2 )
+  throw(
+   std::invalid_argument( "MultiTargetBlockv2::load: time step too long "
+                          "w.r.t. the orbital period" ) );
+
+ const Index incSet = numbOfDiscretize;
+ const Index ascSet = numbOfDiscretize;
+ const Index anmSet = numbOfDiscretize;
+ const Index nOrbits = incSet * ascSet * anmSet;
+
+ std::vector< double > inclination( numbOfDiscretize );
+ std::vector< double > nodeAscendant( numbOfDiscretize );
+ for( Index i = 0 ; i < numbOfDiscretize ; ++i ) {
+  inclination[ i ] = i * ( PI / ( numbOfDiscretize - 1 ) );
+  nodeAscendant[ i ] = i * ( 2 * PI / ( numbOfDiscretize - 1 ) );
+  }
+ const std::vector< double > & meanAnomaly = nodeAscendant;
+
+ thetaValFinal = Theta_min;
+ alphaHalf = aHalf;
+ dt = time_step;
+ T = horizon;
+ t = T / dt;
+
+ CoverageSatLat.resize( boost::extents[ targets ][ t ][ nOrbits ] );
+ CoverageSatLong.resize( boost::extents[ targets ][ t ][ nOrbits ] );
+ boost::multi_array< double , 3 > CoverageSatLat1(
+  boost::extents[ targets ][ t ][ nOrbits ] );
+ boost::multi_array< double , 3 > CoverageSatLong1(
+  boost::extents[ targets ][ t ][ nOrbits ] );
+
+ // enumerate the candidate orbits (inclination jj, RAAN k, mean anomaly l),
+ // with index index1, and propagate the ground track of each one
+
+ Index index1 = 0;
+ OrbitSet = 0;
+ for( Index jj = 0 ; jj < incSet ; ++jj )
+  for( Index k = 0 ; k < ascSet ; ++k )
+   for( Index l = 0 ; l < anmSet ; ++l , ++index1 ) {
+    bool observes = false;
+    for( Index j = 0 ; j < t ; ++j ) {
+     // latitude of the projection of the satellite on the Earth surface
+     const double lat_Sat =
+      asin( ( ( sin( inclination[ jj ] ) * ( altitude[ ii ] + RAYON ) *
+                sin( meanAnomaly[ l ] ) ) *
+              cos( t_p * ( j * time_step ) ) / ( altitude[ ii ] + RAYON ) ) +
+            ( ( sin( inclination[ jj ] ) * t_u * cos( meanAnomaly[ l ] ) ) *
+              sin( t_p * ( j * time_step ) ) * t_GM ) );
+
+     // longitude of the projection of the satellite on the Earth surface
+     double long_Sat = fmod(
+      -( angle0 + ( WE * ( j * time_step ) ) ) +
+       atan2(
+        ( ( ( sin( nodeAscendant[ k ] ) * ( altitude[ ii ] + RAYON ) *
+              cos( meanAnomaly[ l ] ) ) +
+            ( cos( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) *
+              ( altitude[ ii ] + RAYON ) * sin( meanAnomaly[ l ] ) ) ) *
+          cos( t_p * ( j * time_step ) ) / ( altitude[ ii ] + RAYON ) ) +
+         ( ( -( sin( nodeAscendant[ k ] ) * t_u * sin( meanAnomaly[ l ] ) ) +
+             ( cos( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) * t_u *
+               cos( meanAnomaly[ l ] ) ) ) *
+           sin( t_p * ( j * time_step ) ) * t_GM ) ,
+        ( ( ( ( cos( nodeAscendant[ k ] ) * ( altitude[ ii ] + RAYON ) *
+                cos( meanAnomaly[ l ] ) ) -
+              ( sin( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) *
+                ( altitude[ ii ] + RAYON ) * sin( meanAnomaly[ l ] ) ) ) *
+            cos( t_p * ( j * time_step ) ) / ( altitude[ ii ] + RAYON ) ) +
+          ( ( -( cos( nodeAscendant[ k ] ) * t_u * sin( meanAnomaly[ l ] ) ) -
+              ( sin( nodeAscendant[ k ] ) * cos( inclination[ jj ] ) * t_u *
+                cos( meanAnomaly[ l ] ) ) ) *
+            sin( ( t_p * ( j * time_step ) ) ) * t_GM ) ) ) ,
+      ( 2 * PI ) );
+     if( long_Sat <= 0 )
+      long_Sat += 2 * PI;
+
+     // the latitude and longitude distances to every target
+     for( Index i = 0 ; i < targets ; ++i ) {
+      CoverageSatLat1[ i ][ j ][ index1 ] =
+       std::abs( Latitude[ i ] - lat_Sat );
+      CoverageSatLong1[ i ][ j ][ index1 ] =
+       std::abs( Longitude[ i ] - long_Sat ) * cos( Latitude[ i ] );
+      if( ( CoverageSatLat1[ i ][ j ][ index1 ] <= thetaValFinal ) &&
+          ( CoverageSatLong1[ i ][ j ][ index1 ] <= thetaValFinal ) )
+       observes = true;
+      }
+     }
+
+    // the orbits that observe no target at any time stamp are discarded,
+    // the others are compacted into CoverageSatLat / CoverageSatLong
+
+    if( ! observes )
+     continue;
+
+    for( Index j = 0 ; j < t ; ++j )
+     for( Index i = 0 ; i < targets ; ++i ) {
+      CoverageSatLat[ i ][ j ][ OrbitSet ] =
+       CoverageSatLat1[ i ][ j ][ index1 ];
+      CoverageSatLong[ i ][ j ][ OrbitSet ] =
+       CoverageSatLong1[ i ][ j ][ index1 ];
+      }
+
+    ++OrbitSet;
+    }
 
  // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
  // note: this is a NBModification, the "nuclear option"
@@ -388,23 +288,17 @@ void MultiTargetBlockv2::load( std::istream & input , char frmt )
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
 
-} // end( MultiTargetBlockv2::load( istream ) )
+ } // end( MultiTargetBlockv2::load( std::istream ) )
 
 /*--------------------------------------------------------------------------*/
-
-// creates the static Variable of the model: these are exactly the ones of
-// SingleTargetBlock.h (theta, Deltat, Deltat_k1/k2 and their b1/b2/d1/d2
-// linearization helpers, zeta, h, xi), each carrying an extra "targets"
-// dimension (the last index) since a single MultiTargetBlockv2 covers all
-// targets at once, with the sole exception of activation[ i ][ j ] (the
-// per-satellite orbit selection), which is *not* replicated per target,
-// being shared by construction (cf. the class comments in
-// MultiTargetBlockv2.h on why no "duplicate" constraints are needed here)
+// the Variable of SingleTargetBlock.h, each with a further index, the last
+// one, for the target, save activation[][] and theta[], of which there is
+// a single copy for all the targets
 
 void MultiTargetBlockv2::generate_abstract_variables( Configuration * stvv )
 {
  if( AR3 & HasVar ) // the variables are there already
-  return; // nothing to do
+  return;           // nothing to do
 
  theta.resize( n );
  for( auto & var : theta )
@@ -470,7 +364,6 @@ void MultiTargetBlockv2::generate_abstract_variables( Configuration * stvv )
  activation.resize( boost::extents[ n ][ OrbitSet ] );
  for( Index i = 0 ; i < n ; ++i )
   for( Index j = 0 ; j < OrbitSet ; ++j )
-   //for( Index k = 0 ; k < targets ; ++k )
    activation[ i ][ j ].set_type( ColVariable::kBinary , eNoBlck );
 
  add_static_variable( activation );
@@ -506,42 +399,20 @@ void MultiTargetBlockv2::generate_abstract_variables( Configuration * stvv )
 
  AR3 |= HasVar;
 
-} // end( MultiTargetBlockv2::generate_abstract_variables )
+ } // end( MultiTargetBlockv2::generate_abstract_variables )
 
 /*--------------------------------------------------------------------------*/
 
-// generates the same static Constraint families as
-// SingleTargetBlock::generate_abstract_constraints() [see there for the
-// full explanation, referring to the numbered constraints (1)-(10) of
-// SingleTargetBlock.h], each now built once per target (the extra "[ k ]"
-// / "targets" loop) rather than once per SingleTargetBlock instance; since
-// activation[][] is shared (not duplicated) across targets, no counterpart
-// to MultiTargetBlock's duplicate_pi/duplicate_theta constraints is needed
-// (the dead code below is what such a duplicate_pi would have looked like,
-// kept only for reference, cf. MultiTargetBlock::generate_abstract_constraints())
+// the constraints of SingleTargetBlock::generate_abstract_constraints()
+// [see there], one copy per target k, save those involving only
+// activation[][] and theta[], of which there is a single copy
 
 void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
 {
  if( AR2 & HasCnst ) // the constraints are there already
-  return; // nothing to do
- /*
-  duplicate_pi.resize( boost::multi_array_types::extent_gen()[ targets - 1  ][ satellites ][ OrbitSet ] );
-    for( Index i = 0 ; i < targets - 1  ; ++i ) {
-       for( Index j = 0 ; j < satellites; ++j ) {
-          for( Index k = 0 ; k < OrbitSet; ++k ) {
-             LinearFunction::v_coeff_pair v_vars_pi;
-             v_vars_pi.push_back( std::make_pair( &activation[j][k][i], 1.0 ));
-             v_vars_pi.push_back( std::make_pair( &activation[j][k][i+1], -1.0 ));
-             duplicate_pi[i][j][k].set_function( new LinearFunction( std::move( v_vars_pi )) , eNoBlck );
-             duplicate_pi[i][j][k].set_rhs( 0.0 , eNoBlck );
-             duplicate_pi[i][j][k].set_lhs( 0.0 , eNoBlck );
-          }
-       }
-    }
-*/
- // orbitSelection[ i ]: sum_{j} activation[ i ][ j ] == 1 for satellite i;
- // since activation[][] has no target dimension, this constraint does not
- // depend on k and is therefore built only once (not once per target)
+  return;            // nothing to do
+ // orbitSelection[ i ]: sum_j activation[ i ][ j ] == 1 for satellite i,
+ // a single copy for all the targets
 
  orbitSelection.resize( n );
  for( Index i = 0 ; i < n ; ++i ) {
@@ -552,7 +423,7 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   orbitSelection[ i ].set_rhs( 1.0 , eNoBlck );
   orbitSelection[ i ].set_lhs( 1.0 , eNoBlck );
   orbitSelection[ i ].set_function( FunctAnm , eNoBlck );
- }
+  }
 
  add_static_constraint( orbitSelection , "orbitSelection" );
 
@@ -568,9 +439,9 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     activationSat_cnst[ i ][ j ][ k ].set_rhs( Inf< double >() , eNoBlck );
     activationSat_cnst[ i ][ j ][ k ].set_lhs( 0.0 , eNoBlck );
     activationSat_cnst[ i ][ j ][ k ].set_function( FunctSat , eNoBlck );
+    }
    }
   }
- }
  add_static_constraint( activationSat_cnst , "activationSat_cnst" );
 
  activationSat1_cnst.resize(
@@ -580,16 +451,15 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    LinearFunction::v_coeff_pair v_var;
    for( Index j = 0 ; j < n ; ++j ) {
     v_var.push_back( std::make_pair( &xi[ j ][ i ][ k ] , 1.0 ) );
-   }
+    }
    v_var.push_back( std::make_pair( &zeta[ i ][ k ] , -1.0 ) );
    LinearFunction * FunctSat = new LinearFunction( std::move( v_var ) );
    activationSat1_cnst[ i ][ k ].set_rhs( Inf< double >() , eNoBlck );
    activationSat1_cnst[ i ][ k ].set_lhs( 0.0 , eNoBlck );
    activationSat1_cnst[ i ][ k ].set_function( FunctSat , eNoBlck );
+   }
   }
- }
  add_static_constraint( activationSat1_cnst , "activationSat1_cnst" );
-
 
  h_cnst_1.resize(
   boost::multi_array_types::extent_gen()[ t * ( t - 1 ) / 2 ][ targets ] );
@@ -597,7 +467,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ) {
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &h[ ii ][ k ] , -1.0 ) );
     v_var.push_back( std::make_pair( &zeta[ i ][ k ] , 1.0 ) );
@@ -606,11 +475,10 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     h_cnst_1[ ii ][ k ].set_lhs( 0.0 , eNoBlck );
     h_cnst_1[ ii ][ k ].set_function( FunctSat , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
  add_static_constraint( h_cnst_1 , "h_cnst_1" );
-
 
  h_cnst_2.resize(
   boost::multi_array_types::extent_gen()[ t * ( t - 1 ) / 2 ][ targets ] );
@@ -618,7 +486,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ) {
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &h[ ii ][ k ] , -1.0 ) );
     v_var.push_back( std::make_pair( &zeta[ j ][ k ] , 1.0 ) );
@@ -627,9 +494,9 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     h_cnst_2[ ii ][ k ].set_lhs( 0.0 , eNoBlck );
     h_cnst_2[ ii ][ k ].set_function( FunctSat , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
  add_static_constraint( h_cnst_2 , "h_cnst_2" );
 
  h_cnst_3.resize(
@@ -638,7 +505,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ) {
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &h[ ii ][ k ] , 1.0 ) );
     v_var.push_back( std::make_pair( &zeta[ i ][ k ] , -1.0 ) );
@@ -648,44 +514,29 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     h_cnst_3[ ii ][ k ].set_lhs( -1.0 , eNoBlck );
     h_cnst_3[ ii ][ k ].set_function( FunctSat , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
  add_static_constraint( h_cnst_3 , "h_cnst_3" );
 
- // generate observability constraints via big-M approach
-
- //Thetamax[i]+(1-Xi[i,p,j])*M_limit >= (sum(act4[i,a,k,l,s]*CoverageSatLat[j,p,s,l,k,a]
- //      for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
- //Thetamax[i]+(1-Xi[i,p,j])*M_limit >= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
- //      for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
- //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLat[j,p,s,l,k,a]
- //      for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
- //Thetamax[i]-(Xi[i,p,j])*M_limit <= (sum(act4[i,a,k,l,s]*CoverageSatLong[j,p,s,l,k,a]
- //      for s=1:n_inclinaison for l=1:n_noeudAscendant for k in 1:n_meanAnomaly for a=1:length(altitudeSet))))
-
- obs1_cnst.resize(
-  boost::multi_array_types::extent_gen()[ n ][ t ][ targets ] );
- obs3_cnst.resize(
-  boost::multi_array_types::extent_gen()[ n ][ t ][ targets ] );
+ // obs2_cnst and obs4_cnst, the big-M linearization of constraint (5) of
+ // SingleTargetBlock.h for every target: target k can be observed by
+ // satellite i at time stamp j only if the latitude and longitude
+ // distances of the chosen orbit are within the threshold theta[ i ]
 
  obs2_cnst.resize(
   boost::multi_array_types::extent_gen()[ n ][ t ][ targets ] );
  obs4_cnst.resize(
   boost::multi_array_types::extent_gen()[ n ][ t ][ targets ] );
 
- double MLAT = PI;
- double MLONG = 2 * PI;
-
  for( Index k = 0 ; k < targets ; ++k ) {
   for( Index i = 0 ; i < n ; ++i ) {
    for( Index j = 0 ; j < t ; ++j ) {
-    MLAT = 0.0;
-    MLONG = 0.0;
-    LinearFunction::v_coeff_pair v_obs1, v_obs2;
+    // the largest distance over all the orbits, i.e., the smallest big-M
+    // making the constraint redundant when xi == 0, whatever the orbit
+    double MLAT = 0.0;
+    double MLONG = 0.0;
+    LinearFunction::v_coeff_pair v_obs1 , v_obs2;
     for( Index jj = 0 ; jj < OrbitSet ; ++jj ) {
      v_obs1.push_back( std::make_pair( &activation[ i ][ jj ] ,
                                        -CoverageSatLat[ k ][ j ][ jj ] ) );
@@ -693,7 +544,7 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
                                        -CoverageSatLong[ k ][ j ][ jj ] ) );
      MLAT = std::max( MLAT , ( CoverageSatLat[ k ][ j ][ jj ] ) );
      MLONG = std::max( MLONG , ( CoverageSatLong[ k ][ j ][ jj ] ) );
-    }
+     }
 
     v_obs1.push_back( std::make_pair( &xi[ i ][ j ][ k ] , -MLAT ) );
     v_obs2.push_back( std::make_pair( &xi[ i ][ j ][ k ] , -MLONG ) );
@@ -711,23 +562,12 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     obs4_cnst[ i ][ j ][ k ].set_rhs( Inf< double >() , eNoBlck );
     obs4_cnst[ i ][ j ][ k ].set_lhs( ( -MLONG ) , eNoBlck );
     obs4_cnst[ i ][ j ][ k ].set_function( Funct2 , eNoBlck );
-
-    obs1_cnst[ i ][ j ][ k ].set_rhs( ( -thetaValFinal ) , eNoBlck );
-    obs1_cnst[ i ][ j ][ k ].set_lhs( -Inf< double >() , eNoBlck );
-    obs1_cnst[ i ][ j ][ k ].set_function( Funct1 , eNoBlck );
-
-    obs3_cnst[ i ][ j ][ k ].set_rhs( ( -thetaValFinal ) , eNoBlck );
-    obs3_cnst[ i ][ j ][ k ].set_lhs( -Inf< double >() , eNoBlck );
-    obs3_cnst[ i ][ j ][ k ].set_function( Funct2 , eNoBlck );
+    }
    }
   }
- }
 
- //add_static_constraint( obs1_cnst );
- //add_static_constraint( obs3_cnst );
-
- add_static_constraint( obs2_cnst );
- add_static_constraint( obs4_cnst );
+ add_static_constraint( obs2_cnst , "obs2_cnst" );
+ add_static_constraint( obs4_cnst , "obs4_cnst" );
 
  theta_UB.resize( n );
  for( Index i = 0 ; i < n ; ++i ) {
@@ -738,7 +578,7 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   theta_UB[ i ].set_rhs( thetaValFinal , eNoBlck );
   theta_UB[ i ].set_lhs( -Inf< double >() , eNoBlck );
   theta_UB[ i ].set_function( Funct_theta , eNoBlck );
- }
+  }
 
  add_static_constraint( theta_UB , "theta_UB" );
 
@@ -750,7 +590,7 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Deltat_max_dt1[ k ].set_rhs( Inf< double >() , eNoBlck );
   Deltat_max_dt1[ k ].set_lhs( dt , eNoBlck );
   Deltat_max_dt1[ k ].set_function( Functt1 , eNoBlck );
- }
+  }
 
  add_static_constraint( Deltat_max_dt1 , "Deltat_max_dt1" );
 
@@ -766,8 +606,8 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    Deltat_max1[ i ][ k ].set_rhs( Inf< double >() , eNoBlck );
    Deltat_max1[ i ][ k ].set_lhs( 0.0 , eNoBlck );
    Deltat_max1[ i ][ k ].set_function( Funct , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( Deltat_max1 , "Deltat_max1" );
 
@@ -782,8 +622,8 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    Deltat_max11[ i ][ k ].set_rhs( Inf< double >() , eNoBlck );
    Deltat_max11[ i ][ k ].set_lhs( 0.0 , eNoBlck );
    Deltat_max11[ i ][ k ].set_function( Funct , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( Deltat_max11 , "Deltat_max11" );
 
@@ -799,8 +639,8 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    Deltat_max2[ i ][ k ].set_rhs( Inf< double >() , eNoBlck );
    Deltat_max2[ i ][ k ].set_lhs( 0.0 , eNoBlck );
    Deltat_max2[ i ][ k ].set_function( Funct , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( Deltat_max2 , "Deltat_max2" );
 
@@ -815,11 +655,10 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    Deltat_max22[ i ][ k ].set_rhs( Inf< double >() , eNoBlck );
    Deltat_max22[ i ][ k ].set_lhs( 0.0 , eNoBlck );
    Deltat_max22[ i ][ k ].set_function( Funct , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( Deltat_max22 , "Deltat_max22" );
-
 
  Deltat_min_k1_1.resize(
   boost::multi_array_types::extent_gen()[ t * ( t - 1 ) / 2 ][ targets ] );
@@ -827,7 +666,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ){
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &Deltat_k1[ i ][ k ] , -1.0 ) );
     v_var.push_back(
@@ -837,9 +675,9 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     Deltat_min_k1_1[ ii ][ k ].set_lhs( -0.5 * T , eNoBlck );
     Deltat_min_k1_1[ ii ][ k ].set_function( Funct , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
 
  add_static_constraint( Deltat_min_k1_1 , "Deltat_min_k1_1" );
 
@@ -849,7 +687,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ){
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &Deltat_k1[ i ][ k ] , -1.0 ) );
     v_var.push_back(
@@ -860,9 +697,9 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     Deltat_min_k1_2[ ii ][ k ].set_lhs( -Inf< double >() , eNoBlck );
     Deltat_min_k1_2[ ii ][ k ].set_function( Funct , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
 
  add_static_constraint( Deltat_min_k1_2 , "Deltat_min_k1_2" );
 
@@ -874,13 +711,13 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    for( Index j = i + 1 ; j < t ; ++j ) {
     v_var.push_back( std::make_pair( &d1[ ii ][ k ] , 1.0 ) );
     ii += 1;
-   }
+    }
    LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
    d1_cnst[ i ][ k ].set_rhs( 1.0 , eNoBlck );
    d1_cnst[ i ][ k ].set_lhs( 1.0 , eNoBlck );
    d1_cnst[ i ][ k ].set_function( Funct , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( d1_cnst , "d1_cnst" );
 
@@ -890,7 +727,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ){
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &Deltat_k2[ i ][ k ] , 1.0 ) );
     v_var.push_back(
@@ -900,9 +736,9 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     Deltat_min_k2_1[ ii ][ k ].set_lhs( -Inf< double >() , eNoBlck );
     Deltat_min_k2_1[ ii ][ k ].set_function( Funct , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
 
  add_static_constraint( Deltat_min_k2_1 , "Deltat_min_k2_1" );
 
@@ -912,7 +748,6 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
   Index ii = 0;
   for( Index i = 0 ; i < t - 1 ; ++i ) {
    for( Index j = i + 1 ; j < t ; ++j ) {
-    //if ( j > i ){
     LinearFunction::v_coeff_pair v_var;
     v_var.push_back( std::make_pair( &Deltat_k2[ i ][ k ] , 1.0 ) );
     v_var.push_back(
@@ -923,9 +758,9 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     Deltat_min_k2_2[ ii ][ k ].set_lhs( 0.0 , eNoBlck );
     Deltat_min_k2_2[ ii ][ k ].set_function( Funct , eNoBlck );
     ii += 1;
+    }
    }
   }
- }
 
  add_static_constraint( Deltat_min_k2_2 , "Deltat_min_k2_2" );
 
@@ -937,13 +772,13 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    for( Index j = i + 1 ; j < t ; ++j ) {
     v_var.push_back( std::make_pair( &d2[ ii ][ k ] , 1.0 ) );
     ii += 1;
-   }
+    }
    LinearFunction * Funct = new LinearFunction( std::move( v_var ) );
    d2_cnst[ i ][ k ].set_rhs( 1.0 , eNoBlck );
    d2_cnst[ i ][ k ].set_lhs( 1.0 , eNoBlck );
    d2_cnst[ i ][ k ].set_function( Funct , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( d2_cnst , "d2_cnst" );
 
@@ -955,16 +790,15 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    for( Index j = i + 1 ; j < t ; ++j ) {
     v_var1.push_back( std::make_pair( &h[ ii ][ k ] , 1.0 ) );
     ii += 1;
+    }
    }
-  }
   LinearFunction * FunctA = new LinearFunction( std::move( v_var1 ) );
   obs_cnst_h[ k ].set_rhs( Inf< double >() , eNoBlck );
   obs_cnst_h[ k ].set_lhs( 1.0 , eNoBlck );
   obs_cnst_h[ k ].set_function( FunctA , eNoBlck );
- }
+  }
 
  add_static_constraint( obs_cnst_h , "obs_cnst_h" );
-
 
  obs_cnst_xi.resize( boost::multi_array_types::extent_gen()[ n ][ targets ] );
  for( Index k = 0 ; k < targets ; ++k ) {
@@ -972,18 +806,18 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
    LinearFunction::v_coeff_pair v_varxi;
    for( Index j = 0 ; j < t ; ++j ) {
     v_varxi.push_back( std::make_pair( &xi[ i ][ j ][ k ] , 1.0 ) );
-   }
+    }
    LinearFunction * FunctB = new LinearFunction( std::move( v_varxi ) );
    obs_cnst_xi[ i ][ k ].set_rhs( Inf< double >() , eNoBlck );
    obs_cnst_xi[ i ][ k ].set_lhs( 3.0 , eNoBlck );
    obs_cnst_xi[ i ][ k ].set_function( FunctB , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( obs_cnst_xi , "obs_cnst_xi" );
 
  observation1.resize(
-  boost::multi_array< FRowConstraint, 2 >::extent_gen()[ targets ][ t ] );
+  boost::multi_array< FRowConstraint , 2 >::extent_gen()[ targets ][ t ] );
 
  for( Index i = 0 ; i < targets ; ++i ) {
   for( Index j = 0 ; j < t ; ++j ) {
@@ -992,33 +826,32 @@ void MultiTargetBlockv2::generate_abstract_constraints( Configuration * stcc )
     v_var1.push_back( std::make_pair( &xi[ k ][ j ][ i ] , 1.0 ) );
 
    observation1[ i ][ j ].set_function(
-    new LinearFunction( std::move( v_var1 ) ), eNoBlck );
-   observation1[ i ][ j ].set_rhs( 1.0 , eNoBlck ); //Inf< double >()
+    new LinearFunction( std::move( v_var1 ) ) , eNoBlck );
+   observation1[ i ][ j ].set_rhs( 1.0 , eNoBlck );
    observation1[ i ][ j ].set_lhs( -Inf< double >() , eNoBlck );
+   }
   }
- }
 
  add_static_constraint( observation1 , "observation1" );
 
  AR2 |= HasCnst;
-} // end( MultiTargetBlockv2::generate_abstract_constraints )
+ } // end( MultiTargetBlockv2::generate_abstract_constraints )
 
 /*--------------------------------------------------------------------------*/
 
-// the objective is the average of the per-target maximum revisit times
-// Deltat[ k ] (weight 1/targets each), directly summed here since there
-// are no per-target sub-Block to sum objectives over, unlike MultiTargetBlock
+// the objective is the average of the maximum revisit times Deltat[ k ] of
+// the targets
 
 void MultiTargetBlockv2::generate_objective( Configuration * objc )
 {
  if( AR1 & HasObj ) // the objective is there already
-  return; // cowardly (and silently) return
+  return;           // cowardly (and silently) return
 
  LinearFunction::v_coeff_pair v_obj;
 
  for( Index k = 0 ; k < targets ; ++k ) {
   v_obj.push_back( std::make_pair( &Deltat[ k ] , 1.0 / targets ) );
- }
+  }
 
  LinearFunction * Functobj = new LinearFunction( std::move( v_obj ) );
 
@@ -1027,275 +860,277 @@ void MultiTargetBlockv2::generate_objective( Configuration * objc )
 
  AR1 |= HasObj;
 
-} // end( MultiTargetBlockv2::generate_objective )
+ } // end( MultiTargetBlockv2::generate_objective )
 
 /*--------------------------------------------------------------------------*/
+/*--------------------- METHODS FOR CHECKING THE Block ---------------------*/
+/*--------------------------------------------------------------------------*/
 
-// TODO: not implemented yet, cf. SatelliteBlock::is_feasible()
-
-bool MultiTargetBlockv2::is_feasible( bool useabstract , Configuration * fsbc )
+bool MultiTargetBlockv2::is_feasible( bool useabstract ,
+                                      Configuration * fsbc )
 {
+ if( ! ( ( AR3 & HasVar ) && ( AR2 & HasCnst ) ) ) // nothing to check
+  return( false );
+
  FNumber eps = 0;
  auto tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >( fsbc );
 
- if( ( !tfsbc ) && f_BlockConfig &&
+ if( ( ! tfsbc ) && f_BlockConfig &&
      f_BlockConfig->f_is_feasible_Configuration )
   tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
    f_BlockConfig->f_is_feasible_Configuration );
  if( tfsbc )
   eps = tfsbc->f_value;
 
- return ( 0 );
+ return( ColVariable::is_feasible( theta , eps ) &&
+          ColVariable::is_feasible( Deltat , eps ) &&
+          ColVariable::is_feasible( Deltat_k1 , eps ) &&
+          ColVariable::is_feasible( Deltat_k2 , eps ) &&
+          ColVariable::is_feasible( Deltat_k1A , eps ) &&
+          ColVariable::is_feasible( Deltat_k2A , eps ) &&
+          ColVariable::is_feasible( zeta , eps ) &&
+          ColVariable::is_feasible( b1 , eps ) &&
+          ColVariable::is_feasible( b2 , eps ) &&
+          ColVariable::is_feasible( d1 , eps ) &&
+          ColVariable::is_feasible( d2 , eps ) &&
+          ColVariable::is_feasible( h , eps ) &&
+          ColVariable::is_feasible( xi , eps ) &&
+          ColVariable::is_feasible( activation , eps ) &&
+          RowConstraint::is_feasible( orbitSelection , eps ) &&
+          RowConstraint::is_feasible( theta_UB , eps ) &&
+          RowConstraint::is_feasible( Deltat_max_dt1 , eps ) &&
+          RowConstraint::is_feasible( Deltat_max1 , eps ) &&
+          RowConstraint::is_feasible( Deltat_max11 , eps ) &&
+          RowConstraint::is_feasible( Deltat_max2 , eps ) &&
+          RowConstraint::is_feasible( Deltat_max22 , eps ) &&
+          RowConstraint::is_feasible( Deltat_min_k1_1 , eps ) &&
+          RowConstraint::is_feasible( Deltat_min_k1_2 , eps ) &&
+          RowConstraint::is_feasible( d1_cnst , eps ) &&
+          RowConstraint::is_feasible( Deltat_min_k2_1 , eps ) &&
+          RowConstraint::is_feasible( Deltat_min_k2_2 , eps ) &&
+          RowConstraint::is_feasible( d2_cnst , eps ) &&
+          RowConstraint::is_feasible( activationSat_cnst , eps ) &&
+          RowConstraint::is_feasible( activationSat1_cnst , eps ) &&
+          RowConstraint::is_feasible( observation1 , eps ) &&
+          RowConstraint::is_feasible( h_cnst_1 , eps ) &&
+          RowConstraint::is_feasible( h_cnst_2 , eps ) &&
+          RowConstraint::is_feasible( h_cnst_3 , eps ) &&
+          RowConstraint::is_feasible( obs2_cnst , eps ) &&
+          RowConstraint::is_feasible( obs4_cnst , eps ) &&
+          RowConstraint::is_feasible( obs_cnst_h , eps ) &&
+          RowConstraint::is_feasible( obs_cnst_xi , eps ) );
 
-} // end( MultiTargetBlockv2::is_feasible )
+ } // end( MultiTargetBlockv2::is_feasible )
 
 /*--------------------------------------------------------------------------*/
-
-// TODO: not implemented yet, cf. SatelliteBlock::is_optimal()
 
 bool MultiTargetBlockv2::is_optimal( bool useabstract , Configuration * optc )
 {
- CNumber ceps = 0;
- FNumber feps = 0;
- if( optc ) {
-  if( auto toptc =
-       dynamic_cast< SimpleConfiguration< std::pair< CNumber, FNumber > > * >(
-        optc ) ) {
-   ceps = toptc->f_value.first;
-   feps = toptc->f_value.second;
-  } else {
-   auto ttoptc = dynamic_cast< SimpleConfiguration< CNumber > * >( optc );
+ return( false );
 
-   if( ( !ttoptc ) && f_BlockConfig &&
-       f_BlockConfig->f_is_optimal_Configuration )
-    ttoptc = dynamic_cast< SimpleConfiguration< CNumber > * >(
-     f_BlockConfig->f_is_optimal_Configuration );
-   if( ttoptc )
-    ceps = ttoptc->f_value;
-
-   if( f_BlockConfig && f_BlockConfig->f_is_feasible_Configuration ) {
-    auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-     f_BlockConfig->f_is_feasible_Configuration );
-    if( fsbc )
-     feps = fsbc->f_value;
-   }
-  }
- } else if( f_BlockConfig ) {
-  if( f_BlockConfig->f_is_optimal_Configuration )
-   if( auto csbc = dynamic_cast< SimpleConfiguration< CNumber > * >(
-        f_BlockConfig->f_is_optimal_Configuration ) )
-    ceps = csbc->f_value;
-
-  if( f_BlockConfig->f_is_feasible_Configuration )
-   if( auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-        f_BlockConfig->f_is_feasible_Configuration ) )
-    feps = fsbc->f_value;
- }
-
- return ( 0 );
-
-} //  end( MultiTargetBlockv2::is_optimal )
+ } // end( MultiTargetBlockv2::is_optimal )
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- Methods for handling Solution --------------------*/
+/*--------------------- Methods for handling Solution ----------------------*/
 /*--------------------------------------------------------------------------*/
-// creates a new MultiTargetSolution, read from the current status of the
-// MultiTargetBlockv2 unless an empty one (emptys == true) is asked for;
-// wsol is extracted but currently unused, cf. SatelliteBlock::get_Solution()
 
 Solution * MultiTargetBlockv2::get_Solution( Configuration * solc ,
                                              bool emptys )
 {
- int wsol = 0;
- if( ( !solc ) && f_BlockConfig )
-  solc = f_BlockConfig->f_solution_Configuration;
-
- if( auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc ) )
-  wsol = tsolc->f_value;
-
  auto * sol = new MultiTargetSolution();
 
- if( !emptys )
-  sol->read( this );
+ if( AR3 & HasVar ) {
+  sol->v_Deltat.assign( Deltat.size() , 0 );
+  if( ! emptys )
+   sol->read( this );
+  }
 
- return ( sol );
+ return( sol );
 
-} // end( MultiTargetBlockv2::get_Solution )
+ } // end( MultiTargetBlockv2::get_Solution )
 
-// sets the values of the Deltat ColVariable-s (one per target, unlike the
-// single scalar Deltat/zeta of SingleTargetBlock/SatelliteBlock) from the
-// range [ rng.first , rng.second ) of fstrt
+/*--------------------------------------------------------------------------*/
 
-void MultiTargetBlockv2::set_zeta( c_Vec_FNumber_it fstrt , Range rng )
+void MultiTargetBlockv2::set_Deltat( c_Vec_FNumber_it fstrt , Range rng )
 {
- if( !( AR3 & HasVar ) ) // nowhere to put the value in
-  return; // cowardly (and silently) return
+ if( ! ( AR3 & HasVar ) ) // nowhere to put the value in
+  return;                // cowardly (and silently) return
 
- Index i = rng.first;
- Index stop = std::min( Index( rng.second ) , Index( Deltat.size() ) );
+ const Index stop = std::min( Index( rng.second ) , Index( Deltat.size() ) );
+ for( Index k = rng.first ; k < stop ; ++k )
+  Deltat[ k ].set_value( *( fstrt++ ) );
 
- for( auto xi = Deltat.begin() + i ; i < stop ; ++i )
-  ( xi++ )->set_value( *( fstrt++ ) );
-
-} // end( MultiTargetBlockv2::set_zeta )
+ } // end( MultiTargetBlockv2::set_Deltat )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------- Methods for handling Modification -------------------*/
+/*------------------- Methods for handling Modification --------------------*/
 /*--------------------------------------------------------------------------*/
-// intercepts Modification concerning this Block before forwarding them to
-// Block::add_Modification(), cf. SatelliteBlock::add_Modification()
 
 void MultiTargetBlockv2::add_Modification( sp_Mod mod , ChnlName chnl )
 {
  if( mod->concerns_Block() ) {
   mod->concerns_Block( false );
   guts_of_add_Modification( mod.get() , chnl );
- }
+  }
 
  Block::add_Modification( mod , chnl );
 
-} // end( MultiTargetBlockv2::add_Modification )
+ } // end( MultiTargetBlockv2::add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*----- METHODS FOR LOADING, PRINTING & SAVING THE MultiTargetBlockv2 ------*/
+/*---------- METHODS FOR PRINTING & SAVING THE MultiTargetBlockv2 ----------*/
 /*--------------------------------------------------------------------------*/
-// TODO: printing the MultiTargetBlockv2 instance is not implemented yet
 
-void MultiTargetBlockv2::print( std::ostream & output , char vlvl ) const {
+void MultiTargetBlockv2::print( std::ostream & output , char vlvl ) const
+{
+ output << "MultiTargetBlockv2: " << targets << " targets, " << n
+        << " satellites, " << t << " time stamps, " << OrbitSet << " orbits"
+        << std::endl;
 
-} // end( MultiTargetBlockv2::print )
+ } // end( MultiTargetBlockv2::print )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- PRIVATE METHODS -------------------------------*/
+/*---------------------------- PRIVATE METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
 void MultiTargetBlockv2::guts_of_destructor( void )
 {
- // clear() all Constraint to ensure that they do not bother to un-register
- // themselves from Variable that are going to be deleted anyway
-
- // clear the bound constraints
- // note: as in SingleTargetBlock::guts_of_destructor(), Deltat_max3 is
- // never populated by generate_abstract_constraints() and is therefore
- // intentionally not cleared here; obs1_cnst and obs3_cnst are likewise
- // declared and filled in but never actually added as static constraints
- // (see the commented-out add_static_constraint() calls there), so they
- // are not registered against any Variable and do not need clear() either
-
+ // clear() the Constraint and the Objective, so that they do not bother to
+ // un-register themselves from Variable that are going to be deleted anyway
  Constraint::clear( orbitSelection );
+ Constraint::clear( theta_UB );
+ Constraint::clear( Deltat_max_dt1 );
  Constraint::clear( Deltat_max1 );
  Constraint::clear( Deltat_max11 );
  Constraint::clear( Deltat_max2 );
  Constraint::clear( Deltat_max22 );
- Constraint::clear( Deltat_max_dt1 );
  Constraint::clear( Deltat_min_k1_1 );
  Constraint::clear( Deltat_min_k1_2 );
+ Constraint::clear( d1_cnst );
  Constraint::clear( Deltat_min_k2_1 );
  Constraint::clear( Deltat_min_k2_2 );
- Constraint::clear( d1_cnst );
  Constraint::clear( d2_cnst );
- //Constraint::clear( dA_cnst );
- //Constraint::clear( dB_cnst );
+ Constraint::clear( activationSat_cnst );
+ Constraint::clear( activationSat1_cnst );
+ Constraint::clear( observation1 );
  Constraint::clear( h_cnst_1 );
  Constraint::clear( h_cnst_2 );
  Constraint::clear( h_cnst_3 );
- Constraint::clear( activationSat_cnst );
- Constraint::clear( activationSat1_cnst );
- Constraint::clear( theta_UB );
- //Constraint::clear( obs1_cnst );
  Constraint::clear( obs2_cnst );
- //Constraint::clear( obs3_cnst );
  Constraint::clear( obs4_cnst );
  Constraint::clear( obs_cnst_h );
  Constraint::clear( obs_cnst_xi );
- Constraint::clear( observation1 );
+ c.clear();
 
- c.clear(); // clear the Objective
-
- // explicitly reset all Constraint and Variable
- // this is done for the case where this method is called prior to re-loading
- // a new instance: if not, the new representation would be added to the
- // (no longer current) one
+ // explicitly reset all Constraint and Variable, so that a new abstract
+ // representation is not added to the (no longer current) one
  reset_static_constraints();
  reset_static_variables();
- //reset_dynamic_constraints();
- //reset_dynamic_variables();
  reset_objective();
 
-} // end( MultiTargetBlockv2::guts_of_destructor )
+ theta.clear();
+ Deltat.clear();
+ Deltat_k1.resize( boost::extents[ 0 ][ 0 ] );
+ Deltat_k2.resize( boost::extents[ 0 ][ 0 ] );
+ Deltat_k1A.resize( boost::extents[ 0 ][ 0 ] );
+ Deltat_k2A.resize( boost::extents[ 0 ][ 0 ] );
+ zeta.resize( boost::extents[ 0 ][ 0 ] );
+ b1.resize( boost::extents[ 0 ][ 0 ] );
+ b2.resize( boost::extents[ 0 ][ 0 ] );
+ d1.resize( boost::extents[ 0 ][ 0 ] );
+ d2.resize( boost::extents[ 0 ][ 0 ] );
+ h.resize( boost::extents[ 0 ][ 0 ] );
+ xi.resize( boost::extents[ 0 ][ 0 ][ 0 ] );
+ activation.resize( boost::extents[ 0 ][ 0 ] );
+
+ AR1 = AR2 = AR3 = 0;
+
+ } // end( MultiTargetBlockv2::guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/
-
-// no Modification is currently supported on a MultiTargetBlockv2, hence
-// this is a no-op stub, cf. SatelliteBlock::guts_of_add_Modification()
+// the MultiTargetBlockv2 has no physical representation that an abstract
+// Modification may change, hence there is nothing to do here
 
 void MultiTargetBlockv2::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
+{} // end( MultiTargetBlockv2::guts_of_add_Modification )
+
+/*--------------------------------------------------------------------------*/
+/*--------------------- METHODS OF MultiTargetSolution ---------------------*/
+/*--------------------------------------------------------------------------*/
+
+void MultiTargetSolution::deserialize( const netCDF::NcGroup & group )
 {
- // process abstract Modification - - - - - - - - - - - - - - - - - - - - - -
-
-} // end( MultiTargetBlockv2::guts_of_add_Modification )
-
-/*--------------------------------------------------------------------------*/
-/*------------------------ METHODS OF MultiTargetSolution --------------------*/
-/*--------------------------------------------------------------------------*/
-// a MultiTargetSolution stores in v_zeta the value of Deltat[ k ] (the
-// revisit time) for each of the targets k; deserialize()/serialize() are
-// currently no-ops, i.e., loading/saving a MultiTargetSolution to/from a
-// netCDF::NcGroup is not implemented yet
-
-void MultiTargetSolution::deserialize( const netCDF::NcGroup & group ) {}
+ throw(
+  std::logic_error( "MultiTargetSolution::deserialize: not implemented" ) );
+ }
 
 /*--------------------------------------------------------------------------*/
-// reads the current value of Deltat[] out of the given MultiTargetBlockv2
-// into v_zeta; note that this only happens if v_zeta is already non-empty
-// (i.e., this MultiTargetSolution has previously been sized to hold it)
 
 void MultiTargetSolution::read( const Block * block )
 {
- auto SATB = dynamic_cast< const MultiTargetBlockv2 * >( block );
- if( !SATB )
-  throw( std::invalid_argument( "block is not a MultiTargetBlockv2" ) );
+ auto MTB = dynamic_cast< const MultiTargetBlockv2 * >( block );
+ if( ! MTB )
+  throw( std::invalid_argument(
+   "MultiTargetSolution::read: block is not a MultiTargetBlockv2" ) );
 
- if( !v_zeta.empty() ) {
-  v_zeta.resize( SATB->targets );
+ if( v_Deltat.empty() )
+  return;
 
-  for( Index k = 0 ; k < v_zeta.size() ; ++k )
-   v_zeta[ k ] = SATB->get_zeta( k );
+ if( v_Deltat.size() != MTB->Deltat.size() )
+  throw(
+   std::invalid_argument( "MultiTargetSolution::read: wrong Block size" ) );
+
+ for( Index k = 0 ; k < v_Deltat.size() ; ++k )
+  v_Deltat[ k ] = MTB->get_Deltat( k );
  }
-}
 
 /*--------------------------------------------------------------------------*/
-// writes the values of Deltat[] stored in v_zeta into the given
-// MultiTargetBlockv2
 
 void MultiTargetSolution::write( Block * block )
 {
- auto SATB = dynamic_cast< MultiTargetBlockv2 * >( block );
- if( !SATB )
-  throw( std::invalid_argument( "block is not a MultiTargetBlockv2" ) );
+ auto MTB = dynamic_cast< MultiTargetBlockv2 * >( block );
+ if( ! MTB )
+  throw( std::invalid_argument(
+   "MultiTargetSolution::write: block is not a MultiTargetBlockv2" ) );
 
- if( !v_zeta.empty() )
-  SATB->set_zeta( v_zeta.begin() );
-}
+ if( ! v_Deltat.empty() )
+  MTB->set_Deltat( v_Deltat.begin() , Range( 0 , v_Deltat.size() ) );
+ }
 
 /*--------------------------------------------------------------------------*/
 
-void MultiTargetSolution::serialize( netCDF::NcGroup & group ) const {}
+void MultiTargetSolution::serialize( netCDF::NcGroup & group ) const
+{
+ throw(
+  std::logic_error( "MultiTargetSolution::serialize: not implemented" ) );
+ }
 
 /*--------------------------------------------------------------------------*/
 
 MultiTargetSolution * MultiTargetSolution::scale( double factor ) const
 {
- auto * sol = MultiTargetSolution::clone( true );
- return ( sol );
-}
+ auto * sol = clone();
+ for( auto & val : sol->v_Deltat )
+  val *= factor;
+
+ return( sol );
+ }
 
 /*--------------------------------------------------------------------------*/
-// TODO: not implemented yet
 
 void MultiTargetSolution::sum( const Solution * solution , double multiplier )
 {
-}
+ auto tsol = dynamic_cast< const MultiTargetSolution * >( solution );
+ if( ! tsol )
+  throw( std::invalid_argument(
+   "MultiTargetSolution::sum: solution is not a MultiTargetSolution" ) );
+
+ if( tsol->v_Deltat.size() != v_Deltat.size() )
+  throw( std::invalid_argument( "MultiTargetSolution::sum: wrong size" ) );
+
+ for( Index i = 0 ; i < v_Deltat.size() ; ++i )
+  v_Deltat[ i ] += multiplier * tsol->v_Deltat[ i ];
+ }
 
 /*--------------------------------------------------------------------------*/
 
@@ -1303,15 +1138,23 @@ MultiTargetSolution * MultiTargetSolution::clone( bool empty ) const
 {
  auto * sol = new MultiTargetSolution();
 
- if( empty ) {
-  if( !v_zeta.empty() )
-   sol->v_zeta.resize( v_zeta.size() );
- } else {
-  sol->v_zeta = v_zeta;
+ if( empty )
+  sol->v_Deltat.assign( v_Deltat.size() , 0 );
+ else
+  sol->v_Deltat = v_Deltat;
+
+ return( sol );
  }
 
- return ( sol );
-}
+/*--------------------------------------------------------------------------*/
+
+void MultiTargetSolution::print( std::ostream & output ) const
+{
+ output << "MultiTargetSolution: Deltat =";
+ for( auto val : v_Deltat )
+  output << " " << val;
+ output << std::endl;
+ }
 
 /*--------------------------------------------------------------------------*/
 /*-------------------- End File MultiTargetBlockv2.cpp ---------------------*/

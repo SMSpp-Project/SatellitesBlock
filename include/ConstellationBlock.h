@@ -2,8 +2,10 @@
 /*----------------------- File ConstellationBlock.h ------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the *concrete* class ConstellationBlock, which implements the
- * Block concept [see Block.h] for a Multicommodity Min Cost Flow problem.
+ * Header file for the *concrete* class ConstellationBlock, which implements
+ * the Block concept [see Block.h] for the Satellite Constellation Design
+ * Problem, as a set of SatelliteBlock linked by the observability
+ * constraints of the targets.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -12,309 +14,398 @@
  * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
-/*----------------------------- DEFINITIONS --------------------------------*/
+/*------------------------------ DEFINITIONS -------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #ifndef __ConstellationBlock
-#define __ConstellationBlock /* self-identification: #endif at the end of the file */
+ #define __ConstellationBlock
+                      /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
-/*------------------------------ INCLUDES ----------------------------------*/
+/*-------------------------------- INCLUDES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #include "Block.h"
+
 #include "SatelliteBlock.h"
-#include "ColVariable.h"
+
 #include "FRowConstraint.h"
-#include "Configuration.h"
-#include "Objective.h"
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- NAMESPACE ------------------------------------*/
+/*------------------------------- NAMESPACE --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it {
+namespace SMSpp_di_unipi_it
+{
 /*--------------------------------------------------------------------------*/
 /*-------------------- ConstellationBlock-RELATED TYPES --------------------*/
 /*--------------------------------------------------------------------------*/
-/** @name Public Types
+/** @defgroup ConstellationBlock_TYPES ConstellationBlock-related types
  *
  * "Import" basic types from SatelliteBlock.
- *
  *  @{ */
 
-using CNumber = SatelliteBlock::CNumber;
-using c_RHSValue = RowConstraint::c_RHSValue;
-using Vec_CNumber = SatelliteBlock::Vec_CNumber;
-using FNumber = SatelliteBlock::FNumber;
-using Vec_FNumber = SatelliteBlock::Vec_FNumber;
+using CNumber = SatelliteBlock::CNumber;         ///< type of the costs
+using c_RHSValue = RowConstraint::c_RHSValue;    ///< type of the RHS values
+using Vec_CNumber = SatelliteBlock::Vec_CNumber; ///< vector of CNumber
+using FNumber = SatelliteBlock::FNumber;         ///< type of the values
+using Vec_FNumber = SatelliteBlock::Vec_FNumber; ///< vector of FNumber
 
-using FMultiVector = std::vector< Vec_FNumber >;
-using CMultiVector = std::vector< Vec_CNumber >;
-using MultiSubset = std::vector< Block::Subset >;
+using FMultiVector = std::vector< Vec_FNumber >;  ///< vector of Vec_FNumber
+using CMultiVector = std::vector< Vec_CNumber >;  ///< vector of Vec_CNumber
+using MultiSubset = std::vector< Block::Subset >; ///< vector of Subset
 
-using Vec_Bool = std::vector< bool >;
+using Vec_Bool = std::vector< bool >; ///< vector of bool
 
-/** @}  end( types ) */
+/** @} end( group( ConstellationBlock_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
-/*------------------------------- CLASSES ----------------------------------*/
+/*-------------------------------- CLASSES ---------------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @defgroup ConstellationBlock_CLASSES Classes in ConstellationBlock.h
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS ConstellationBlock ----------------------*/
+/*------------------------ CLASS ConstellationBlock ------------------------*/
 /*--------------------------------------------------------------------------*/
-/*--------------------------- GENERAL NOTES --------------------------------*/
+/*----------------------------- GENERAL NOTES ------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// Implementation of a simple ConstellationBlock concept.
-/* ConstellationBlock is composed of some SatelliteBlocks linked by the
-* observability constraints for the targets, indicating that each target has to
-* be observed by at least one satellite of the constellation within the revisit
-* time:
-* \f[
-    \sum_{\substack{t \in T(k,\Delta t_m,dt) \\ i \in \mathcal [s]}}
-    \xi[ i ][ t ][ m ] \ge 1, \forall k \in [\lfloor T\slash\Delta t_m\rfloor],
-    \forall m \in \mathcal{X},
-* \f]
-* where \Delta t_m is the revisit time for target m \in \mathcal{X} and
-* [s] = \{1,2,...,s\} is the set of the satellites in the constellation. Variables
-* \xi[ i ][ t ][ m ] indicating whether the sallite i observes target m at time stamp t
-* (see SatelliteBlock.h).
-*/
+/// the Satellite Constellation Design Problem
+/** ConstellationBlock represents the Satellite Constellation Design
+ * Problem: choosing the orbits of a constellation of at most s satellites,
+ * among a finite set of candidate ones, so that every target m is observed
+ * by some satellite at least once in each of its revisit windows, with the
+ * fewest active satellites. Its sub-Block are one SatelliteBlock [see
+ * SatelliteBlock.h] per satellite, linked by the observability constraints
+ *
+ * \f[
+ *  \sum_{ i \in [s] } \sum_{ t \in T( k , \Delta t_m , dt ) }
+ *  \xi_i[ m ][ t ] \geq 1 \quad k = 1 , \ldots ,
+ *  \lfloor T / \Delta t_m \rfloor \; , \; m \in \mathcal{X}      \qquad (1)
+ * \f]
+ *
+ * where \f$ \mathcal{X} \f$ is the set of the targets, T the time horizon,
+ * dt the time step, \f$ \Delta t_m \f$ the revisit time of target m,
+ * \f$ T( k , \Delta t_m , dt ) \f$ the set of time stamps of its k-th
+ * revisit window, [s] = { 1 , ... , s } the set of the satellites, and
+ * \f$ \xi_i[ m ][ t ] \f$ the Variable of SatelliteBlock i that is 1 if the
+ * satellite observes target m at time stamp t. Besides (1), the
+ * "observation" constraints, ConstellationBlock has the "observation1"
+ * constraints
+ *
+ * \f[
+ *  \sum_{ i \in [s] } \xi_i[ m ][ t ] \leq 1                     \qquad (2)
+ * \f]
+ *
+ * for every target m and time stamp t (no two satellites observe the same
+ * target at the same time), and the "thetaM" constraint
+ *
+ * \f[
+ *  \sum_{ i \in [s] } \theta_i \leq 0.9 \, \bar\theta
+ *  \sum_{ i \in [s] } \zeta_i                                    \qquad (3)
+ * \f]
+ *
+ * bounding the average observability threshold \f$ \theta_i \f$ of the
+ * active satellites (those with \f$ \zeta_i = 1 \f$) with the reference
+ * threshold \f$ \bar\theta \f$ computed by load(). ConstellationBlock has
+ * no Objective of its own: the objective of the problem is the sum of those
+ * of the SatelliteBlock, i.e., the number of active satellites. */
 
-class ConstellationBlock : public Block
-{
+class ConstellationBlock : public Block {
+
 /*--------------------------------------------------------------------------*/
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
+/*------------------------ PUBLIC PART OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 
-public:
+ public:
+
 /*--------------------------------------------------------------------------*/
-/*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 /*--------------------------------------------------------------------------*/
-/*---------------------------- CONSTRUCTOR ---------------------------------*/
+/*----------------------- CONSTRUCTOR AND DESTRUCTOR -----------------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Constructor and Destructor
+/** @name Constructor and Destructor
  *  @{ */
 
  /// constructor of ConstellationBlock
  /** Constructor of ConstellationBlock. It accepts a pointer to the father
-  * Block, which can be of any type. */
+  * Block, which can be of any type, defaulting to nullptr so that this can
+  * also be used as the void constructor. */
 
- ConstellationBlock( Block * father = nullptr ) : Block( father ), AR( 0 ) {}
+ explicit ConstellationBlock( Block * father = nullptr )
+  : Block( father ) , AR( false ) , satellites( 0 ) , targets( 0 ) ,
+    time_step( 0 ) , horizon( 0 ) , thetaValF( 0 ) {}
 
 /*--------------------------------------------------------------------------*/
- /// destructor of ConstellationBlock
+ /// destructor: deletes the sub-Block and the abstract representation
 
  virtual ~ConstellationBlock() { guts_of_destructor(); }
 
- /*@} -----------------------------------------------------------------------*/
-/*-------------------------- OTHER INITIALIZATIONS -------------------------*/
+/** @} ---------------------------------------------------------------------*/
+/*------------------------- OTHER INITIALIZATIONS --------------------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Other initializations
+/** @name Other initializations
  *  @{ */
 
- /// loads the instance from the given file in the given format
- /** Loads a SDCP instance using filename as the "base filename".
-  * If there is any Solver attached to this ConstellationBlock then a NBModification
-  * (the "nuclear option") is issued. */
+ /// loads the instance from the file with the given name
+ /** Opens the file with the given name and loads the instance out of it
+  * with load( std::istream & ); exception is thrown if the file cannot be
+  * opened. */
 
  void load( const std::string & input , char frmt = 0 ) override;
 
 /*--------------------------------------------------------------------------*/
- /// load the ConstellationBlock out of an istream
- /*
-  * If there is any Solver attached to this ConstellationBlock then a NBModification
-  * (the "nuclear option") is issued. */
+ /// loads the instance out of an istream
+ /** Loads the instance out of an istream, which has the format (comments
+  * allowed, see eatcomments)
+  *
+  *     < time horizon, in hours >
+  *     < length of the time step, in seconds >
+  *     < number m of targets >
+  *     m lines < number of revisit periods > < latitude > < longitude >
+  *     < number of satellites >
+  *
+  * with latitude and longitude of the targets in degrees. Then the
+  * candidate orbits of each satellite and the distances of their ground
+  * tracks from the targets are computed, and one SatelliteBlock per
+  * satellite is created; the satellites are split in three groups of
+  * (almost) the same size, each one using a different altitude among
+  * those, in the range [ 400 , 1400 ] km, of the circular orbits making an
+  * integer number of revolutions within the time horizon. Any previous
+  * instance, including the sub-Block, is deleted. Exception is thrown if
+  * the input is not correct or if the time horizon allows less than three
+  * altitudes. If there is any Solver attached to this ConstellationBlock
+  * then a NBModification (the "nuclear option") is issued. */
 
  void load( std::istream & input , char frmt = 0 ) override;
 
 /*--------------------------------------------------------------------------*/
- /// generate the "abstract representation" of the Variable of the Block
- /** This method generates the "abstract representation" of the Variable of
-  * the ConstellationBlock.
-  */
+ /// generate the abstract Variable of the ConstellationBlock
+ /** The ConstellationBlock has no Variable of its own: this just generates
+  * those of all its SatelliteBlock. */
 
  void generate_abstract_variables( Configuration * stvv = nullptr ) override;
 
 /*--------------------------------------------------------------------------*/
+ /// generate the static Constraint of the ConstellationBlock
+ /** Generates the Variable and the Constraint of all the SatelliteBlock and
+  * then the constraints (1), (2) and (3) of the class comments, linking
+  * them together. */
 
  void generate_abstract_constraints(
   Configuration * stcc = nullptr ) override;
 
- /**@} ----------------------------------------------------------------------*/
+/** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
+/** @name Methods for checking the Block
+ *  @{ */
+
+ /// returns true if the current solution satisfies the linking constraints
+ /** Returns true if the solution encoded in the current value of the
+  * Variable of the SatelliteBlock satisfies the constraints (1), (2) and
+  * (3) of the class comments, which requires that they have been generated
+  * (false is returned otherwise); the constraints of each SatelliteBlock
+  * are not checked, this being done by their own is_feasible(). The
+  * tolerance, by default 1e-1 and relative, is taken out of fsbc, or, if
+  * this is not a valid Configuration, out of
+  * f_BlockConfig->f_is_feasible_Configuration; a valid Configuration is
+  * either a SimpleConfiguration< double > containing the tolerance, or a
+  * SimpleConfiguration< std::pair< double , int > > containing the
+  * tolerance and whether it is relative (nonzero) or absolute (zero). */
 
  bool is_feasible( bool useabstract = false ,
                    Configuration * fsbc = nullptr ) override;
 
- /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE ConstellationBlock -----*/
+/** @} ---------------------------------------------------------------------*/
+/*---------- METHODS FOR PRINTING & SAVING THE ConstellationBlock ----------*/
 /*--------------------------------------------------------------------------*/
- /** @name Methods for printing & saving the ConstellationBlock
+/** @name Methods for printing & saving the ConstellationBlock
  *  @{ */
 
- /// print the ConstellationBlock on an ostream with the given verbosity
+ /// print the ConstellationBlock on an ostream
+ /** Prints the size of the instance (time horizon, time step, targets,
+  * satellites) and the number of candidate orbits of each satellite; vlvl
+  * is ignored. */
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
- /** @} ---------------------------------------------------------------------*/
-/*----------- Methods for reading the data of the SatelliteBlock -----------*/
+/** @} ---------------------------------------------------------------------*/
+/*--------- Methods for reading the data of the ConstellationBlock ---------*/
 /*--------------------------------------------------------------------------*/
- /** @name Methods for reading the data of the ConstellationBlock
+/** @name Methods for reading the data of the ConstellationBlock
  *  @{ */
 
-/*--------------------------------------------------------------------------*/
  /// getting the current sense of the Objective, which is minimization
 
- int get_objective_sense( void ) const override final { return ( f_sense ); }
+ int get_objective_sense( void ) const override final {
+  return( Objective::eMin );
+  }
 
 /*--------------------------------------------------------------------------*/
+ /// returns the current value of the threshold Variable of satellite k
 
- /// public get()-type functions for accessing the current values of the parameters
- /// and the variables
-
- double get_thetaVar( Index k ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_thetaVar() );
- }
- double get_alt( Index k ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alt() );
- }
- double get_alpha( Index k ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_alpha() );
- }
- double get_theta( Index k ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_theta() );
- }
- double get_Lat( Index k , Index i , Index n , Index t ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )
-            ->get_Delta_lat( i , n , t ) );
- }
- double get_Long( Index k , Index i , Index n , Index t ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )
-            ->get_Delta_long( i , n , t ) );
- }
-
- Index get_horizon( void ) const { return ( horizon ); }
-
- Index get_timeStep( void ) const { return ( time_step ); }
-
- Index get_numSat( void ) const { return ( satellites ); }
-
- Index get_numTarget( void ) const { return ( targets ); }
-
- Index get_numTime( void ) const { return ( horizon / time_step ); }
-
- Index get_period( Index k ) const { return ( periods[ k ] ); }
-
- Index get_numOrbits( Index k ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_numOrbit() );
- }
-
- double get_zs( Index k ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_zeta() );
- }
-
- double get_xis( Index k , Index n , Index t ) const
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )->get_xi( n , t ) );
- }
-
- double get_activations( Index k , Index j ) const
- {
-  return (
-   static_cast< SatelliteBlock * >( v_Block[ k ] )->get_activation( j ) );
- }
-
- void set_activations( Index k , Index j , int value )
- {
-  return ( static_cast< SatelliteBlock * >( v_Block[ k ] )
-            ->set_activation( j , value ) );
- }
-
- void set_zs( Index k , int value )
- {
-  return (
-   static_cast< SatelliteBlock * >( v_Block[ k ] )->set_zeta( value ) );
- }
-
- /** @} ---------------------------------------------------------------------*/
-/*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
-/*--------------------------------------------------------------------------*/
-
-protected:
-/*--------------------------------------------------------------------------*/
-/*-------------------------- PROTECTED METHODS -----------------------------*/
-/*--------------------------------------------------------------------------*/
- /** @name Protected methods for inserting and extracting
- *  @{ */
-
+ double get_thetaVar( Index k ) const { return( SB( k )->get_thetaVar() ); }
 
 /*--------------------------------------------------------------------------*/
- /** called at the end of any constructor, does some initializations that are
-  * common to them all: it is "protected" for allowing derived classes that
-  * use the "void" constructor to call it. */
+ /// returns the altitude of the orbits of satellite k
 
- //void CmnIntlz( void );
-
- /* @} ----------------------------------------------------------------------*/
-/*--------------------------- PROTECTED FIELDS  ----------------------------*/
-/*--------------------------------------------------------------------------*/
-
- ///< the static strong forcing constrs
-
- int f_sense = Objective::eMin;
- unsigned char AR;
+ double get_alt( Index k ) const { return( SB( k )->get_alt() ); }
 
 /*--------------------------------------------------------------------------*/
-/*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
+ /// returns the half-aperture of the sensor of satellite k
+
+ double get_alpha( Index k ) const { return( SB( k )->get_alpha() ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the maximum threshold of satellite k
+
+ double get_theta( Index k ) const { return( SB( k )->get_theta() ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the latitude distance of orbit i of satellite k from target n
+ /// at time stamp t
+
+ double get_Lat( Index k , Index i , Index n , Index t ) const {
+  return( SB( k )->get_Delta_lat( i , n , t ) );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the longitude distance of orbit i of satellite k from target n
+ /// at time stamp t
+
+ double get_Long( Index k , Index i , Index n , Index t ) const {
+  return( SB( k )->get_Delta_long( i , n , t ) );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the time horizon [s]
+
+ Index get_horizon( void ) const { return( horizon ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the time step [s]
+
+ Index get_timeStep( void ) const { return( time_step ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of satellites
+
+ Index get_numSat( void ) const { return( satellites ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of targets
+
+ Index get_numTarget( void ) const { return( targets ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of time stamps
+
+ Index get_numTime( void ) const { return( horizon / time_step ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of revisit periods of target k
+
+ Index get_period( Index k ) const { return( periods[ k ] ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of candidate orbits of satellite k
+
+ Index get_numOrbits( Index k ) const { return( SB( k )->get_numOrbit() ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the current value of the activation Variable of satellite k
+
+ double get_zs( Index k ) const { return( SB( k )->get_zeta() ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the current value of the observation Variable of satellite k
+ /// for target n at time stamp t
+
+ double get_xis( Index k , Index n , Index t ) const {
+  return( SB( k )->get_xi( n , t ) );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the current value of the Variable of orbit j of satellite k
+
+ double get_activations( Index k , Index j ) const {
+  return( SB( k )->get_activation( j ) );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// sets and fixes the Variable of orbit j of satellite k to value
+
+ void set_activations( Index k , Index j , int value ) {
+  SB( k )->set_activation( j , value );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// sets and fixes the activation Variable of satellite k to value
+
+ void set_zs( Index k , int value ) { SB( k )->set_zeta( value ); }
+
+/** @} ---------------------------------------------------------------------*/
+/*---------------------- PROTECTED PART OF THE CLASS -----------------------*/
 /*--------------------------------------------------------------------------*/
 
-private:
+ protected:
+
 /*--------------------------------------------------------------------------*/
-/*-------------------------- PRIVATE METHODS -------------------------------*/
+/*--------------------------- PROTECTED METHODS ----------------------------*/
+/*--------------------------------------------------------------------------*/
+
+ /// returns the k-th sub-Block, as a SatelliteBlock
+
+ SatelliteBlock * SB( Index k ) const {
+  return( static_cast< SatelliteBlock * >( v_Block[ k ] ) );
+  }
+
+/*--------------------------------------------------------------------------*/
+/*---------------------------- PROTECTED FIELDS ----------------------------*/
+/*--------------------------------------------------------------------------*/
+
+ bool AR; ///< true if the constraints (1), (2) and (3) have been generated
+
+/*--------------------------------------------------------------------------*/
+/*----------------------- PRIVATE PART OF THE CLASS ------------------------*/
+/*--------------------------------------------------------------------------*/
+
+ private:
+
+/*--------------------------------------------------------------------------*/
+/*---------------------------- PRIVATE METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
  void guts_of_destructor( void );
 
 /*--------------------------------------------------------------------------*/
-/*---------------------------- PRIVATE FIELDS ------------------------------*/
+/*----------------------------- PRIVATE FIELDS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
  SMSpp_insert_in_factory_h; // insert it in the Block factory
 
 /*--------------------------------------------------------------------------*/
 
- FNumber satellites; /// the maximum number of satellites in the constellation
- FNumber targets; /// the number of targets
- FNumber time_step; /// the time discretization step [seconds]
- FNumber horizon; /// the simulation horizon [seconds]
- double thetaValF; /// the Theta values per satellite
+ Index satellites;  ///< the number of satellites
+ Index targets;     ///< the number of targets
+ FNumber time_step; ///< the time discretization step [s]
+ FNumber horizon;   ///< the time horizon [s]
+ double thetaValF;  ///< the reference threshold of the satellites
 
- Vec_CNumber periods; /// the number of periods per target
+ Vec_CNumber periods; ///< the number of revisit periods per target
 
- boost::multi_array< FRowConstraint, 2 >
-  observation; /// the observation constraints
- boost::multi_array< FRowConstraint, 2 >
-  observation1; /// the observation1 constraints
- std::vector< FRowConstraint > thetaM;
-
-}; // end( class( ConstellationBlock ) )
+ boost::multi_array< FRowConstraint , 2 > observation;
+ ///< the constraints (1)
+ boost::multi_array< FRowConstraint , 2 > observation1;
+ ///< the constraints (2)
+ std::vector< FRowConstraint > thetaM; ///< the constraint (3)
 
 /*--------------------------------------------------------------------------*/
 
-/*@}  end( group( ConstellationBlock_CLASSES ) ) ---------------------------*/
+ }; // end( class( ConstellationBlock ) )
+
+/** @} end( group( ConstellationBlock_CLASSES ) ) */
 /*--------------------------------------------------------------------------*/
 
 } // end( namespace SMSpp_di_unipi_it )

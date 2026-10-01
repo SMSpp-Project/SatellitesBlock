@@ -1,8 +1,9 @@
 /*--------------------------------------------------------------------------*/
-/*--------------------- File DiscreteSatelliteBlock.cpp --------------------*/
+/*-------------------- File DiscreteSatelliteBlock.cpp ---------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Implementation of the DiscreteSatelliteBlock class.
+ * Implementation of the DiscreteSatelliteBlock and
+ * DiscreteSatelliteSolution classes.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -11,134 +12,31 @@
  * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
-/*---------------------------- IMPLEMENTATION ------------------------------*/
+/*----------------------------- IMPLEMENTATION -----------------------------*/
 /*--------------------------------------------------------------------------*/
-/*------------------------------ INCLUDES ----------------------------------*/
+/*-------------------------------- INCLUDES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #include "DiscreteSatelliteBlock.h"
-#include "DQuadFunction.h"
-#include <iomanip>
+
+#include <algorithm>
+
 #include <cmath>
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------------- MACROS ---------------------------------*/
-/*--------------------------------------------------------------------------*/
-
-#ifndef NDEBUG
- #define CHECK_DS 0
- /* Perform long and costly checks on the data structures representing the
-  * abstract and the physical representations agree. */
-#else
- #define CHECK_DS 0
- // never change this
-#endif
-
-/*--------------------------------------------------------------------------*/
-/*------------------------- NAMESPACE AND USING ----------------------------*/
+/*-------------------------- NAMESPACE AND USING ---------------------------*/
 /*--------------------------------------------------------------------------*/
 
 using namespace SMSpp_di_unipi_it;
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------------- TYPES -----------------------------------*/
+/*--------------------------------- TYPES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 using Index = Block::Index;
-using c_Index = Block::c_Index;
-
-using Range = Block::Range;
-using c_Range = Block::c_Range;
-
-using Subset = Block::Subset;
-using c_Subset = Block::c_Subset;
 
 using FNumber = DiscreteSatelliteBlock::FNumber;
-
-/*--------------------------------------------------------------------------*/
-/*-------------------------------- CONSTANTS -------------------------------*/
-/*--------------------------------------------------------------------------*/
-
-static constexpr auto dNAN = std::numeric_limits< double >::quiet_NaN();
-static const double RAYON = 6378136.3;
-static const double M_limit = 10*3.14159265;
-static const auto PI = 3.14159265;
-
-/*--------------------------------------------------------------------------*/
-/*-------------------------------- FUNCTIONS -------------------------------*/
-/*--------------------------------------------------------------------------*/
-
-static void print_UB( std::ostream & os , FNumber ub )
-{
- if( ub == Inf< FNumber >() )
-  os << "+Inf";
- else
-  os << ub;
- }
-
-/*--------------------------------------------------------------------------*/
-// returns the number of elements where two vectors differ
-
-template< typename T >
-static Index countdiff( T beg , T end , T cmp )
-{
- Index ndiff = 0;
- for( ; beg != end ; )
-  if( *(beg++) != *(cmp++) )
-   ndiff++;
-
- return( ndiff );
- }
-
-/*--------------------------------------------------------------------------*/
-// returns true if two vectors differ, one of them being given as a base
-// vector and a subset of indices
-
-template< typename T >
-static bool is_equal( std::vector< T > & vec , c_Subset & nms ,
-		      typename std::vector< T >::const_iterator cmp ,
-		      Index n_max )
-{
- for( auto nm : nms ) {
-  if( nm >= n_max )
-   throw( std::invalid_argument( "invalid name in nms" ) );
-  if( vec[ nm ] != *(cmp++) )
-   return( false );
-  }
-
- return( true );
- }
-
-/*--------------------------------------------------------------------------*/
-// returns the number of elements where two vectors differ, one of them
-// being given as a base vector and a subset of indices
-
-template< typename T >
-static Index countdiff( std::vector< T > & vec , c_Subset & nms ,
-			typename std::vector< T >::const_iterator cmp ,
-			Index n_max )
-{
- Index ndiff = 0;
- for( auto nm : nms ) {
-  if( nm >= n_max )
-   throw( std::invalid_argument( "invalid name in nms" ) );
-  if( vec[ nm ] != *(cmp++) )
-   ndiff++;
-  }
-
- return( ndiff );
- }
-
-/*--------------------------------------------------------------------------*/
-// copys one vector to a given subset of another
-
-template< typename T >
-static void copyidx( std::vector< T > & vec , c_Subset & nms ,
-		     typename std::vector< T >::const_iterator cpy )
-{
- for( auto nm : nms )
-  vec[ nm ] = *(cpy++);
- }
+using CNumber = DiscreteSatelliteBlock::CNumber;
 
 /*--------------------------------------------------------------------------*/
 /*----------------------------- STATIC MEMBERS -----------------------------*/
@@ -153,50 +51,21 @@ SMSpp_insert_in_factory_cpp_1( DiscreteSatelliteBlock );
 SMSpp_insert_in_factory_cpp_0( DiscreteSatelliteSolution );
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- METHODS OF DiscreteSatelliteBlock ------------*/
+/*------------------- METHODS OF DiscreteSatelliteBlock --------------------*/
 /*--------------------------------------------------------------------------*/
-/*-------------------------- OTHER INITIALIZATIONS -------------------------*/
-/*--------------------------------------------------------------------------*/
-
-// loads the size of the (orbit, threshold-level) grid: indOrbit candidate
-// orbits (typically computed by DiscreteConstellationBlock, see there) and
-// indTheta discretized observability levels per orbit; note that neither
-// the abstract Variable nor the Objective are generated here (both calls
-// are commented out), so the caller (DiscreteConstellationBlock::load())
-// is expected to trigger them itself, e.g. indirectly via
-// generate_abstract_constraints()/generate_abstract_variables() further down
-
-void DiscreteSatelliteBlock::load( FNumber indOrbit , FNumber indTheta )
-{
- // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
-
-  guts_of_destructor();
-
- // copy over problem data - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-  ell = indTheta;
-  OrbitSet = indOrbit;
-
- //generate_abstract_variables();
- //generate_objective();
-
- }  // end( DiscreteSatelliteBlock::load( memory ) )
-
+/*------------------------- OTHER INITIALIZATIONS --------------------------*/
 /*--------------------------------------------------------------------------*/
 
-void DiscreteSatelliteBlock::load( std::istream & input , char frmt )
+void DiscreteSatelliteBlock::load( Index n_orbits , Index n_levels )
 {
  // erase previous instance, if any- - - - - - - - - - - - - - - - - - - - - -
 
  guts_of_destructor();
 
- // allocate memory - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ // copy over problem data - - - - - - - - - - - - - - - - - - - - - - - - - -
 
- // read problem data - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- 
- // allocate observability variables - - - - - - - - - - - - - - - - - - - - - 
-
- //generate_abstract_variables();
+ OrbitSet = n_orbits;
+ ell = n_levels;
 
  // issue Modification- - - - - - - - - - - - - - - - - - - - - - - - - - - -
  // note: this is a NBModification, the "nuclear option"
@@ -204,192 +73,206 @@ void DiscreteSatelliteBlock::load( std::istream & input , char frmt )
  if( anyone_there() )
   add_Modification( std::make_shared< NBModification >( this ) );
 
- }  // end( DiscreteSatelliteBlock::load( istream ) )
+ } // end( DiscreteSatelliteBlock::load( memory ) )
 
 /*--------------------------------------------------------------------------*/
 
-// creates the OrbitSet * ell binary y[][] Variable, one per candidate
-// (orbit, discretized threshold level) pair
-
-void DiscreteSatelliteBlock::generate_abstract_variables( Configuration *stvv )
+void DiscreteSatelliteBlock::load( std::istream & input , char frmt )
 {
+ Index n_orbits;
+ Index n_levels;
+ if( ! ( input >> eatcomments >> n_orbits ) )
+  throw( std::invalid_argument(
+   "DiscreteSatelliteBlock::load: error reading the number of orbits" ) );
 
-  if( AR3 & HasVar )  // the variables are there already
-    return;           // nothing to do
+ if( ! ( input >> eatcomments >> n_levels ) )
+  throw( std::invalid_argument(
+   "DiscreteSatelliteBlock::load: error reading the number of levels" ) );
 
-  y.resize( boost::extents[ OrbitSet ][ ell ] );
-  for( Index i = 0 ; i < OrbitSet ; ++i )
-    for( Index j = 0 ; j < ell ; ++j )
-      y[ i ][ j ].set_type( ColVariable::kBinary );
+ load( n_orbits , n_levels );
 
-  add_static_variable( y );
-
-  AR3 |= HasVar;
-
- }  // end( DiscreteSatelliteBlock::generate_abstract_variables )
+ } // end( DiscreteSatelliteBlock::load( istream ) )
 
 /*--------------------------------------------------------------------------*/
 
-// generates the single constraint sum_{ i , j } y[ i ][ j ] <= 1, i.e., at
-// most one (orbit, threshold level) combination can be selected
-
-void DiscreteSatelliteBlock::generate_abstract_constraints( Configuration *stcc )
+void DiscreteSatelliteBlock::generate_abstract_variables(
+ Configuration * stvv )
 {
+ if( AR3 & HasVar ) // the variables are there already
+  return;           // nothing to do
 
-  if( AR2 & HasCnst )  // the constraints are there already
-    return;           // nothing to do
+ y.resize( boost::extents[ OrbitSet ][ ell ] );
+ for( Index o = 0 ; o < OrbitSet ; ++o )
+  for( Index l = 0 ; l < ell ; ++l )
+   y[ o ][ l ].set_type( ColVariable::kBinary , eNoMod );
 
-  LinearFunction::v_coeff_pair v_var;
-  for( Index i = 0 ; i < OrbitSet ; ++i ){
-    for( Index j = 0 ; j < ell ; ++j ){
-      v_var.push_back( std::make_pair( &y[ i ][ j ], 1.0 ));
-    }
-  }
+ add_static_variable( y , "y" );
 
-  LinearFunction* FunctSat = new LinearFunction( std::move( v_var ));
-  one.set_rhs( 1.0 );
-  one.set_lhs( -Inf< double >() ); 
-  one.set_function( FunctSat );
-  add_static_constraint( one );
+ AR3 |= HasVar;
 
-  AR2 |= HasCnst;
-
- }  // end( DiscreteSatelliteBlock::generate_abstract_constraints )
+ } // end( DiscreteSatelliteBlock::generate_abstract_variables )
 
 /*--------------------------------------------------------------------------*/
 
-// generates a plain LinearFunction objective over y[][], with all
-// coefficients initially set to 1.0 (a DQuadFunction alternative, p, is
-// built but currently unused): these coefficients are meant to be later
-// overwritten (via an abstract Modification to the LinearFunction) with the
-// actual Lagrangian costs by whoever dualizes the DiscreteConstellationBlock
-// observability constraints, see DiscreteSatelliteSolver.h
-
-void DiscreteSatelliteBlock::generate_objective( Configuration *objc )
+void DiscreteSatelliteBlock::generate_abstract_constraints(
+ Configuration * stcc )
 {
+ if( AR2 & HasCnst ) // the constraints are there already
+  return;            // nothing to do
 
- if( AR1 & HasObj )  // the objective is there already
+ LinearFunction::v_coeff_pair v_var;
+ v_var.reserve( OrbitSet * ell );
+ for( Index o = 0 ; o < OrbitSet ; ++o )
+  for( Index l = 0 ; l < ell ; ++l )
+   v_var.push_back( std::make_pair( &y[ o ][ l ] , 1.0 ) );
+
+ one.set_function( new LinearFunction( std::move( v_var ) ) , eNoMod );
+ one.set_rhs( 1.0 , eNoMod );
+ one.set_lhs( -Inf< double >() , eNoMod );
+
+ add_static_constraint( one , "one" );
+
+ AR2 |= HasCnst;
+
+ } // end( DiscreteSatelliteBlock::generate_abstract_constraints )
+
+/*--------------------------------------------------------------------------*/
+
+void DiscreteSatelliteBlock::generate_objective( Configuration * objc )
+{
+ if( AR1 & HasObj ) // the objective is there already
   return;           // cowardly (and silently) return
 
-  DQuadFunction::v_coeff_triple p;
-  LinearFunction::v_coeff_pair P;
+ LinearFunction::v_coeff_pair v_var;
+ v_var.reserve( OrbitSet * ell );
+ for( Index o = 0 ; o < OrbitSet ; ++o )
+  for( Index l = 0 ; l < ell ; ++l )
+   v_var.push_back( std::make_pair( &y[ o ][ l ] , 1.0 ) );
 
-  for( Index i = 0 ; i < OrbitSet ; ++i ){
-    for( Index j = 0 ; j < ell ; ++j ){
-        p.push_back( std::make_tuple( &y[ i ][ j ], 1.0, 0.0 ));
-        P.push_back( std::make_pair( &y[ i ][ j ], 1.0 ));
-    }
-  }
+ c.set_function( new LinearFunction( std::move( v_var ) , 0 ) , eNoMod );
+ set_objective( &c , eNoMod );
 
-  //c.set_function( new DQuadFunction( std::move( p ) , 0 ) , eNoMod );
-  c.set_function( new LinearFunction( std::move( P ) , 0 ) , eNoMod );
-  set_objective( & c , eNoMod );
+ AR1 |= HasObj;
 
-  AR1 |= HasObj;
-
- }  // end( DiscreteSatelliteBlock::generate_objective )
+ } // end( DiscreteSatelliteBlock::generate_objective )
 
 /*--------------------------------------------------------------------------*/
+/*--------------------- METHODS FOR CHECKING THE Block ---------------------*/
+/*--------------------------------------------------------------------------*/
 
-// TODO: not implemented yet, cf. SatelliteBlock::is_feasible()
-
- bool DiscreteSatelliteBlock::is_feasible( bool useabstract , Configuration *fsbc )
+bool DiscreteSatelliteBlock::is_feasible( bool useabstract ,
+                                          Configuration * fsbc )
 {
+ if( ! ( AR3 & HasVar ) ) // there is no solution to check
+  return( false );
+
  FNumber eps = 0;
  auto tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >( fsbc );
 
  if( ( ! tfsbc ) && f_BlockConfig &&
      f_BlockConfig->f_is_feasible_Configuration )
   tfsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-                        f_BlockConfig->f_is_feasible_Configuration );
+   f_BlockConfig->f_is_feasible_Configuration );
  if( tfsbc )
   eps = tfsbc->f_value;
 
- return( 0 );
+ FNumber sum = 0;
+ for( Index o = 0 ; o < OrbitSet ; ++o )
+  for( Index l = 0 ; l < ell ; ++l ) {
+   const FNumber val = y[ o ][ l ].get_value();
+   if( ( val < -eps ) || ( val > 1 + eps ) ||
+       ( std::abs( val - std::round( val ) ) > eps ) )
+    return( false );
+   sum += val;
+   }
 
- }  // end( DiscreteSatelliteBlock::is_feasible )
+ return( sum <= 1 + eps );
+
+ } // end( DiscreteSatelliteBlock::is_feasible )
 
 /*--------------------------------------------------------------------------*/
 
-// TODO: not implemented yet, cf. SatelliteBlock::is_optimal()
-
-bool DiscreteSatelliteBlock::is_optimal( bool useabstract , Configuration *optc )
+bool DiscreteSatelliteBlock::is_optimal( bool useabstract ,
+                                         Configuration * optc )
 {
+ if( ! ( ( AR3 & HasVar ) && ( AR1 & HasObj ) ) )
+  return( false );
+
  CNumber ceps = 0;
  FNumber feps = 0;
  if( optc ) {
-  if( auto toptc =
-      dynamic_cast< SimpleConfiguration< std::pair< CNumber , FNumber > > * >(
-								    optc ) ) {
+  using CFpair = std::pair< CNumber , FNumber >;
+  if( auto toptc = dynamic_cast< SimpleConfiguration< CFpair > * >( optc ) ) {
    ceps = toptc->f_value.first;
    feps = toptc->f_value.second;
    }
   else {
-   auto ttoptc = dynamic_cast< SimpleConfiguration< CNumber > * >( optc );
-
-   if( ( ! ttoptc ) && f_BlockConfig &&
-       f_BlockConfig->f_is_optimal_Configuration )
-    ttoptc = dynamic_cast< SimpleConfiguration< CNumber > * >(
-                           f_BlockConfig->f_is_optimal_Configuration );
-   if( ttoptc )
+   if( auto ttoptc =
+        dynamic_cast< SimpleConfiguration< CNumber > * >( optc ) )
     ceps = ttoptc->f_value;
 
-   if( f_BlockConfig && f_BlockConfig->f_is_feasible_Configuration ) {
-    auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-                              f_BlockConfig->f_is_feasible_Configuration );
-    if( fsbc )
+   if( f_BlockConfig && f_BlockConfig->f_is_feasible_Configuration )
+    if( auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
+         f_BlockConfig->f_is_feasible_Configuration ) )
      feps = fsbc->f_value;
-    }
    }
   }
- else
-  if( f_BlockConfig ) {
-   if( f_BlockConfig->f_is_optimal_Configuration )
-    if( auto csbc = dynamic_cast< SimpleConfiguration< CNumber > * >(
-                              f_BlockConfig->f_is_optimal_Configuration ) )
-     ceps = csbc->f_value;
+ else if( f_BlockConfig ) {
+  if( f_BlockConfig->f_is_optimal_Configuration )
+   if( auto csbc = dynamic_cast< SimpleConfiguration< CNumber > * >(
+        f_BlockConfig->f_is_optimal_Configuration ) )
+    ceps = csbc->f_value;
 
-   if( f_BlockConfig->f_is_feasible_Configuration )
-    if( auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
-                              f_BlockConfig->f_is_feasible_Configuration ) )
-     feps = fsbc->f_value;
-   }
+  if( f_BlockConfig->f_is_feasible_Configuration )
+   if( auto fsbc = dynamic_cast< SimpleConfiguration< FNumber > * >(
+        f_BlockConfig->f_is_feasible_Configuration ) )
+    feps = fsbc->f_value;
+  }
 
- return( 0 );
+ SimpleConfiguration< FNumber > feascfg( feps );
+ if( ! is_feasible( useabstract , &feascfg ) )
+  return( false );
 
- }  //  end( DiscreteSatelliteBlock::is_optimal )
+ auto lf = dynamic_cast< LinearFunction * >( c.get_function() );
+ if( ! lf )
+  return( false );
+
+ // since at most one y is nonzero, the optimal value is the minimum
+ // between 0 and the smallest coefficient (plus the constant term, which
+ // is left out of both values)
+ CNumber best = 0;
+ CNumber value = 0;
+ for( const auto & [ var , coeff ] : lf->get_v_var() ) {
+  best = std::min( best , coeff );
+  value += coeff * var->get_value();
+  }
+
+ return( value - best <= ceps * std::max( CNumber( 1 ) , std::abs( best ) ) );
+
+ } // end( DiscreteSatelliteBlock::is_optimal )
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- Methods for handling Solution --------------------*/
+/*--------------------- Methods for handling Solution ----------------------*/
 /*--------------------------------------------------------------------------*/
-// creates a new DiscreteSatelliteSolution, read from the current status of
-// the DiscreteSatelliteBlock unless an empty one (emptys == true) is asked
-// for; wsol is extracted but currently unused, cf. SatelliteBlock::get_Solution()
 
- Solution * DiscreteSatelliteBlock::get_Solution( Configuration * solc , bool emptys )
+Solution * DiscreteSatelliteBlock::get_Solution( Configuration * solc ,
+                                                 bool emptys )
 {
-   
- int wsol = 0;
- if( ( ! solc ) && f_BlockConfig )
-  solc = f_BlockConfig->f_solution_Configuration;
+ auto * sol = new DiscreteSatelliteSolution();
 
- if( auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc ) )
-  wsol = tsolc->f_value;
- 
- auto *sol = new DiscreteSatelliteSolution();
+ if( AR3 & HasVar ) {
+  sol->v_y.assign( OrbitSet * ell , 0 );
+  if( ! emptys )
+   sol->read( this );
+  }
 
- if( ! emptys )
-  sol->read( this );
- 
  return( sol );
 
- }  // end( DiscreteSatelliteBlock::get_Solution )
+ } // end( DiscreteSatelliteBlock::get_Solution )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------- Methods for handling Modification -------------------*/
+/*------------------- Methods for handling Modification --------------------*/
 /*--------------------------------------------------------------------------*/
-// intercepts Modification concerning this Block before forwarding them to
-// Block::add_Modification(), cf. SatelliteBlock::add_Modification()
 
 void DiscreteSatelliteBlock::add_Modification( sp_Mod mod , ChnlName chnl )
 {
@@ -400,63 +283,58 @@ void DiscreteSatelliteBlock::add_Modification( sp_Mod mod , ChnlName chnl )
 
  Block::add_Modification( mod , chnl );
 
- }
+ } // end( DiscreteSatelliteBlock::add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*------------ METHODS FOR LOADING, PRINTING & SAVING THE DiscreteSatelliteBlock ---*/
+/*------- METHODS FOR LOADING, PRINTING & SAVING THE DiscreteSatelliteBlock */
 /*--------------------------------------------------------------------------*/
-// TODO: printing the DiscreteSatelliteBlock instance is not implemented yet
 
-void DiscreteSatelliteBlock::print( std::ostream  & output , char vlvl ) const
+void DiscreteSatelliteBlock::print( std::ostream & output , char vlvl ) const
 {
- 
- }  // end( DiscreteSatelliteBlock::print )
+ output << OrbitSet << " " << ell << std::endl;
+
+ } // end( DiscreteSatelliteBlock::print )
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- PRIVATE METHODS -------------------------------*/
+/*---------------------------- PRIVATE METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
 void DiscreteSatelliteBlock::guts_of_destructor( void )
 {
- // clear() all Constraint to ensure that they do not bother to un-register
- // themselves from Variable that are going to be deleted anyway
+ // clear() the Constraint and the Objective, so that they do not bother to
+ // un-register themselves from Variable that are going to be deleted anyway
+ one.clear();
+ c.clear();
 
- // clear the bound constraints
-
- c.clear();  // clear the Objective
-
- // explicitly reset all Constraint and Variable
- // this is done for the case where this method is called prior to re-loading
- // a new instance: if not, the new representation would be added to the
- // (no longer current) one
+ // explicitly reset all Constraint and Variable, so that a new abstract
+ // representation is not added to the (no longer current) one
  reset_static_constraints();
  reset_static_variables();
- //reset_dynamic_constraints();
- //reset_dynamic_variables();
  reset_objective();
 
- }  // end( DiscreteSatelliteBlock::guts_of_destructor )
+ y.resize( boost::extents[ 0 ][ 0 ] );
+
+ AR1 = AR2 = AR3 = 0;
+
+ } // end( DiscreteSatelliteBlock::guts_of_destructor )
 
 /*--------------------------------------------------------------------------*/
+// the DiscreteSatelliteBlock has no physical representation that an
+// abstract Modification may change, hence there is nothing to do here
 
-// no Modification is currently supported on a DiscreteSatelliteBlock,
-// hence this is a no-op stub, cf. SatelliteBlock::guts_of_add_Modification()
-
-void DiscreteSatelliteBlock::guts_of_add_Modification( p_Mod mod , ChnlName chnl )
-{
- // process abstract Modification - - - - - - - - - - - - - - - - - - - - - -
-
- }  // end( DiscreteSatelliteBlock::guts_of_add_Modification )
+void DiscreteSatelliteBlock::guts_of_add_Modification( p_Mod mod ,
+                                                       ChnlName chnl )
+{} // end( DiscreteSatelliteBlock::guts_of_add_Modification )
 
 /*--------------------------------------------------------------------------*/
-/*--------------------- METHODS OF DiscreteSatelliteSolution ----------------*/
+/*------------------ METHODS OF DiscreteSatelliteSolution ------------------*/
 /*--------------------------------------------------------------------------*/
-// TODO: none of these are implemented yet: a DiscreteSatelliteSolution
-// would need to store, at the least, which (orbit, threshold level) pair
-// y[][] is active, cf. SatelliteSolution for the (also incomplete) pattern
 
 void DiscreteSatelliteSolution::deserialize( const netCDF::NcGroup & group )
-{}
+{
+ throw( std::logic_error(
+  "DiscreteSatelliteSolution::deserialize: not implemented" ) );
+ }
 
 /*--------------------------------------------------------------------------*/
 
@@ -464,48 +342,107 @@ void DiscreteSatelliteSolution::read( const Block * block )
 {
  auto SATB = dynamic_cast< const DiscreteSatelliteBlock * >( block );
  if( ! SATB )
-  throw( std::invalid_argument( "block is not a DiscreteSatelliteBlock" ) );
+  throw( std::invalid_argument( "DiscreteSatelliteSolution::read: block is "
+                                "not a DiscreteSatelliteBlock" ) );
 
-}
+ if( v_y.empty() )
+  return;
+
+ if( v_y.size() != SATB->y.num_elements() )
+  throw( std::invalid_argument(
+   "DiscreteSatelliteSolution::read: wrong Block size" ) );
+
+ auto var = SATB->y.data();
+ for( auto & val : v_y )
+  val = ( var++ )->get_value();
+
+ } // end( DiscreteSatelliteSolution::read )
 
 /*--------------------------------------------------------------------------*/
 
 void DiscreteSatelliteSolution::write( Block * block )
 {
-
- auto SATB = dynamic_cast<DiscreteSatelliteBlock * >( block );
+ auto SATB = dynamic_cast< DiscreteSatelliteBlock * >( block );
  if( ! SATB )
-  throw( std::invalid_argument( "block is not a DiscreteSatelliteBlock" ) );
+  throw( std::invalid_argument( "DiscreteSatelliteSolution::write: block is "
+                                "not a DiscreteSatelliteBlock" ) );
 
-}
+ if( v_y.empty() )
+  return;
+
+ if( v_y.size() != SATB->y.num_elements() )
+  throw( std::invalid_argument(
+   "DiscreteSatelliteSolution::write: wrong Block size" ) );
+
+ auto var = SATB->y.data();
+ for( auto val : v_y )
+  ( var++ )->set_value( val );
+
+ } // end( DiscreteSatelliteSolution::write )
 
 /*--------------------------------------------------------------------------*/
 
 void DiscreteSatelliteSolution::serialize( netCDF::NcGroup & group ) const
-{}
-
-/*--------------------------------------------------------------------------*/
-
-DiscreteSatelliteSolution * DiscreteSatelliteSolution::scale( double factor ) const
 {
-  auto * sol = DiscreteSatelliteSolution::clone( true );
-  return( sol );
-}
+ throw( std::logic_error(
+  "DiscreteSatelliteSolution::serialize: not implemented" ) );
+ }
 
 /*--------------------------------------------------------------------------*/
 
-void DiscreteSatelliteSolution::sum( const Solution * solution , double multiplier )
-{}
-
-/*--------------------------------------------------------------------------*/
-
-DiscreteSatelliteSolution * DiscreteSatelliteSolution::clone( bool empty ) const
+DiscreteSatelliteSolution * DiscreteSatelliteSolution::scale(
+ double factor ) const
 {
-  auto * sol = new DiscreteSatelliteSolution();
+ auto * sol = clone();
+ for( auto & val : sol->v_y )
+  val *= factor;
 
  return( sol );
-}
+ }
 
 /*--------------------------------------------------------------------------*/
-/*------------------- End File DiscreteSatelliteBlock.cpp --------------------------*/
+
+void DiscreteSatelliteSolution::sum( const Solution * solution ,
+                                     double multiplier )
+{
+ auto tsol = dynamic_cast< const DiscreteSatelliteSolution * >( solution );
+ if( ! tsol )
+  throw( std::invalid_argument( "DiscreteSatelliteSolution::sum: solution is "
+                                "not a DiscreteSatelliteSolution" ) );
+
+ if( tsol->v_y.size() != v_y.size() )
+  throw(
+   std::invalid_argument( "DiscreteSatelliteSolution::sum: wrong size" ) );
+
+ for( Index i = 0 ; i < v_y.size() ; ++i )
+  v_y[ i ] += multiplier * tsol->v_y[ i ];
+ }
+
+/*--------------------------------------------------------------------------*/
+
+DiscreteSatelliteSolution * DiscreteSatelliteSolution::clone(
+ bool empty ) const
+{
+ auto * sol = new DiscreteSatelliteSolution();
+
+ if( empty )
+  sol->v_y.assign( v_y.size() , 0 );
+ else
+  sol->v_y = v_y;
+
+ return( sol );
+ }
+
+/*--------------------------------------------------------------------------*/
+
+void DiscreteSatelliteSolution::print( std::ostream & output ) const
+{
+ output << "DiscreteSatelliteSolution [" << v_y.size() << "]:";
+ for( auto val : v_y )
+  output << " " << val;
+ output << std::endl;
+ }
+
+/*--------------------------------------------------------------------------*/
+/*------------------ End File DiscreteSatelliteBlock.cpp -------------------*/
 /*--------------------------------------------------------------------------*/

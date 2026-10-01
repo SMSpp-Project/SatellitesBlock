@@ -1,9 +1,12 @@
 /*--------------------------------------------------------------------------*/
-/*-------------------- File DiscreteSatelliteBlock.h -----------------------*/
+/*--------------------- File DiscreteSatelliteBlock.h ----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the *concrete* class DiscreteSatelliteBlock, which implements
- * the Block concept [see Block.h] for the solution of Satellite observavility problem.
+ * Header file for the *concrete* class DiscreteSatelliteBlock, which
+ * implements the Block concept [see Block.h] for a single satellite of the
+ * Satellite Constellation Design Problem in the discretized form used by
+ * DiscreteConstellationBlock, and for the class DiscreteSatelliteSolution
+ * holding a solution of it.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -12,15 +15,15 @@
  * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
-/*----------------------------- DEFINITIONS --------------------------------*/
+/*------------------------------ DEFINITIONS -------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #ifndef __DiscreteSatelliteBlock
- #define __DiscreteSatelliteBlock  
+ #define __DiscreteSatelliteBlock
                       /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
-/*------------------------------ INCLUDES ----------------------------------*/
+/*-------------------------------- INCLUDES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #include "Block.h"
@@ -31,249 +34,233 @@
 
 #include "FRowConstraint.h"
 
-#include "OneVarConstraint.h"
-
 #include "Solution.h"
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- NAMESPACE ------------------------------------*/
+/*------------------------------- NAMESPACE --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
 namespace SMSpp_di_unipi_it
 {
- class DiscreteSatelliteBlock;     // forward declaration of DiscreteSatelliteBlock
+class DiscreteSatelliteBlock; // forward declaration of DiscreteSatelliteBlock
 
- class DiscreteSatelliteSolution;  // forward declaration of DiscreteSatelliteSolution
+class DiscreteSatelliteSolution; // forward declaration of the Solution
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- DiscreteSatelliteBlock-RELATED TYPES ---------------------------*/
+/*------------------ DiscreteSatelliteBlock-RELATED TYPES ------------------*/
 /*--------------------------------------------------------------------------*/
-/** @defgroup DiscreteSatelliteBlock_TYPES DiscreteSatelliteBlock-related types
+/** @defgroup DiscreteSatelliteBlock_TYPES DiscreteSatelliteBlock types
  *  @{ */
 
- using p_DiscreteSatelliteBlock = DiscreteSatelliteBlock *;  
-    ///< a pointer to DiscreteSatelliteBlock
+using p_DiscreteSatelliteBlock = DiscreteSatelliteBlock *;
+///< a pointer to DiscreteSatelliteBlock
 
- using Vec_DiscreteSatelliteBlock = std::vector< p_DiscreteSatelliteBlock>;
- ///< a vector of pointers to DiscreteSatelliteBlock
+using Vec_DiscreteSatelliteBlock = std::vector< p_DiscreteSatelliteBlock >;
+///< a vector of pointers to DiscreteSatelliteBlock
 
- using Vec_DiscreteSatelliteBlock_it = Vec_DiscreteSatelliteBlock::iterator;
- ///< iterator for a Vec_DiscreteSatelliteBlock
+using Vec_DiscreteSatelliteBlock_it = Vec_DiscreteSatelliteBlock::iterator;
+///< iterator for a Vec_DiscreteSatelliteBlock
 
- using c_Vec_DiscreteSatelliteBlock = const Vec_DiscreteSatelliteBlock;
- ///< a const vector of pointers to DiscreteSatelliteBlock
+using c_Vec_DiscreteSatelliteBlock = const Vec_DiscreteSatelliteBlock;
+///< a const vector of pointers to DiscreteSatelliteBlock
 
- using c_Vec_DiscreteSatelliteBlock_it = c_Vec_DiscreteSatelliteBlock::iterator;
- ///< iterator for a c_Vec_DiscreteSatelliteBlock
+using c_Vec_DiscreteSatelliteBlock_it =
+ c_Vec_DiscreteSatelliteBlock::iterator;
+///< iterator for a c_Vec_DiscreteSatelliteBlock
 
-/** @}  end( group( DiscreteSatelliteBlock_TYPES ) ) */ 
+/** @} end( group( DiscreteSatelliteBlock_TYPES ) ) */
 /*--------------------------------------------------------------------------*/
-/*------------------------------- CLASSES ----------------------------------*/
+/*-------------------------------- CLASSES ---------------------------------*/
 /*--------------------------------------------------------------------------*/
-/** @defgroup DiscreteSatelliteBlock_CLASSES Classes in DiscreteSatelliteBlock.h
+/** @defgroup DiscreteSatelliteBlock_CLASSES Discrete satellite
  *  @{ */
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS DiscreteSatelliteBlock ------------------*/
+/*---------------------- CLASS DiscreteSatelliteBlock ----------------------*/
 /*--------------------------------------------------------------------------*/
-/*--------------------------- GENERAL NOTES --------------------------------*/
+/*----------------------------- GENERAL NOTES ------------------------------*/
 /*--------------------------------------------------------------------------*/
-/// implementation of the Block concept for a single satellite of a
-/// DiscreteConstellationBlock, in "fully discretized" form
+/// a single satellite of a DiscreteConstellationBlock
 /** DiscreteSatelliteBlock is the counterpart of SatelliteBlock [see
- * SatelliteBlock.h] used by DiscreteConstellationBlock [see
- * DiscreteConstellationBlock.h] instead of ConstellationBlock: rather than
- * modeling the observability threshold theta^{\max} as a continuous
- * Variable linked to the orbit/target-observation Variable via a big-M
- * linearization (as SatelliteBlock does), the set of candidate orbits
- * [C] (of size OrbitSet) is crossed with a further discretization of the
- * observability threshold into "ell" levels, so that every possible
- * (orbit, threshold level) pair becomes a single binary decision
+ * SatelliteBlock.h] in the discretized form of the Satellite Constellation
+ * Design Problem handled by DiscreteConstellationBlock [see
+ * DiscreteConstellationBlock.h]. In SatelliteBlock the observability
+ * threshold \f$ \theta^{\max} \f$ of the satellite is a continuous Variable,
+ * linked to the observation Variable by big-M constraints; here, instead,
+ * \f$ \theta^{\max} \f$ is discretized into ell levels, so that the choice of
+ * the satellite is that of a pair (orbit , threshold level) among the
+ * OrbitSet x ell possible ones, represented by the binary Variable
  *
  * \f[
- *  y[ i ][ j ] \in \{ 0 , 1 \} , \quad i \in [C] , \; j \in \{ 0 , ... ,
- *  ell - 1 \}
+ *  y[ o ][ l ] \in \{ 0 , 1 \} \quad o = 0 , \ldots , OrbitSet - 1 \; , \;
+ *  l = 0 , \ldots , ell - 1
  * \f]
  *
- * indicating whether orbit i is selected together with threshold level j.
- * Since at most one such combination can be active, the only static
- * constraint is
+ * with y[ o ][ l ] = 1 if the satellite is placed on the candidate orbit o
+ * with the threshold level l. The only constraint is that at most one pair
+ * is chosen
  *
  * \f[
- *  \sum_{ i \in [C] } \sum_{ j = 0 }^{ ell - 1 } y[ i ][ j ] \leq 1 .
+ *  \sum_{ o = 0 }^{ OrbitSet - 1 } \sum_{ l = 0 }^{ ell - 1 } y[ o ][ l ]
+ *  \leq 1 \; ,
  * \f]
  *
- * All the "physics" of the problem (which targets are observed, at which
- * time stamps, for a given (orbit, level) pair) is precomputed outside of
- * this class by DiscreteConstellationBlock, which uses the corresponding
- * y[][] Variable directly in its own observability constraints (see
- * DiscreteConstellationBlock::generate_abstract_constraints()); as a
- * consequence, a "bare" DiscreteSatelliteBlock objective is a plain
- * LinearFunction over the y[][] with (initially) unit coefficients, which
- * only takes its actual meaning as an activation cost once dualized (see
- * DiscreteSatelliteSolver.h, which solves exactly this Block "by
- * inspection" as a Lagrangian pricing subproblem). */
+ * the satellite being unused (inactive) if all the y are zero. The
+ * objective is the LinearFunction with unit coefficients over all the y,
+ * i.e., 1 if the satellite is active and 0 otherwise, so that the sum of
+ * the objectives of the DiscreteSatelliteBlock of a
+ * DiscreteConstellationBlock is the number of active satellites.
+ *
+ * Which targets each pair (o , l) observes, and at which time stamps, is not
+ * known to the DiscreteSatelliteBlock: it is precomputed by
+ * DiscreteConstellationBlock, which uses it as the coefficients of the y in
+ * its own observability constraints. As a consequence, once these are
+ * dualized the DiscreteSatelliteBlock is a trivial problem, solved "by
+ * inspection" by DiscreteSatelliteSolver [see DiscreteSatelliteSolver.h]. */
 
-class DiscreteSatelliteBlock : public Block
-{
-/*--------------------------------------------------------------------------*/
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
-/*--------------------------------------------------------------------------*/
-
-public:
+class DiscreteSatelliteBlock : public Block {
 
 /*--------------------------------------------------------------------------*/
-/*---------------------------- PUBLIC TYPES --------------------------------*/
+/*------------------------ PUBLIC PART OF THE CLASS ------------------------*/
+/*--------------------------------------------------------------------------*/
+
+ public:
+
+/*--------------------------------------------------------------------------*/
+/*------------------------------ PUBLIC TYPES ------------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Public types
  *
  * DiscreteSatelliteBlock defines three main public types:
  *
- * - FNumber, the type of flow variables, arc capacities, and node deficits;
+ * - FNumber, the type of the values of the Variable and of the data;
  *
- * - CNumber, the type of flow costs, node potentials, and arc reduced costs;
+ * - CNumber, the type of the objective coefficients;
  *
- * - FONumber, the type of objective function value.
+ * - FONumber, the type of the objective function value.
  *
- * By re-defining the types in this section, some (but not all) solution
- * algorithms may be able to work with the "smallest" choice of data type 
- * that is capable of properly representing the data of the instances to be
- * solved. This may be relevant due to an important property of DCR problems:
- * *if all arc capacities and node deficits are integer, then there exists an
- * integral optimal primal solution*, and *if all arc costs are integer,
- * then there exists an integral optimal dual solution*. Even more
- * importantly, *many solution algorithms will in fact produce an integral
- * primal/dual solution for free*, because *every primal/dual solution they
- * generate during the solution process is naturally integral*. Therefore,
- * one can use integer data types to represent everything connected with
- * flows and/or costs if the corresponding data is integer in all instances
- * one needs to solve. This directly translates in significant memory savings
- * and/or speed improvements.
- *
- * However, while using a DiscreteSatelliteBlock as a part of some larger problem, it may
- * be difficult to fully exploit this property: even if some Solver can
- * exploit it, not all of them may be able to (one example are Interior-Point
- * approaches, which require both flow and cost variables to be continuous),
- * and maybe some other aspects of the overall solution algorithm will require
- * general double data anyway. One should actually have Block template over
- * all these types to be able to fully exploit this property, which may be a
- * future evolution but is not what this implementation does. The current
- * choice is to use the "worst case scenario" where FNumber == CNumber ==
- * OFNumber == double, although the data types are left there and it is
- * therefore in principle possible to change this. Note, however, that the
- * above integrality property only holds for *linear* DCR problems. Should
- * the class be extended, by even allowing arc costs to be convex quadratic
- * (the simplest possible nonlinear extension), then a single arc with a
- * nonzero quadratic cost coefficient implies that optimal flows and
- * potentials may be fractional even if all the data of the problem
- * (comprised quadratic cost coefficients) is integer. Hence, for such a
- * setting FNumber == CNumber == OFNumber == double is actually *mandatory*,
- * for any reasonable algorithm will typically misbehave otherwise.
- @{ */
+ * They are all double; they are kept as separate names for uniformity with
+ * SatelliteBlock and with the other Block of the module.
+ *  @{ */
 
-/*--------------------------------------------------------------------------*/
+ using FNumber = double;          ///< type of the values
+ using c_FNumber = const FNumber; ///< a read-only FNumber
 
- typedef double FNumber;                     ///< type of arc flow / deficit
- typedef const FNumber c_FNumber;            ///< a read-only FNumber
+ using Vec_FNumber = std::vector< FNumber >; ///< a vector of FNumber
+ using c_Vec_FNumber = const Vec_FNumber;    ///< a const vector of FNumber
 
- typedef std::vector< FNumber > Vec_FNumber; ///< a vector of FNumber
- typedef const Vec_FNumber c_Vec_FNumber;    ///< a const vector of FNumber
-
- typedef Vec_FNumber::iterator Vec_FNumber_it;   ///< iterator in Vec_FNumber
- typedef Vec_FNumber::const_iterator c_Vec_FNumber_it;
-                                           ///< const iterator in Vec_FNumber
+ using Vec_FNumber_it = Vec_FNumber::iterator; ///< iterator in Vec_FNumber
+ using c_Vec_FNumber_it = Vec_FNumber::const_iterator;
+ ///< const iterator in Vec_FNumber
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double CNumber;                     ///< type of arc cost / potential
- typedef const CNumber c_CNumber;            ///< a read-only CNumber
+ using CNumber = double;          ///< type of the costs
+ using c_CNumber = const CNumber; ///< a read-only CNumber
 
- typedef std::vector< CNumber > Vec_CNumber;  ///< a vector of CNumber
- typedef const Vec_CNumber c_Vec_CNumber;     ///< a const vector of CNumber
+ using Vec_CNumber = std::vector< CNumber >; ///< a vector of CNumber
+ using c_Vec_CNumber = const Vec_CNumber;    ///< a const vector of CNumber
 
- typedef Vec_CNumber::iterator Vec_CNumber_it;   ///< iterator in Vec_CNumber
- typedef Vec_CNumber::const_iterator c_Vec_CNumber_it;
-                                           ///< const iterator in Vec_CNumber
+ using Vec_CNumber_it = Vec_CNumber::iterator; ///< iterator in Vec_CNumber
+ using c_Vec_CNumber_it = Vec_CNumber::const_iterator;
+ ///< const iterator in Vec_CNumber
 
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
- typedef double FONumber; 
- /**< type of the objective function: has to hold sums of products of
-    FNumber(s) by CNumber(s) */
+ using FONumber = double;           ///< type of the objective function value
+ using c_FONumber = const FONumber; ///< a read-only FONumber
 
- typedef const FONumber c_FONumber;             ///< a read-only FONumber
-
- typedef std::vector< FONumber > Vec_FONumber;  ///< a vector of FONumber
- typedef const Vec_FONumber c_Vec_FONumber;     ///< a const vector of FONumber
+ using Vec_FONumber = std::vector< FONumber >; ///< a vector of FONumber
+ using c_Vec_FONumber = const Vec_FONumber;    ///< a const vector of FONumber
 
 /** @} ---------------------------------------------------------------------*/
-/*------------------------------- FRIENDS ----------------------------------*/
+/*-------------------------------- FRIENDS ---------------------------------*/
 /*--------------------------------------------------------------------------*/
 
- friend DiscreteSatelliteSolution;  ///< make DiscreteSatelliteSolution friend
+ friend DiscreteSatelliteSolution; ///< make DiscreteSatelliteSolution friend
 
 /*--------------------------------------------------------------------------*/
-/*--------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
+/*---------------------- PUBLIC METHODS OF THE CLASS -----------------------*/
 /*--------------------------------------------------------------------------*/
-/*--------------------- CONSTRUCTOR AND DESTRUCTOR -------------------------*/
+/*----------------------- CONSTRUCTOR AND DESTRUCTOR -----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Constructor and Destructor
  *  @{ */
 
- /// constructor of DiscreteSatelliteBlock, taking a pointer to the father (generic) Block
- /** Constructor of DiscreteSatelliteBlock. It accepts a pointer to the father Block, which
-  * can be of any type, defaulting to nullptr so that this can also be used as
-  * the void constructor. */
+ /// constructor of DiscreteSatelliteBlock, taking a pointer to the father
+ /** Constructor of DiscreteSatelliteBlock. It accepts a pointer to the
+  * father Block, which can be of any type, defaulting to nullptr so that
+  * this can also be used as the void constructor. */
 
- explicit DiscreteSatelliteBlock( Block *father = nullptr )
-  : Block( father ) , AR1(0), AR2(0), AR3(0) { }
-               
+ explicit DiscreteSatelliteBlock( Block * father = nullptr )
+  : Block( father ) , AR1( 0 ) , AR2( 0 ) , AR3( 0 ) , OrbitSet( 0 ) ,
+    ell( 0 ) {}
 
 /*--------------------------------------------------------------------------*/
- /// destructor of DiscreteSatelliteBlock: deletes the abstract representation, if any
+ /// destructor: deletes the abstract representation, if any
 
  virtual ~DiscreteSatelliteBlock() { guts_of_destructor(); }
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------------------- OTHER INITIALIZATIONS -------------------------*/
+/*------------------------- OTHER INITIALIZATIONS --------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Other initializations
  *  @{ */
-  /*
-  * Like load( std::istream & ), if there is any Solver attached to this
-  * DiscreteSatelliteBlock then a NBModification (the "nuclear option") is issued. */
 
- void load( FNumber n , FNumber ell );
+ /// loads the instance out of the size of the (orbit , level) grid
+ /** Loads the instance, which is entirely described by the number
+  * n_orbits of candidate orbits and the number n_levels of levels of the
+  * observability threshold (both are computed by
+  * DiscreteConstellationBlock::load()). Any previous abstract
+  * representation is deleted. If there is any Solver attached to this
+  * DiscreteSatelliteBlock then a NBModification (the "nuclear option") is
+  * issued. */
 
- void load( std::istream &input , char frmt = 0 ) override;
-
- [[nodiscard]] ColVariable * i2p_y( Index iii , Index jjj ) const {
-  return( const_cast< ColVariable * >( &y[ iii ][ jjj ] ) );
- }
+ void load( Index n_orbits , Index n_levels );
 
 /*--------------------------------------------------------------------------*/
- /// generate the abstract variables of the DCR
- /** Method that generates the abstract Variable of the Satellite. */
+ /// loads the instance out of an istream
+ /** Loads the instance out of an istream, which must contain (possibly
+  * preceded by comments, see eatcomments) the two numbers
+  *
+  *     < number of candidate orbits > < number of threshold levels >
+  *
+  * that are then passed to load( Index , Index ). The format parameter
+  * frmt is ignored. Exception is thrown if the two numbers cannot be read. */
 
- void generate_abstract_variables( Configuration *stvv = nullptr ) override;
+ void load( std::istream & input , char frmt = 0 ) override;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
- /// generate the static constraint of the Satellite
- /** Method that generates the abstract constraint of the Satellite. */
- 
- void generate_abstract_constraints( Configuration *stcc = nullptr ) override;
+/*--------------------------------------------------------------------------*/
+ /// loads the instance from the file with the given name
+ /** The version of Block, which opens the file and calls
+  * load( std::istream & ). */
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
- /// generate the objective of the Satellite
- /** Method that generates the objective of the Satellite. */
+ using Block::load;
 
- void generate_objective( Configuration *objc = nullptr ) override;
+/*--------------------------------------------------------------------------*/
+ /// generate the abstract Variable of the DiscreteSatelliteBlock
+ /** Generates the OrbitSet x ell binary Variable y[][]. */
 
- //void generate_dynamic_constraints( Configuration *stcc = nullptr ) override;
+ void generate_abstract_variables( Configuration * stvv = nullptr ) override;
+
+/*--------------------------------------------------------------------------*/
+ /// generate the static Constraint of the DiscreteSatelliteBlock
+ /** Generates the single constraint sum_{ o , l } y[ o ][ l ] <= 1. */
+
+ void generate_abstract_constraints(
+  Configuration * stcc = nullptr ) override;
+
+/*--------------------------------------------------------------------------*/
+ /// generate the Objective of the DiscreteSatelliteBlock
+ /** Generates the FRealObjective whose LinearFunction has unit coefficient
+  * on every y[][], in "row-major" order, i.e., that of y[ o ][ l ] is the
+  * coefficient with index o * ell + l. */
+
+ void generate_objective( Configuration * objc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------- Methods for reading the data of the DiscreteSatelliteBlock */
+/*------- Methods for reading the data of the DiscreteSatelliteBlock -------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for reading the data of the DiscreteSatelliteBlock
  *  @{ */
@@ -283,24 +270,53 @@ public:
  [[nodiscard]] int get_objective_sense( void ) const override {
   return( Objective::eMin );
   }
-  
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of candidate orbits
+
+ [[nodiscard]] Index get_orbits( void ) const { return( OrbitSet ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the number of levels of the observability threshold
+
+ [[nodiscard]] Index get_ell( void ) const { return( ell ); }
+
+/*--------------------------------------------------------------------------*/
+ /// returns a pointer to the Variable y[ o ][ l ]
+ /** Returns a pointer to the Variable y[ o ][ l ]; this clearly requires
+  * that generate_abstract_variables() has been called. */
+
+ [[nodiscard]] ColVariable * i2p_y( Index o , Index l ) const {
+  return( const_cast< ColVariable * >( &y[ o ][ l ] ) );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// returns the current value of the Variable y[ o ][ l ]
+
+ [[nodiscard]] FNumber get_y( Index o , Index l ) const {
+  return( y[ o ][ l ].get_value() );
+  }
+
+/*--------------------------------------------------------------------------*/
+ /// sets the current value of the Variable y[ o ][ l ]
+
+ void set_y( Index o , Index l , FNumber value ) {
+  y[ o ][ l ].set_value( value );
+  }
+
 /** @} ---------------------------------------------------------------------*/
 /*--------------------- Methods for checking the Block ---------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for checking the Block
  *  @{ */
 
-/*--------------------------------------------------------------------------*/
  /// returns true if the current solution is approximately feasible
- /** Returns true if the solution encoded in the current value of the flow
-  * (x) Variable of the DiscreteSatelliteBlock is approximately feasible. This clearly
-  * requires the Variable of the DiscreteSatelliteBlock to have been defined, i.e., that
-  * generate_abstract_variables() has been called prior to this method.
-  *
-  * The parameter for deciding what "approximately feasible" exactly means is
-  * a single FNumber value, representing the *relative* tolerance for
-  * satisfaction of both flow conservation constraint and flow upper/lower
-  * bounds. This value is to be found as:
+ /** Returns true if the solution encoded in the current value of the y[][]
+  * Variable is approximately feasible, i.e., every y[ o ][ l ] is binary
+  * and sum_{ o , l } y[ o ][ l ] <= 1, both up to a tolerance eps. This
+  * requires that generate_abstract_variables() has been called prior to
+  * this method, otherwise false is returned. The tolerance eps is found as
+  * follows:
   *
   * - if fsbc is not nullptr and it is a SimpleConfiguration< FNumber >, then
   *   it is fsbc->f_value;
@@ -310,28 +326,29 @@ public:
   *   is a SimpleConfiguration< FNumber >, then it is
   *   f_BlockConfig->f_is_feasible_Configuration->f_value;
   *
-  * - otherwise, it is 0. */
- 
- bool is_feasible( bool useabstract = false , Configuration *fsbc = nullptr )
-  override;
+  * - otherwise, it is 0.
+  *
+  * The parameter useabstract is ignored, since the check is the same. */
+
+ bool is_feasible( bool useabstract = false ,
+                   Configuration * fsbc = nullptr ) override;
 
 /*--------------------------------------------------------------------------*/
  /// returns true if the current solution is (approximately) optimal
- /** Returns true if the solution encoded in the current value of the flow
-  * (x) Variable of the DiscreteSatelliteBlock is approximately optimal, which means that
-  * it is approximately feasible, that the dual solution encoded in the
-  * current value of the dual multipliers of both the flow conservation and
-  * bound constraints is approximately feasible, and that the two
-  * approximately satisfies the Complementary Slackness Conditions. This
-  * clearly requires that both the Variable and the Constraint of the
-  * DiscreteSatelliteBlock to have been defined, i.e., that generate_abstract_variables()
-  * and generate_abstract_constraints() have been called prior to this method.
+ /** Returns true if the solution encoded in the current value of the y[][]
+  * Variable is approximately feasible [see is_feasible()] and
+  * approximately optimal for the current Objective. Since at most one y is
+  * nonzero, the optimal value of the DiscreteSatelliteBlock is the constant
+  * term of the Objective plus the minimum between 0 and the smallest
+  * coefficient, which is compared with the current value of the Objective.
+  * This requires that generate_abstract_variables() and
+  * generate_objective() have been called prior to this method, otherwise
+  * false is returned.
   *
-  * This requires two parameters for deciding what "approximately feasible"
-  * means, one for the primal (feps) and one for the dual (ceps), like in
-  * complementary_slackness(). These are found as follows:
+  * The two tolerances, the relative one ceps for the objective value and
+  * feps for the feasibility, are found as follows:
   *
-  * - if optc is not nullptr and it is a 
+  * - if optc is not nullptr and it is a
   *   SimpleConfiguration< std::pair< CNumber , FNumber > >, then
   *   ceps = optc->f_value.first and feps = optc->f_value.second;
   *
@@ -345,434 +362,226 @@ public:
   *   assuming the latter is a SimpleConfiguration< CNumber >;
   *
   * - otherwise, ceps == feps == 0. */
- 
- bool is_optimal( bool useabstract = false  , Configuration *optc = nullptr )
-  override;
 
- Index get_orbits( void ) const { return( OrbitSet ); }
- Index get_ell( void ) const { return( ell ); }
-
- void set_y( Index n , Index t , int value) {
-    y[ n ][ t ].set_value( value );
-  }
+ bool is_optimal( bool useabstract = false ,
+                  Configuration * optc = nullptr ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*----------------------- Methods for handling Solution --------------------*/
+/*--------------------- Methods for handling Solution ----------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for handling Solution
  *  @{ */
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ /// returns a DiscreteSatelliteSolution with the current values of the y
+ /** Returns a DiscreteSatelliteSolution sized for the OrbitSet x ell
+  * Variable y[][] of this DiscreteSatelliteBlock; unless emptys == true, it
+  * also holds their current values. The Configuration solc is ignored. */
 
- /// returns a DiscreteSatelliteSolution representing the current solution of this DiscreteSatelliteBlock
-
- Solution * get_Solution( Configuration *solc = nullptr ,
- 			  bool emptys = true ) override;
-
+ Solution * get_Solution( Configuration * solc = nullptr ,
+                          bool emptys = true ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------------- Methods for handling Modification -------------------*/
+/*------------------- Methods for handling Modification --------------------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for handling Modification
  *  @{ */
 
- /// returns true if there is any Solver "listening to this DiscreteSatelliteBlock"
- /** Returns true if there is any Solver "listening to this DiscreteSatelliteBlock", or if
-  * the DiscreteSatelliteBlock has to "listen" anyway because the "abstract" representation
-  * is constructed, and therefore "abstract" Modification have to be generated
-  * anyway to keep the two representations in sync.
-  *
-  * No, this should not be needed. In fact, if the "abstract" representation
-  * is modified with the default eModBlck value of issueMod, it is issued
-  * irrespectively to the value of anyone_there(); see Observer::issue_mod().
-  * If the value of issueMod is anything else the  "abstract" representation
-  * has been modified already and there is no point in issuing the
-  * Modification.
-  * Note that that Observer::issue_mod() does not check if the "abstract"
-  * representation has been constructed, but this is clearly not
-  * necessary, as the Modification we are speaking of are issued while
-  * changing the "abstract" representation, if that has not been
-  * constructed then it cannot issue Modification
-
- bool anyone_there( void ) const override {
-  return( AR ? true : Block::anyone_there() );
-  }
- */
-/*--------------------------------------------------------------------------*/
  /// adding a new Modification to the DiscreteSatelliteBlock
- /** Method for handling Modification.
-  *
-  * The version of DiscreteSatelliteBlock has to intercept any "abstract Modification" that
-  * modifies the "abstract representation" of the DiscreteSatelliteBlock, and "translate"
-  * them into both changes of the actual data structures and corresponding
-  * "physical Modification". These Modification are those for which
-  * Modification::concerns_Block() is true. Note, however, that before sending
-  * the Modification to the Solver and/or the father Block, the
-  * concerns_Block() value is set to false. This is because once it is passed
-  * through this method, the "abstract Modification" has "already done its
-  * duty" of providing the information to the DiscreteSatelliteBlock, and this must not be
-  * repeated. In particular, this would be an issue if the Modification would
-  * be [map_forward or map_back]-ed, because inside of this method a "physical
-  * Modification" doing the same job is surely issued. That Modification would
-  * also be [map_forward or map_back]-ed, together with the original "abstract
-  * Modification" that would pass again through this method (in the other
-  * DiscreteSatelliteBlock), which would mean that the "physical Modification" would be
-  * issued twice.
-  *
-  * The following "abstract Modification" are handled:
-  *
-  * - GroupModification, that are simply unpacked into the individual
-  *   sub-[Group]Modification and dealt with individually;
-  *
-  * - C05FunctionModRngd and C05FunctionModSbst changing coefficients coming
-  *   from the (LinearFunction into the FRow)Objective, but *not* from the
-  *   (LinearFunction into the FRow)Constraint;
-  *
-  * - RowConstraintMod changing the RHS of the bound constraints and both
-  *   sides at once of the flow conservation ones, but not any other
-  *   combination; and note that the RHS of the bound constraints may not
-  *   be changeable at all if they have not been constructed, in which
-  *   case there cannot be any Modification to handle here;
-  *
-  * - VariableMod fixing and un-fixing a flow ColVariable; however, note
-  *   that *fixing is only permitted if the value() of the ColVariable is
-  *   zero*, because that corresponds to closing the arc, exception being
-  *   thrown otherwise.
-  *
-  * Any other Modification reaching the DiscreteSatelliteBlock will lead to exception
-  * being thrown.
-  *
-  * Note: any "physical" Modification resulting from processing an "abstract"
-  *       one will be sent to the same channel (chnl). */
+ /** Method for handling Modification. Any "abstract Modification" (one for
+  * which Modification::concerns_Block() is true) has its concerns_Block()
+  * value set to false and is passed to guts_of_add_Modification() before
+  * being forwarded to Block::add_Modification(). Since the
+  * DiscreteSatelliteBlock has no "physical representation" besides the
+  * size of its grid, the abstract Modification require no translation and
+  * guts_of_add_Modification() does nothing; changes of the coefficients of
+  * the Objective (e.g., those of a Lagrangian relaxation) are just
+  * forwarded to the Solver. */
 
  void add_Modification( sp_Mod mod , ChnlName chnl = 0 ) override;
 
 /** @} ---------------------------------------------------------------------*/
-/*--------------- METHODS FOR PRINTING & SAVING THE DiscreteSatelliteBlock ---------------*/
+/*-------- METHODS FOR PRINTING & SAVING THE DiscreteSatelliteBlock --------*/
 /*--------------------------------------------------------------------------*/
 /** @name Methods for printing & saving the DiscreteSatelliteBlock
  *  @{ */
 
- /// print the DiscreteSatelliteBlock on an ostream with the given verbosity
- /** Protected method to print information about the DiscreteSatelliteBlock; with the
-  * "complete" level ('C') it outputs the DiscreteSatelliteBlock in DIMACS format. */
+ /// print the DiscreteSatelliteBlock on an ostream
+ /** Prints the size of the (orbit , level) grid of the
+  * DiscreteSatelliteBlock, in the format read by load( std::istream & );
+  * vlvl is ignored. */
 
  void print( std::ostream & output , char vlvl = 0 ) const override;
 
 /** @} ---------------------------------------------------------------------*/
-/*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
+/*---------------------- PROTECTED PART OF THE CLASS -----------------------*/
 /*--------------------------------------------------------------------------*/
 
  protected:
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- PROTECTED METHODS -----------------------------*/
+/*---------------------------- PROTECTED FIELDS ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
-/*--------------------------------------------------------------------------*/
-/*--------------------------- PROTECTED FIELDS  ----------------------------*/
-/*--------------------------------------------------------------------------*/
+ unsigned char AR1; ///< nonzero if the Objective has been constructed
+ unsigned char AR2; ///< nonzero if the Constraint have been constructed
+ unsigned char AR3; ///< nonzero if the Variable have been constructed
 
- unsigned char AR1,AR2,AR3;               ///< bit-wise coded: what abstract is there
  static constexpr unsigned char HasVar = 1;
- ///< first bit of AR == 1 if the Variable have been constructed
+ ///< bit of AR3 set if the Variable are constructed
  static constexpr unsigned char HasObj = 2;
- ///< first bit of AR == 1 if the Objective have been constructed
- static constexpr unsigned char HasCnst = 3;
- ///< first bit of AR == 1 if the Constraint have been constructed
+ ///< bit of AR1 set if the Objective is constructed
+ static constexpr unsigned char HasCnst = 4;
+ ///< bit of AR2 set if the Constraint are constructed
 
- FNumber ell;                        ///< the number of values for theta angles
- FNumber OrbitSet;           ///< the number of configurations
+ Index OrbitSet; ///< the number of candidate orbits
+ Index ell;      ///< the number of levels of the threshold theta
 
- double f_cond_lower;            ///< conditional lower bound, can be -INF
- double f_cond_upper;            ///< conditional upper bound, can be +INF
- 
- boost::multi_array< ColVariable , 2 > y; ///< the y variables
- 
- FRowConstraint one;
+ boost::multi_array< ColVariable , 2 > y; ///< the y[][] Variable
 
- FRealObjective c;               ///< the (linear) objective function
+ FRowConstraint one; ///< the constraint sum_{ o , l } y[ o ][ l ] <= 1
+
+ FRealObjective c; ///< the (linear) objective function
 
 /*--------------------------------------------------------------------------*/
-/*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
+/*----------------------- PRIVATE PART OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 
  private:
 
 /*--------------------------------------------------------------------------*/
-/*-------------------------- PRIVATE METHODS -------------------------------*/
+/*---------------------------- PRIVATE METHODS -----------------------------*/
 /*--------------------------------------------------------------------------*/
-/// register DiscreteSatelliteBlock methods into the method factories
-/** Although in general private methods should not be commented, this one is
- * because it does the registration of the following DiscreteSatelliteBlock methods*/
 
  void guts_of_destructor( void );
 
  void guts_of_add_Modification( p_Mod mod , ChnlName chnl );
 
-
 /*--------------------------------------------------------------------------*/
-/*---------------------------- PRIVATE FIELDS ------------------------------*/
-/*--------------------------------------------------------------------------*/
-
- SMSpp_insert_in_factory_h;  // insert DiscreteSatelliteBlock in the Block factory
-
-/*--------------------------------------------------------------------------*/
+/*----------------------------- PRIVATE FIELDS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( DiscreteSatelliteBlock ) )
-
-/*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS DiscreteSatelliteBlockMod -----------------------*/
-/*--------------------------------------------------------------------------*/
-/// derived class from Modification for modifications to a DiscreteSatelliteBlock
-/** Derived class from Modification to describe modifications to a DiscreteSatelliteBlock.
- *  This is actually "sort of abstract", since it does not say exactly what
- *  is changed, this being demanded to derived classes (which do this in
- *  different ways). Note that it is derived from Modification rather than,
- *  say, BlockMod (which has the same structure) because this is a class of
- *  "physical Modification". This means that a DiscreteSatelliteBlockMod refers to changes
- *  in the "physical representation" of the DiscreteSatelliteBlock; the corresponding
- *  changes in the "abstract representation" of the DiscreteSatelliteBlock are dealt with
- *  by means of "abstract Modification", i.e., derived classes from
- *  AModification (as is BlockMod, which is why DiscreteSatelliteBlockMod is not derived
- *  from BlockMod). */
-
-class DiscreteSatelliteBlockMod : public Modification
-{
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
-
- public:
-
-/*---------------------------- PUBLIC TYPES --------------------------------*/
- /// public enum for the types of DiscreteSatelliteBlockMod
-
-/*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
-
- /// constructor: takes the DiscreteSatelliteBlock and the type
-
- DiscreteSatelliteBlockMod( DiscreteSatelliteBlock * fblock , int type )
-  : f_Block( fblock ) , f_type( type ) {}
-
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
- virtual ~DiscreteSatelliteBlockMod() = default;   ///< destructor, does nothing
-
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
-
- /// returns the [DCR]Block to which the DiscreteSatelliteBlockMod refers
-
- Block * get_Block( void ) const override  { return( f_Block ); }
-
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
- /// accessor to the type of modification
-
- int type( void ) const { return( f_type ); }
-
-/*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
-
- protected:
-
-/*-------------------------- PROTECTED METHODS -----------------------------*/
- /// print the DiscreteSatelliteBlockMod
-
- void print( std::ostream &output ) const override {
-
-  }
-
-/*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
-
- DiscreteSatelliteBlock *f_Block;
-          ///< pointer to the DiscreteSatelliteBlock to which the DiscreteSatelliteBlockMod refers
-
- int f_type;   ///< type of Modification
+ SMSpp_insert_in_factory_h; // insert DiscreteSatelliteBlock in the factory
 
 /*--------------------------------------------------------------------------*/
 
- };  // end( class( DiscreteSatelliteBlockMod ) )
+ }; // end( class( DiscreteSatelliteBlock ) )
 
 /*--------------------------------------------------------------------------*/
-/*------------------------ CLASS DiscreteSatelliteBlockRngdMod ---------------------*/
+/*-------------------- CLASS DiscreteSatelliteSolution ---------------------*/
 /*--------------------------------------------------------------------------*/
-/// derived from DiscreteSatelliteBlockMod for "ranged" modifications
-
-class DiscreteSatelliteBlockRngdMod : public DiscreteSatelliteBlockMod
-{
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
-
- public:
-
-/*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
-
- /// constructor: takes the DiscreteSatelliteBlock, the type, and the range
-
- DiscreteSatelliteBlockRngdMod( DiscreteSatelliteBlock * fblock , int type , Block::Range rng )
-  : DiscreteSatelliteBlockMod( fblock , type ) , f_rng( rng ) {}
-
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
- virtual ~DiscreteSatelliteBlockRngdMod() = default;   ///< destructor, does nothing
-
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
-
- /// accessor to the range
-
- Block::c_Range & rng( void ) const { return( f_rng ); }
- 
-/*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
-
- protected:
-
-/*-------------------------- PROTECTED METHODS -----------------------------*/
- /// print the DiscreteSatelliteBlockRngdMod
-
- void print( std::ostream &output ) const override {
-  DiscreteSatelliteBlockMod::print( output );
-  output << "[ " << f_rng.first << ", " << f_rng.second << " )" << std::endl;
-  }
-
-/*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
-
- Block::Range f_rng;     ///< the range
-
-/*--------------------------------------------------------------------------*/
-
- };  // end( class( DiscreteSatelliteBlockRngdMod ) )
-
-/*--------------------------------------------------------------------------*/
-/*------------------------ CLASS DiscreteSatelliteBlockSbstMod ---------------------*/
-/*--------------------------------------------------------------------------*/
-/// derived from DiscreteSatelliteBlockMod for "subset" modifications
-/** Derived class from Modification to describe "subset" modifications to a
- *  DiscreteSatelliteBlock, i.e., modifications that apply to an arbitrary subset of either
- * the arcs or the nodes. */
-
-class DiscreteSatelliteBlockSbstMod : public DiscreteSatelliteBlockMod
-{
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
-
- public:
-
-
-/*---------------------- CONSTRUCTOR & DESTRUCTOR --------------------------*/
-
- ///< constructor: takes the DiscreteSatelliteBlock, the type, and the subset
- /**< Constructor: takes the DiscreteSatelliteBlock, the type, and the subset. As the the
-  * && tells, nms is "consumed" by the constructor and its resources become
-  * property of the DiscreteSatelliteBlockSbstMod object.
-  *
-  *   NOTE THAT nms IS REQUIRED TO BE ORDERED IN INCREASING SENSE
-  *
-  * although this is not checked by the class. */
-
- DiscreteSatelliteBlockSbstMod( DiscreteSatelliteBlock * fblock , int type , Block::Subset && nms )
-  : DiscreteSatelliteBlockMod( fblock , type ) , f_nms( std::move( nms ) ) {}
-
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-
- virtual ~DiscreteSatelliteBlockSbstMod() = default;  ///< destructor, does nothing
-
-/*-------------------- PUBLIC METHODS OF THE CLASS ------------------------*/
-
- /// accessor to the subset
-
- Block::c_Subset & nms( void ) const { return( f_nms ); }
-
-/*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
-
- protected:
-
-/*-------------------------- PROTECTED METHODS -----------------------------*/
- /// print the DiscreteSatelliteBlockSbstMod
-
- void print( std::ostream &output ) const override {
-  DiscreteSatelliteBlockMod::print( output );
-  output << "(# " << f_nms.size() << ")" << std::endl;
-  }
-
-/*--------------------- PROTECTED FIELDS OF THE CLASS ----------------------*/
-
- Block::Subset f_nms;   ///< the subset
-
-/*--------------------------------------------------------------------------*/
-
- };  // end( class( DiscreteSatelliteBlockSbstMod ) )
-
-/*--------------------------------------------------------------------------*/
-/*-------------------------- CLASS DiscreteSatelliteSolution --------------*/
-/*--------------------------------------------------------------------------*/
+/// a solution of a DiscreteSatelliteBlock
+/** A DiscreteSatelliteSolution holds the values of the OrbitSet x ell
+ * Variable y[][] of a DiscreteSatelliteBlock, in "row-major" order (that of
+ * y[ o ][ l ] has index o * ell + l). An empty DiscreteSatelliteSolution
+ * (one with no values) reads and writes nothing. */
 
 class DiscreteSatelliteSolution : public Solution {
 
 /*--------------------------------------------------------------------------*/
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
+/*------------------------ PUBLIC PART OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 
-public:
+ public:
 
-/*------------------------------- FRIENDS ----------------------------------*/
+/*-------------------------------- FRIENDS ---------------------------------*/
 
-friend DiscreteSatelliteBlock;  ///< make DiscreteSatelliteBlock friend
+ friend DiscreteSatelliteBlock; ///< make DiscreteSatelliteBlock friend
 
-/*---------------- CONSTRUCTING AND DESTRUCTING DiscreteSatelliteSolution -*/
+/*--------- CONSTRUCTING AND DESTRUCTING DiscreteSatelliteSolution ---------*/
 
-  explicit DiscreteSatelliteSolution( void ) { }  /// constructor, it has nothing to do
+ /// constructor, it has nothing to do
 
-  void deserialize( const netCDF::NcGroup & group ) override final;
+ explicit DiscreteSatelliteSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// de-serialize a DiscreteSatelliteSolution out of netCDF::NcGroup
+ /** Not implemented: exception is thrown. */
 
- ~DiscreteSatelliteSolution() = default;  ///< destructor: it is virtual, and empty
+ void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*------------- METHODS DESCRIBING THE BEHAVIOR OF A DiscreteSatelliteSolution --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// destructor: it is virtual, and empty
 
-  void read( const Block * block ) override final;
+ ~DiscreteSatelliteSolution() override = default;
 
-  void write( Block * block ) override final;
+/*----- METHODS DESCRIBING THE BEHAVIOR OF A DiscreteSatelliteSolution -----*/
 
-  void serialize( netCDF::NcGroup & group ) const override final;
+ /// read the values of the y[][] out of the given DiscreteSatelliteBlock
+ /** Reads the current values of the y[][] Variable of the given
+  * DiscreteSatelliteBlock, which must have the same size as this
+  * DiscreteSatelliteSolution (exception is thrown otherwise); does nothing
+  * if the DiscreteSatelliteSolution is empty. */
 
-  DiscreteSatelliteSolution * scale( double factor ) const override final;
+ void read( const Block * block ) override final;
 
-  void sum( const Solution * solution , double multiplier ) override final;
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// write the values of the y[][] into the given DiscreteSatelliteBlock
+ /** Writes the stored values into the y[][] Variable of the given
+  * DiscreteSatelliteBlock, which must have the same size as this
+  * DiscreteSatelliteSolution (exception is thrown otherwise); does nothing
+  * if the DiscreteSatelliteSolution is empty. */
 
-  DiscreteSatelliteSolution * clone( bool empty = false ) const override final;
-  
-/*-------------------- PROTECTED PART OF THE CLASS -------------------------*/
+ void write( Block * block ) override final;
 
-//protected:
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// serialize a DiscreteSatelliteSolution into a netCDF::NcGroup
+ /** Not implemented: exception is thrown. */
 
-/*-------------------------- PROTECTED METHODS -----------------------------*/
+ void serialize( netCDF::NcGroup & group ) const override final;
 
- void print( std::ostream &output ) const override final {
-   //output << "DiscreteSatelliteSolution";
- }
-  
-/*---------------------- PRIVATE PART OF THE CLASS -------------------------*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// returns a DiscreteSatelliteSolution with the values multiplied by factor
 
-//private:
+ DiscreteSatelliteSolution * scale( double factor ) const override final;
 
-/*---------------------------- PRIVATE FIELDS ------------------------------*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// adds the given DiscreteSatelliteSolution, multiplied by multiplier
+ /** Adds multiplier times the values of the given DiscreteSatelliteSolution,
+  * which must have the same size, to the stored ones. */
 
-DiscreteSatelliteBlock::Vec_FNumber v_zeta;   ///< the arc flows
-  
+ void sum( const Solution * solution , double multiplier ) override final;
+
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// returns a copy of the DiscreteSatelliteSolution
+ /** Returns a copy of the DiscreteSatelliteSolution; if empty == true the
+  * copy has the same size but all its values are zero. */
+
+ DiscreteSatelliteSolution * clone( bool empty = false ) const override final;
+
+/*---------------------- PROTECTED PART OF THE CLASS -----------------------*/
+
+ protected:
+
+/*--------------------------- PROTECTED METHODS ----------------------------*/
+ /// print the DiscreteSatelliteSolution
+
+ void print( std::ostream & output ) const override final;
+
+/*----------------------- PRIVATE PART OF THE CLASS ------------------------*/
+
+ private:
+
+/*----------------------------- PRIVATE FIELDS -----------------------------*/
+
+ DiscreteSatelliteBlock::Vec_FNumber v_y; ///< the values of the y[][]
+
 /*--------------------------------------------------------------------------*/
 
-SMSpp_insert_in_factory_h;
+ SMSpp_insert_in_factory_h;
 
 /*--------------------------------------------------------------------------*/
 
-};  // end( class( DiscreteSatelliteSolution ) )
+ }; // end( class( DiscreteSatelliteSolution ) )
 
-/** @} end( group( DiscreteSatelliteBlock_CLASSES ) ) ----------------------*/
+/** @} end( group( DiscreteSatelliteBlock_CLASSES ) ) */
 /*--------------------------------------------------------------------------*/
 
- };  // end( namespace SMSpp_di_unipi_it )
+} // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#endif  /* DiscreteSatelliteBlock.h included */
+#endif /* DiscreteSatelliteBlock.h included */
 
 /*--------------------------------------------------------------------------*/
 /*------------------- End File DiscreteSatelliteBlock.h --------------------*/

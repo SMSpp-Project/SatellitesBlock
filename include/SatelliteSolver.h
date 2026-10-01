@@ -2,7 +2,8 @@
 /*------------------------- File SatelliteSolver.h -------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * Header file for the SatelliteSolver class
+ * Header file for the SatelliteSolver class, a Solver that solves the
+ * Lagrangian subproblem of a SatelliteBlock by enumeration of its orbits.
  *
  * \author Luca Mencarelli \n
  *         Dipartimento di Informatica \n
@@ -11,37 +12,30 @@
  * \copyright &copy; by Luca Mencarelli
  */
 /*--------------------------------------------------------------------------*/
-/*----------------------------- DEFINITIONS --------------------------------*/
+/*------------------------------ DEFINITIONS -------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #ifndef __SatelliteSolver
-#define __SatelliteSolver
-/* self-identification: #endif at the end of the file */
+ #define __SatelliteSolver
+                      /* self-identification: #endif at the end of the file */
 
 /*--------------------------------------------------------------------------*/
-/*------------------------------ INCLUDES ----------------------------------*/
+/*-------------------------------- INCLUDES --------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 #include "Solver.h"
 
 #include "SatelliteBlock.h"
 
-#include "BlockSolverConfig.h"
-
 /*--------------------------------------------------------------------------*/
-/*-------------------------- NAMESPACE & USING -----------------------------*/
+/*--------------------------- NAMESPACE & USING ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
 /// namespace for the Structured Modeling System++ (SMS++)
-namespace SMSpp_di_unipi_it {
-
-//using namespace MCFClass_di_unipi_it;
-//using Index = Block::Index;
-
-//class SatelliteSolverState;  // forward declaration of SatelliteSolverState
-
+namespace SMSpp_di_unipi_it
+{
 /*--------------------------------------------------------------------------*/
-/*------------------------------- CLASSES ----------------------------------*/
+/*-------------------------------- CLASSES ---------------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @defgroup SatelliteSolver_CLASSES Classes in SatelliteSolver.h
  *  @{ */
@@ -49,458 +43,353 @@ namespace SMSpp_di_unipi_it {
 /*--------------------------------------------------------------------------*/
 /*------------------------- CLASS SatelliteSolver --------------------------*/
 /*--------------------------------------------------------------------------*/
-/*--------------------------- GENERAL NOTES --------------------------------*/
+/*----------------------------- GENERAL NOTES ------------------------------*/
 /*--------------------------------------------------------------------------*/
 /// Solver for SatelliteBlock
-/** SatelliteSolver is a specialized Solver that exploits the very simple
- * structure of a single SatelliteBlock to solve it "by inspection", without
- * calling any general-purpose (I)LP/MILP solver. This is meant to be used
- * as the *pricing* Solver attached to each SatelliteBlock while the
- * corresponding ConstellationBlock is tackled by a Lagrangian decomposition
- * approach (e.g., LagrangianDualSolver / BundleSolver): the observability
- * constraints of ConstellationBlock, which are the only ones linking
- * different SatelliteBlock together, are dualized, so that the Lagrangian
- * function decomposes into one independent subproblem per SatelliteBlock,
- * each amounting to "does this satellite reduce the Lagrangian cost by
- * being active, and if so with which one of its (finitely many) candidate
- * orbits [C]?"
+/** SatelliteSolver is a Solver that exploits the structure of a single
+ * SatelliteBlock to solve it "by inspection", without any general-purpose
+ * MILP solver. It is the Solver attached to each SatelliteBlock when the
+ * ConstellationBlock is solved by Lagrangian decomposition (e.g., by
+ * LagrangianDualSolver and BundleSolver): the constraints of
+ * ConstellationBlock, the only ones linking different SatelliteBlock, are
+ * dualized, so that the Lagrangian function decomposes into one subproblem
+ * per SatelliteBlock, whose Objective is a LinearFunction with coefficient
+ * lambdaz for zeta, lambda3 for thetaVar and lambda11[ m ][ t ] for every
+ * xi[ m ][ t ] (any of them may be missing, i.e., zero).
  *
- * Precisely, once the observability constraints are dualized with
- * multipliers lambda11[ j ][ tt ] (one per target j and time stamp tt) and
- * the LinearFunction of the SatelliteBlock Objective is correspondingly
- * updated by whoever performs the dualization (lambdaz being the
- * (dualized) coefficient of zeta, lambda3 that of thetaVar, and
- * lambda1[][] those of the bound constraints, currently unused here), the
- * subproblem is solved by brute-force enumeration over all the candidate
- * orbits c \in [C] of get_numOrbit(): for each c, the corresponding xi[][]
- * pattern is exactly determined by comparing the precomputed coverage
- * distances Delta_lat/Delta_long against the fixed threshold theta (see
- * SatelliteBlock::get_theta()), and the resulting Lagrangian cost is
- * xi_sum1 = sum_{j,tt} lambda11[ j ][ tt ] * xi[ j ][ tt ]. The orbit
- * yielding the smallest (i.e., most negative) such cost is retained in
- * orbit_opt only if it improves on the "do nothing" alternative (whose
- * cost is 0, i.e., zeta = 0 and no target observed): orbit_opt stays -1,
- * and the satellite is reported inactive, whenever no candidate orbit
- * achieves a strictly negative Lagrangian cost. */
+ * The subproblem is solved with the threshold fixed to its maximum value
+ * \f$ \theta^{\max} \f$ (see SatelliteBlock::get_theta()). For every
+ * candidate orbit c, the xi[][] are then fixed: xi[ m ][ t ] = 1 iff both
+ * distances Delta_lat and Delta_long of orbit c from target m at time t are
+ * within \f$ \theta^{\max} \f$, with cost sum_{ m , t } lambda11[ m ][ t ]
+ * xi[ m ][ t ]. The orbit with the smallest cost is chosen if this cost is
+ * negative, the satellite being inactive (all the Variable zero, cost 0)
+ * otherwise; the value of the solution is the constant term of the
+ * Objective plus min( lambdaz + cost + lambda3 \f$ \theta^{\max} \f$ , 0 ).
+ * Since the threshold is fixed, the result is optimal only among the
+ * solutions with \f$ \theta = \theta^{\max} \f$ for the active satellite.
+ * Since compute() always reads the whole Objective, the Modification
+ * received by the Solver are simply discarded. */
 
-class SatelliteSolver : public Solver
-{
+class SatelliteSolver : public Solver {
+
 /*--------------------------------------------------------------------------*/
-/*----------------------- PUBLIC PART OF THE CLASS -------------------------*/
+/*------------------------ PUBLIC PART OF THE CLASS ------------------------*/
 /*--------------------------------------------------------------------------*/
 
-public:
+ public:
+
 /*--------------------------------------------------------------------------*/
-/*---------------------------- PUBLIC TYPES --------------------------------*/
+/*------------------------------ PUBLIC TYPES ------------------------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Public Types
+/** @name Public types
  *  @{ */
 
- /** @} ---------------------------------------------------------------------*/
+ using Index = Block::Index; ///< the type of the indices
+
+/** @} ---------------------------------------------------------------------*/
 /*-------------- CONSTRUCTING AND DESTRUCTING SatelliteSolver --------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Constructing and destructing SatelliteSolver
+/** @name Constructing and destructing SatelliteSolver
  *  @{ */
 
- /// constructor: does nothing special
- /** Void constructor: does nothing special, except verifying that the
-  * template argument derives from BenBound. */
+ /// constructor: initializes the (empty) solution
 
- SatelliteSolver( void ) : Solver() {}
+ SatelliteSolver( void )
+  : Solver() , objective_opt( 0 ) , orbit_opt( -1 ) , lambda3( 0 ) ,
+    lambdaz( 0 ) ,
+    f_has_sol( false ) {}
 
 /*--------------------------------------------------------------------------*/
- /// destructor: it has to release all the Modifications
+ /// destructor: there is nothing to release
 
  virtual ~SatelliteSolver() {}
 
- /** @} ---------------------------------------------------------------------*/
-/*-------------------------- OTHER INITIALIZATIONS -------------------------*/
+/** @} ---------------------------------------------------------------------*/
+/*------------------------- OTHER INITIALIZATIONS --------------------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Other initializations
- *
- * Parameter-wise, SatelliteSolver maps the parameters of [CDA]Solver
-**/
-
- /// set the (pointer to the) Block that the Solver has to solve
-
- void set_Block( Block * block ) override
- {
-  if( block == f_Block ) // actually doing nothing
-   return; // cowardly and silently return
-
-  Solver::set_Block( block ); // attach to the new Block
-
-  if( block ) { // this is not just resetting everything
-   auto SATB = dynamic_cast< SatelliteBlock * >( f_Block );
-   if( !SATB )
-    throw( std::invalid_argument(
-     "SatelliteSolver:set_Block: block must be a SatelliteBlock" ) );
-
-   bool owned = SATB->is_owned_by( f_id );
-   if( ( !owned ) && ( !SATB->read_lock() ) )
-    throw( std::logic_error( "cannot acquire read_lock on SatelliteBlock" ) );
-   // load the new SatelliteBlock into the :BenBound object
-
-   // once done, read_unlock the SatelliteBlock (if it was read-lock()-ed)
-   if( !owned )
-    SATB->read_unlock();
-
-   // TODO: maybe log it
-  }
- } // end( set_Block )
-
-/*--------------------------------------------------------------------------*/
-/*--------------------------------------------------------------------------*/
-
- /** @} ---------------------------------------------------------------------*/
-/*--------------------- METHODS FOR SOLVING THE Block ----------------------*/
-/*--------------------------------------------------------------------------*/
- /** @name Solving the Satellite
+/** @name Other initializations
  *  @{ */
 
- /// (try to) solve the Satellite
+ /// set the (pointer to the) Block that the Solver has to solve
+ /** Sets the Block that the Solver has to solve, which must be a
+  * SatelliteBlock (exception is thrown otherwise); any solution found for
+  * the previous Block is discarded. */
 
- int compute( bool changedvars = true ) override
- {
+ void set_Block( Block * block ) override {
+  if( block == f_Block ) // actually doing nothing
+   return;               // cowardly and silently return
+
+  if( block && ( ! dynamic_cast< SatelliteBlock * >( block ) ) )
+   throw( std::invalid_argument(
+    "SatelliteSolver::set_Block: block must be a SatelliteBlock" ) );
+
+  Solver::set_Block( block ); // attach to the new Block
+  f_has_sol = false;
+  }
+
+/** @} ---------------------------------------------------------------------*/
+/*--------------------- METHODS FOR SOLVING THE Block ----------------------*/
+/*--------------------------------------------------------------------------*/
+/** @name Solving the SatelliteBlock
+ *  @{ */
+
+ /// solve the SatelliteBlock
+ /** Solves the SatelliteBlock by enumeration of its candidate orbits [see
+  * the class comments]. Returns kOK on success, kBlockLocked if the Block
+  * cannot be read_lock()-ed, and kError if there is no Block or if its
+  * Objective is not a FRealObjective with a LinearFunction of the Variable
+  * zeta, thetaVar and xi[][]. */
+
+ int compute( bool changedvars = true ) override {
   lock(); // first of all, acquire self-lock
 
-  if( !f_Block ) // there is no [SatelliteBlock] to solve
-   return ( kBlockLocked ); // return error
+  if( ! f_Block ) { // there is no SatelliteBlock to solve
+   unlock();
+   return( kError );
+   }
 
-  bool owned = f_Block->is_owned_by( f_id ); // check if already locked
-  if( ( !owned ) && ( !f_Block->read_lock() ) ) // if not try to read_lock
-   return ( kBlockLocked ); // return error on failure
-
-  if( !owned ) // if the [Satellite]Block was actually read_locked
-   f_Block->read_unlock(); // read_unlock it
+  bool owned = f_Block->is_owned_by( f_id );      // check if already locked
+  if( ( ! owned ) && ( ! f_Block->read_lock() ) ) { // if not try to lock
+   unlock();
+   return( kBlockLocked ); // return error on failure
+   }
 
   process_outstanding_Modification();
+  f_has_sol = false;
 
-  /****** COMPUTE PROCEDURE ******/
-  // the Lagrangian multipliers dualizing the ConstellationBlock-level
-  // observability / thetaM constraints are read directly out of the
-  // coefficients of the (dense) LinearFunction of the SatelliteBlock
-  // Objective, in the fixed order in which generate_objective() /
-  // whoever dualizes the constraints is assumed to have laid them out:
-  // coefficient 0 is lambdaz (dual price of zeta), coefficient 1 is
-  // lambda3 (dual price of thetaVar), and the following ones (extracted
-  // into lambda1[][], currently unused below) and lambda11[][] are the
-  // per-(target,revisit-window)/per-(target,time-stamp) multipliers
-
+  int status = kError;
   auto SATB = dynamic_cast< SatelliteBlock * >( f_Block );
-  auto t = SATB->get_t();
-  auto n = SATB->get_n();
-  auto theta = SATB->get_theta();
+  auto obj = SATB ? dynamic_cast< FRealObjective * >( SATB->get_objective() )
+                  : nullptr;
+  auto lf = obj ? dynamic_cast< LinearFunction * >( obj->get_function() )
+                : nullptr;
 
-  xi_new.resize( boost::extents[ n ][ t ] );
+  if( lf && read_multipliers( SATB , lf ) ) {
+   const auto t = SATB->get_t();
+   const auto n = SATB->get_n();
+   const auto theta = SATB->get_theta();
 
-  zeta = 0.0;
+   // enumeration of the candidate orbits: for orbit i, xi_new1[ j ][ tt ]
+   // is 1 iff target j is within the threshold at time stamp tt, and
+   // xi_sum1 is the corresponding cost; the best orbit is kept only if it
+   // improves on the cost 0 of "doing nothing"
 
-  auto tot_periods = 0;
-  sum_lambda = 0.0;
-  int max_period = 0;
+   boost::multi_array< double , 2 > xi_new1( boost::extents[ n ][ t ] );
+   xi_new.resize( boost::extents[ n ][ t ] );
+   std::fill_n( xi_new.data() , xi_new.num_elements() , 0.0 );
 
-  for( int k = 0 ; k < n ; k++ ) {
-   tot_periods += SATB->get_period( k );
-   if( max_period < SATB->get_period( k ) )
-    max_period = SATB->get_period( k );
-  }
+   double objective_opt1 = 0.0;
+   orbit_opt = -1;
 
-  lambda1.resize( boost::extents[ n ][ max_period ] );
-  lambda2.resize( boost::extents[ n ][ t ] );
+   for( Index i = 0 ; i < SATB->get_numOrbit() ; ++i ) {
+    double xi_sum1 = 0.0;
+    for( Index j = 0 ; j < n ; ++j )
+     for( Index tt = 0 ; tt < t ; ++tt )
+      if( ( SATB->get_Delta_lat( i , j , tt ) <= theta ) &&
+          ( SATB->get_Delta_long( i , j , tt ) <= theta ) ) {
+       xi_sum1 += lambda11[ j ][ tt ];
+       xi_new1[ j ][ tt ] = 1.0;
+       }
+      else
+       xi_new1[ j ][ tt ] = 0.0;
 
-  for( int j = 0 ; j < n ; j++ ) {
-   for( int i = 0 ; i < max_period ; i++ ) {
-    lambda1[ j ][ i ] = 0.0;
-   }
-  }
-
-  lambdaz =
-   static_cast< LinearFunction * >(
-    static_cast< FRealObjective * >( SATB->get_objective() )->get_function() )
-    ->get_coefficient( 0 );
-  lambda3 =
-   static_cast< LinearFunction * >(
-    static_cast< FRealObjective * >( SATB->get_objective() )->get_function() )
-    ->get_coefficient( 1 );
-
-  int index = 2;
-  for( int j = 0 ; j < n ; j++ ) {
-   for( int i = 0 ; i < SATB->get_period( j ) ; i++ ) {
-    lambda1[ j ][ i ] =
-     static_cast< LinearFunction * >(
-      static_cast< FRealObjective * >( SATB->get_objective() )
-       ->get_function() )
-      ->get_coefficient( index );
-    sum_lambda -= lambda1[ j ][ i ];
-    index += 1;
-   }
-  }
-
-  lambda11.resize( boost::extents[ n ][ t ] );
-
-  index = 1;
-  index += 1;
-  for( int j = 0 ; j < n ; j++ ) {
-   for( int tt = 0 ; tt < t ; tt++ ) {
-    lambda11[ j ][ tt ] =
-     static_cast< LinearFunction * >(
-      static_cast< FRealObjective * >( SATB->get_objective() )
-       ->get_function() )
-      ->get_coefficient( index );
-    index += 1;
-   }
-  }
-
-  objective_opt = 0.0;
-
-  int flag = 0;
-
-  for( int j = 0 ; j < n ; ++j )
-   for( int k = 0 ; k < t ; ++k )
-    xi_new[ j ][ k ] = 0;
-
-  boost::multi_array< double, 2 > xi_new1;
-  xi_new1.resize( boost::extents[ n ][ t ] );
-
-  boost::multi_array< double, 2 > xi_sum1p;
-  xi_sum1p.resize( boost::extents[ n ][ max_period ] );
-
-  boost::multi_array< double, 2 > xi_sump1;
-  xi_sump1.resize( boost::extents[ n ][ max_period ] );
-
-  double pp;
-
-  double objective_opt1 = 0.0;
-  zeta = 1.0;
-  xi_sum = 0.0;
-  auto xi_sum1 = 0.0;
-  auto sum_p = 0.0;
-  orbit_opt = -1;
-
-  // brute-force enumeration over the (small) set [C] of candidate orbits:
-  // for orbit i, xi_new1[ j ][ tt ] is 1 iff. target j is within the fixed
-  // threshold theta at time tt for that orbit (both in latitude and
-  // longitude), and xi_sum1 accumulates the corresponding dualized
-  // observability cost sum_{j,tt} lambda11[ j ][ tt ] * xi[ j ][ tt ]
-
-  for( int i = 0 ; i < SATB->get_numOrbit() ; i++ ) {
-   xi_sum1 = 0.0;
-   sum_p = 0.0;
-
-   for( int j = 0 ; j < n ; j++ ) {
-    pp = SATB->get_horizon() / SATB->get_timeStep() / SATB->get_period( j );
-    for( int tt = 0 ; tt < t ; tt++ ) {
-     if( SATB->get_Delta_lat( i , j , tt ) <= theta and
-         SATB->get_Delta_long( i , j , tt ) <= theta ) {
-      xi_sum1 += lambda11[ j ][ tt ];
-      xi_new1[ j ][ tt ] = 1.0;
-      zeta1 = 1.0;
-     } else {
-      xi_new1[ j ][ tt ] = 0.0;
+    if( xi_sum1 < objective_opt1 ) {
+     objective_opt1 = xi_sum1;
+     orbit_opt = i;
+     xi_new = xi_new1;
      }
     }
+
+   // the value also includes the costs of zeta and of the threshold;
+   // "doing nothing" (cost 0) is always possible
+
+   objective_opt =
+    std::min( lambdaz + objective_opt1 + lambda3 * theta , 0.0 );
+   if( ( orbit_opt == -1 ) || ( objective_opt >= 0.0 ) ) {
+    objective_opt = 0.0;
+    orbit_opt = -1;
+    }
+   objective_opt += lf->get_constant_term();
+
+   f_has_sol = true;
+   status = kOK;
    }
 
-   // keep orbit i only if it strictly improves on the best cost found so
-   // far (objective_opt1, initialized to 0 == the "do nothing" cost)
-
-   if( xi_sum1 < objective_opt1 ) {
-    objective_opt1 = xi_sum1;
-    orbit_opt = i;
-    zeta = zeta1;
-    xi_new = xi_new1;
-    xi_sum = xi_sum1;
-    flag = 1;
-   }
-  }
-
-  // the Lagrangian value of the subproblem also includes the (dualized)
-  // cost of zeta and of the fixed threshold theta; std::min( ... , 0.0 )
-  // enforces that "doing nothing" (cost 0) is always a feasible fallback
-
-  objective_opt = std::min( lambdaz + objective_opt1 + lambda3 * theta , 0.0 );
+  if( ! owned )             // if the Block was actually read_locked
+   f_Block->read_unlock(); // read_unlock it
 
   unlock(); // unlock the mutex
 
-  return ( kOK );
- }
+  return( status );
+  }
 
- /** @} ---------------------------------------------------------------------*/
+/** @} ---------------------------------------------------------------------*/
 /*---------------------- METHODS FOR READING RESULTS -----------------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Accessing the found solutions (if any)
+/** @name Accessing the found solutions (if any)
  *  @{ */
 
-/*--------------------------------------------------------------------------*/
-// the subproblem is solved to optimality by brute-force enumeration (see
-// compute()), so the lower and upper bound on its optimal value coincide
+ /// returns the value found by the last call to compute()
+ /** Returns the value found by the last call to compute() [see the class
+  * comments], which is used as both lower and upper bound; before any
+  * successful compute() this is -Inf. Note that, the threshold being fixed
+  * to \f$ \theta^{\max} \f$, the value is the optimum of the SatelliteBlock
+  * restricted to the solutions with that threshold, hence an upper bound
+  * on its optimum but not, in general, a lower bound: a Lagrangian dual of
+  * ConstellationBlock computed with this Solver on the SatelliteBlock is
+  * therefore not, in general, a lower bound on the optimum of the
+  * ConstellationBlock. */
 
- OFValue get_lb( void ) override
- {
-  if( orbit_opt == -1 )
-   objective_opt = 0.0;
+ OFValue get_lb( void ) override {
+  return( f_has_sol ? objective_opt : -Inf< OFValue >() );
+  }
 
-  return ( objective_opt );
- }
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// returns the value found by the last call to compute()
+ /** Same as get_lb(), but returning +Inf before any successful compute(). */
 
- /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ OFValue get_ub( void ) override {
+  return( f_has_sol ? objective_opt : Inf< OFValue >() );
+  }
 
- OFValue get_ub( void ) override
- {
-  if( orbit_opt == -1 )
-   objective_opt = 0.0;
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+ /// returns the value of the solution found by the last call to compute()
 
-  return ( objective_opt );
- }
-
- /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
-
- OFValue get_var_value( void ) override { return ( get_ub() ); }
-
-/*--------------------------------------------------------------------------*/
-
- bool has_var_solution( void ) override { return ( true ); }
+ OFValue get_var_value( void ) override { return( get_ub() ); }
 
 /*--------------------------------------------------------------------------*/
+ /// returns true if the last call to compute() has found a solution
 
- // writes the solution found by compute() back into the SatelliteBlock:
- // zeta is 1 iff. some orbit improved the Lagrangian cost (orbit_opt > -1,
- // re-checked here against objective_opt for consistency), that orbit's
- // activation[] entry is set to 1 (all others to 0), and its corresponding
- // xi_new[][] pattern is copied into the xi[][] Variable
+ bool has_var_solution( void ) override { return( f_has_sol ); }
 
- void get_var_solution( Configuration * solc = nullptr ) override
- {
-  if( !f_Block ) // no [SingleFlowDCR]Block to write to
-   return; // cowardly and silently return
+/*--------------------------------------------------------------------------*/
+ /// writes the solution found by compute() in the SatelliteBlock
+ /** Writes the solution found by the last call to compute() in the
+  * Variable of the SatelliteBlock: if an orbit has been chosen, zeta is 1,
+  * the activation of that orbit is 1 (all the others 0), the threshold is
+  * \f$ \theta^{\max} \f$ and the xi[][] are those of the orbit; otherwise,
+  * all the Variable are 0. Nothing is done if there is no solution, or if
+  * solc is a SimpleConfiguration< int > with value 2. */
+
+ void get_var_solution( Configuration * solc = nullptr ) override {
+  if( ( ! f_Block ) || ( ! f_has_sol ) ) // no solution to write
+   return;                             // cowardly and silently return
 
   auto tsolc = dynamic_cast< SimpleConfiguration< int > * >( solc );
   if( tsolc && ( tsolc->f_value == 2 ) )
    return;
 
   auto SATB = static_cast< SatelliteBlock * >( f_Block );
-  auto t = SATB->get_t();
-  auto n = SATB->get_n();
+  const bool active = orbit_opt > -1;
 
-  if( objective_opt >= 0.0 ) {
-   orbit_opt = -1;
-  }
+  SATB->set_zeta1( active ? 1 : 0 );
+  SATB->set_thetaVar1( active ? SATB->get_theta() : 0 );
 
-  SATB->set_zeta1( 1.0 );
-
-  if( orbit_opt > -1 ) {
-   SATB->set_zeta1( 1.0 );
-  } else {
-   SATB->set_zeta1( 0.0 );
-  }
-
-  for( int i = 0 ; i < SATB->get_numOrbit() ; i++ )
+  for( Index i = 0 ; i < SATB->get_numOrbit() ; ++i )
    SATB->set_activation1( i , 0 );
-
-  if( orbit_opt > -1 ) {
+  if( active )
    SATB->set_activation1( orbit_opt , 1 );
+
+  for( Index j = 0 ; j < SATB->get_n() ; ++j )
+   for( Index k = 0 ; k < SATB->get_t() ; ++k )
+    SATB->set_xi1( j , k , active ? xi_new[ j ][ k ] : 0.0 );
   }
 
-  auto sumx = 0.0;
-  for( int j = 0 ; j < n ; j++ ) {
-   for( int k = 0 ; k < t ; k++ ) {
-    if( orbit_opt > -1 ) {
-     SATB->set_xi1( j , k , xi_new[ j ][ k ] );
-     sumx += xi_new[ j ][ k ];
-    } else {
-     SATB->set_xi1( j , k , 0.0 );
-    }
-   }
-  }
- }
-
- /** @} ---------------------------------------------------------------------*/
+/** @} ---------------------------------------------------------------------*/
 /*------------- METHODS FOR ADDING / REMOVING / CHANGING DATA --------------*/
 /*--------------------------------------------------------------------------*/
- /** @name Changing the data of the model
+/** @name Changing the data of the model
  *  @{ */
 
-/*--------------------------------------------------------------------------*/
+ /// discards all the outstanding Modification
+ /** Since compute() reads the whole Objective every time, the
+  * Modification need not be processed: they are just discarded. */
 
- void process_outstanding_Modification( void )
- {
-  bool reload = false;
-
-  // note: since processing the Modification is fast, we don't bother with
-  // being nice to other processes and do it all with v_mod under lock
+ void process_outstanding_Modification( void ) {
   // try to acquire lock, spin on failure
   while( f_mod_lock.test_and_set( std::memory_order_acquire ) )
    ;
 
-  // process all the Modifications
-  for( auto mod : v_mod )
-   if( auto tmod = dynamic_cast< C05FunctionModLinRngd * >( mod.get() ) ) {
-    reload = true; // a reset must be done
-    break; // ignore all the remaining Modifications
-   }
-
-  v_mod.clear(); // all Modifications tackled, clear the list
+  v_mod.clear(); // all Modification tackled, clear the list
 
   f_mod_lock.clear( std::memory_order_release ); // release lock
-
-  if( reload ) {
-   auto SATB = dynamic_cast< SatelliteBlock * >( f_Block );
-   auto n = SATB->get_n();
-
-   int tot_periods = 0;
-
-   for( int k = 0 ; k < n ; k++ ) {
-    tot_periods += SATB->get_period( k );
-    //std::cout << "TOT: " << SATB->get_period( k ) << std::endl;
-   }
   }
- }
 
- /** @} ---------------------------------------------------------------------*/
-/*--------------------- PROTECTED PART OF THE CLASS ------------------------*/
+/** @} ---------------------------------------------------------------------*/
+/*---------------------- PROTECTED PART OF THE CLASS -----------------------*/
 /*--------------------------------------------------------------------------*/
 
-protected:
-/*--------------------------------------------------------------------------*/
-/*-------------------------- PROTECTED METHODS -----------------------------*/
-/*--------------------------------------------------------------------------*/
+ protected:
 
 /*--------------------------------------------------------------------------*/
-
-/*--------------------------------------------------------------------------*/
-/*---------------------------- PROTECTED FIELDS  ---------------------------*/
+/*--------------------------- PROTECTED METHODS ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
- double zeta;
- double zeta1;
- double objective_opt;
- double sum_lambda;
- double xi_sum;
+ /// reads lambdaz, lambda3 and lambda11[][] out of the Objective
+ /** Reads the coefficients of zeta (lambdaz), of thetaVar (lambda3) and of
+  * the xi[][] (lambda11[][]) out of the LinearFunction lf of the Objective
+  * of SATB, those of the missing Variable being 0. Returns false if lf has
+  * some other Variable. */
 
- int orbit_opt;
+ bool read_multipliers( SatelliteBlock * SATB , LinearFunction * lf ) {
+  const auto t = SATB->get_t();
+  const auto n = SATB->get_n();
 
- boost::multi_array< double, 2 > xi_new;
- boost::multi_array< double, 2 > lambda1;
- boost::multi_array< double, 2 > lambda2;
- boost::multi_array< double, 2 > lambda11;
- double lambda3;
- double lambdaz;
+  lambdaz = lambda3 = 0;
+  lambda11.resize( boost::extents[ n ][ t ] );
+  std::fill_n( lambda11.data() , lambda11.num_elements() , 0.0 );
+
+  const ColVariable * xi0 = ( n && t ) ? SATB->i2p_r( 0 , 0 ) : nullptr;
+  for( const auto & [ var , coeff ] : lf->get_v_var() ) {
+   if( var == SATB->i2p_z() )
+    lambdaz = coeff;
+   else if( var == SATB->i2p_theta() )
+    lambda3 = coeff;
+   else {
+    const auto pos = xi0 ? var - xi0 : -1;
+    if( ( pos < 0 ) || ( Index( pos ) >= n * t ) )
+     return( false );
+    lambda11[ pos / t ][ pos % t ] = coeff;
+    }
+   }
+
+  return( true );
+  }
 
 /*--------------------------------------------------------------------------*/
-/*--------------------- PRIVATE PART OF THE CLASS --------------------------*/
+/*---------------------------- PROTECTED FIELDS ----------------------------*/
 /*--------------------------------------------------------------------------*/
 
-private:
+ double objective_opt; ///< the value found by compute()
+ int orbit_opt;        ///< the chosen orbit, -1 if the satellite is inactive
+
+ boost::multi_array< double , 2 > xi_new;   ///< the xi[][] of orbit_opt
+ boost::multi_array< double , 2 > lambda11; ///< the costs of the xi[][]
+ double lambda3;                           ///< the cost of thetaVar
+ double lambdaz;                           ///< the cost of zeta
+
+ bool f_has_sol; ///< true if compute() has found a solution
+
 /*--------------------------------------------------------------------------*/
-/*-------------------------- PRIVATE METHODS -------------------------------*/
+/*----------------------- PRIVATE PART OF THE CLASS ------------------------*/
+/*--------------------------------------------------------------------------*/
+
+ private:
+
+/*--------------------------------------------------------------------------*/
+/*----------------------------- PRIVATE FIELDS -----------------------------*/
 /*--------------------------------------------------------------------------*/
 
  SMSpp_insert_in_factory_h;
 
 /*--------------------------------------------------------------------------*/
 
-}; // end( class( SatelliteSolver ) )
+ }; // end( class( SatelliteSolver ) )
+
+/** @} end( group( SatelliteSolver_CLASSES ) ) */
+/*--------------------------------------------------------------------------*/
+
 } // end( namespace SMSpp_di_unipi_it )
 
 /*--------------------------------------------------------------------------*/
