@@ -2,10 +2,19 @@
 
 Implementation of different `Block` for the Satellite Constellation Design
 Problem (SCDP) for the minimization of the number of satellites in the
-constellation or of the sum of the maximum revisit times per target, in the
-continuous case: `SatelliteBlock`, `SingleTargetBlock`, `MultiTargetBlock`
-(with its `MultiTargetBlockv2` variant) and the `ConstellationBlock` that
-aggregates them, together with the `SatelliteSolver` heuristic.
+constellation or of the sum of the maximum revisit times per target. In the
+continuous case these are `SatelliteBlock`, `SingleTargetBlock`,
+`MultiTargetBlock` (with its `MultiTargetBlockv2` variant) and the
+`ConstellationBlock` that aggregates them, together with the `SatelliteSolver`
+that solves a `SatelliteBlock` by inspection; in the discrete case, where the
+observability threshold of each satellite takes one of finitely many levels,
+they are `DiscreteSatelliteBlock` and `DiscreteConstellationBlock`, together
+with the `DiscreteSatelliteSolver`. The two Solver are meant for the
+sub-problems of a Lagrangian decomposition of the corresponding
+constellation, e.g., by the `LagrangianDualSolver`.
+
+Two small instances, one for the constellation Blocks and one for
+`MultiTargetBlock`, are in [data/txt](data/txt).
 
 The formulations implemented here are described in the working papers
 "A MILP approach to minimize the average of maximum revisit times in small
