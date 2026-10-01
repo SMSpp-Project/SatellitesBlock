@@ -48,6 +48,10 @@ using Index = Block::Index;
 // register ConstellationBlock to the Block factory
 SMSpp_insert_in_factory_cpp_1( ConstellationBlock );
 
+// the symbol that whoever links the module asks for, so that the linker keeps
+// the module, and with it the registration of all its classes in the factory
+SMSpp_define_force_load( SatellitesBlock )
+
 /*--------------------------------------------------------------------------*/
 /*-------------------------------- CONSTANTS -------------------------------*/
 /*--------------------------------------------------------------------------*/
