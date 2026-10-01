@@ -29,48 +29,30 @@ else ()
     endif ()
 endif ()
 
-# ----- SatellitesBlock_test -------------------------------------------------- #
+# ----- SatellitesBlock_unit_test --------------------------------------------- #
 
-add_executable(${modName}_test test.cpp)
-target_link_libraries(${modName}_test PRIVATE ${modNamespace}::${modName})
+add_executable(${modName}_unit_test test.cpp)
+target_link_libraries(${modName}_unit_test PRIVATE ${modNamespace}::${modName})
 
 if (WIN32 AND BUILD_SHARED_LIBS AND NOT DEFINED ENV{CONDA_BUILD})
     # On Windows with shared libraries enabled copies all runtime DLL
     # dependencies next to the executable in the build directory
     # (POST_BUILD), using CMake's TARGET_RUNTIME_DLLS generator expression
-    add_custom_command(TARGET ${modName}_test POST_BUILD
+    add_custom_command(TARGET ${modName}_unit_test POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_RUNTIME_DLLS:${modName}_test>
-            $<TARGET_FILE_DIR:${modName}_test>
+            $<TARGET_RUNTIME_DLLS:${modName}_unit_test>
+            $<TARGET_FILE_DIR:${modName}_unit_test>
             COMMAND_EXPAND_LISTS
-            COMMENT "Copying runtime DLLs next to ${modName}_test.exe")
+            COMMENT "Copying runtime DLLs next to ${modName}_unit_test.exe")
 endif ()
 
-add_test(NAME ${modName}_test
-         COMMAND ${modName}_test
+add_test(NAME ${modName}_unit_test
+         COMMAND ${modName}_unit_test
          WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 # The label lets the module CI select exactly the tests exercising this
 # module with `ctest -L <module>` (see tests/cmake/TestLabels.cmake in the
 # umbrella for the system-tests counterpart).
-set_tests_properties(${modName}_test PROPERTIES LABELS "${modName}")
+set_tests_properties(${modName}_unit_test PROPERTIES LABELS "${modName}")
 
 # --------------------------------------------------------------------------- #
-
-# ----- SatellitesBlock_milp_test -------------------------------------------- #
-# solves a small SCDP instance as a MILP; it needs a MILPSolver, so it is
-# built only when the module is available
-if (NOT TARGET ${modNamespace}::MILPSolver)
-    find_package(MILPSolver QUIET)
-endif ()
-if (TARGET ${modNamespace}::MILPSolver)
-    add_executable(${modName}_milp_test test_milp.cpp)
-    target_link_libraries(${modName}_milp_test PRIVATE
-            ${modNamespace}::${modName} ${modNamespace}::MILPSolver)
-
-    add_test(NAME ${modName}_milp_test
-             COMMAND ${modName}_milp_test
-             WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-
-    set_tests_properties(${modName}_milp_test PROPERTIES LABELS "${modName}")
-endif ()

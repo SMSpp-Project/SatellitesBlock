@@ -1,36 +1,45 @@
 /*--------------------------------------------------------------------------*/
-/*----------------------------- File test.cpp -------------------------------*/
+/*-------------------------- File test.cpp ---------------------------------*/
 /*--------------------------------------------------------------------------*/
 /** @file
- * MILP test for SatellitesBlock: loads a small SCDP instance into a
- * DiscreteConstellationBlock, configures a *MILPSolver on it out of a
- * BlockSolverConfig txt file and solves it, checking that a finite optimum
- * is found. The instance and the configuration can be overridden on the
- * command line.
+ * Unit test of SatellitesBlock, using nothing but the core SMS++ library.
  *
- * This is the file built as the default "${modName}_test" target by
- * test/CMakeLists.txt (and as SatellitesBlock_test by the plain makefile
- * in this directory); the analogous test based on the "continuous"
- * ConstellationBlock is test_milp.cpp, built as "${modName}_milp_test"
- * (only when a MILPSolver is available).
+ * Each of the Block that are the root of a model of the module, i.e.,
+ * ConstellationBlock, DiscreteConstellationBlock and MultiTargetBlock, is
+ * constructed by the Block factory and loaded with the instance of the
+ * module it is meant for [see data/txt], and then:
  *
- * \author Luca Mencarelli \n
+ * - its abstract representation, and that of all its sub-Block, is
+ *   generated with a FakeSolver registered to it, which has to receive no
+ *   Modification at all: the abstract representation is part of the
+ *   construction of the Block, and a Modification issued while generating
+ *   it reaches whoever listens, e.g., the LagBFunction of a Lagrangian
+ *   decomposition, which does not know the Block yet and throws;
+ *
+ * - the instance is loaded again into the same Block, and the abstract
+ *   representation generated again has to have the same number of static
+ *   Variable and Constraint, in the Block and in each sub-Block.
+ *
+ * The solution of the models, by a :MILPSolver and by the Lagrangian
+ * decomposition with the Solver of this module on the sub-Block, is
+ * cross-checked in the SatellitesBlock suite of the tests of the umbrella.
+ *
+ * \author Donato Meoli \n
  *         Dipartimento di Informatica \n
  *         Universita' di Pisa \n
  *
- * \copyright &copy; by Luca Mencarelli
+ * \copyright &copy; by Donato Meoli
  */
 /*--------------------------------------------------------------------------*/
 /*------------------------------ INCLUDES ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
-#include <cmath>
-
 #include <iostream>
+#include <string>
+#include <vector>
 
-#include "BlockSolverConfig.h"
-
-#include "DiscreteConstellationBlock.h"
+#include "Block.h"
+#include "FakeSolver.h"
 
 /*--------------------------------------------------------------------------*/
 /*-------------------------------- USING -----------------------------------*/
@@ -39,69 +48,107 @@
 using namespace SMSpp_di_unipi_it;
 
 /*--------------------------------------------------------------------------*/
+/*------------------------------ FUNCTIONS ---------------------------------*/
+/*--------------------------------------------------------------------------*/
+/// generates the abstract representation of block and of all its sub-Block
+
+static void generate_all( Block * block )
+{
+ block->generate_abstract_variables();
+ for( auto sb : block->get_nested_Blocks() )
+  generate_all( sb );
+ block->generate_abstract_constraints();
+ block->generate_objective();
+ }
+
+/*--------------------------------------------------------------------------*/
+/// the number of static Variable and Constraint of block and its sub-Block
+
+static std::vector< Block::Index > shape( Block * block )
+{
+ std::vector< Block::Index > s = { block->get_number_static_variables() ,
+                                   block->get_number_static_constraints() };
+ for( auto sb : block->get_nested_Blocks() ) {
+  auto ss = shape( sb );
+  s.insert( s.end() , ss.begin() , ss.end() );
+  }
+ return( s );
+ }
+
+/*--------------------------------------------------------------------------*/
+/// the checks on the Block named classname, loaded with instance
+
+static bool check( const std::string & classname ,
+                   const std::string & instance )
+{
+ auto block = Block::new_Block( classname );
+ if( ! block ) {
+  std::cout << classname << ": not present in the Block factory"
+            << std::endl;
+  return( false );
+  }
+
+ bool ok = true;
+ try {
+  block->load( instance );
+  if( block->get_nested_Blocks().empty() ) {
+   std::cout << classname << ": no sub-Block after load()" << std::endl;
+   ok = false;
+   }
+
+  auto fake = new FakeSolver();
+  block->register_Solver( fake );
+  generate_all( block );
+  if( ! fake->get_Modification_list().empty() ) {
+   std::cout << classname << ": " << fake->get_Modification_list().size()
+             << " Modification issued while generating the abstract "
+             << "representation" << std::endl;
+   ok = false;
+   }
+  block->unregister_Solvers( true );
+
+  const auto first = shape( block );
+  block->load( instance );
+  generate_all( block );
+  if( shape( block ) != first ) {
+   std::cout << classname << ": a second load() gives a different abstract "
+             << "representation" << std::endl;
+   ok = false;
+   }
+  }
+ catch( std::exception & e ) {
+  std::cout << classname << ": " << e.what() << std::endl;
+  ok = false;
+  }
+
+ delete block;
+
+ if( ok )
+  std::cout << classname << ": OK" << std::endl;
+ return( ok );
+ }
+
+/*--------------------------------------------------------------------------*/
 /*-------------------------------- main() ----------------------------------*/
 /*--------------------------------------------------------------------------*/
 
 int main( int argc , char ** argv )
 {
- std::string instance = argc > 1 ? argv[ 1 ] : "inputheur-const";
- std::string config = argc > 2 ? argv[ 2 ] : "MILPPar.txt";
+ // the directory of the instances, data/txt of the module by default
+ const std::string data = argc > 1 ? argv[ 1 ] : "../data/txt";
 
- // construct a DiscreteConstellationBlock via the factory and load the instance
- auto block = dynamic_cast< DiscreteConstellationBlock * >(
-                                    Block::new_Block( "DiscreteConstellationBlock" ) );
- if( ! block ) {
-  std::cerr << "DiscreteConstellationBlock not present in Block factory" << std::endl;
-  return( 1 );
-  }
+ bool ok = check( "ConstellationBlock" , data + "/inputheur-const" );
+ ok = check( "DiscreteConstellationBlock" , data + "/inputheur-const" ) && ok;
+ ok = check( "MultiTargetBlock" , data + "/inputheur-target" ) && ok;
 
- block->load( instance );
+ if( ok )
+  std::cout << "SatellitesBlock: all tests passed" << std::endl;
+ else
+  std::cout << "SatellitesBlock: some test failed" << std::endl;
 
- // configure a Solver on the Block out of the BlockSolverConfig
- auto bsc = dynamic_cast< BlockSolverConfig * >(
-                                     Configuration::deserialize( config ) );
- if( ! bsc ) {
-  std::cerr << "'" << config << "' is not a BlockSolverConfig" << std::endl;
-  delete block;
-  return( 1 );
-  }
-
- bsc->apply( block );
-
- if( block->get_registered_solvers().empty() ) {
-  std::cerr << "the BlockSolverConfig did not register any Solver"
-            << std::endl;
-  delete bsc;
-  delete block;
-  return( 1 );
-  }
-
- // solve
- auto slvr = block->get_registered_solvers().front();
- slvr->compute();
-
- auto lb = slvr->get_lb();
- auto ub = slvr->get_ub();
- std::cout << "lb = " << lb << ", ub = " << ub << std::endl;
-
- bool ok = std::isfinite( lb ) && std::isfinite( ub ) &&
-           ( ub - lb <= 1e-6 * std::max( 1.0 , std::abs( ub ) ) );
-
- // cleanup: unregister the Solver and delete everything
- bsc->clear();
- bsc->apply( block );
- delete bsc;
- delete block;
-
- if( ok ) {
-  std::cout << "SatellitesBlock MILP: all tests passed" << std::endl;
-  return( 0 );
-  }
-
- std::cout << "SatellitesBlock MILP: test failed" << std::endl;
- return( 1 );
+ return( ok ? 0 : 1 );
  }
 
 /*--------------------------------------------------------------------------*/
-/*--------------------------- End File test.cpp -----------------------------*/
+/*-------------------------- End File test.cpp -----------------------------*/
 /*--------------------------------------------------------------------------*/
