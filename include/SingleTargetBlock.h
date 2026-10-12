@@ -594,13 +594,13 @@ class SingleTargetSolution : public Solution {
 
  explicit SingleTargetSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// de-serialize a SingleTargetSolution out of netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// destructor: it is virtual, and empty
 
  ~SingleTargetSolution() override = default;
@@ -613,32 +613,32 @@ class SingleTargetSolution : public Solution {
 
  void read( const Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// write the value of Deltat into the given SingleTargetBlock
  /** Writes the stored value into the Variable Deltat of the given
   * SingleTargetBlock; does nothing if the SingleTargetSolution is empty. */
 
  void write( Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// serialize a SingleTargetSolution into a netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void serialize( netCDF::NcGroup & group ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a SingleTargetSolution with the value multiplied by factor
 
  SingleTargetSolution * scale( double factor ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// adds the given SingleTargetSolution, multiplied by multiplier
  /** Adds multiplier times the value of the given SingleTargetSolution,
   * which must have the same size, to the stored one. */
 
  void sum( const Solution * solution , double multiplier ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a copy of the SingleTargetSolution
  /** Returns a copy of the SingleTargetSolution; if empty == true the copy
   * has the same size but its value is zero. */

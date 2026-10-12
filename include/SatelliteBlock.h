@@ -652,13 +652,13 @@ class SatelliteSolution : public Solution {
 
  explicit SatelliteSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// de-serialize a SatelliteSolution out of netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// destructor: it is virtual, and empty
 
  ~SatelliteSolution() override = default;
@@ -671,32 +671,32 @@ class SatelliteSolution : public Solution {
 
  void read( const Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// write the value of zeta into the given SatelliteBlock
  /** Writes the stored value into the Variable zeta of the given
   * SatelliteBlock; does nothing if the SatelliteSolution is empty. */
 
  void write( Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// serialize a SatelliteSolution into a netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void serialize( netCDF::NcGroup & group ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a SatelliteSolution with the value multiplied by factor
 
  SatelliteSolution * scale( double factor ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// adds the given SatelliteSolution, multiplied by multiplier
  /** Adds multiplier times the value of the given SatelliteSolution, which
   * must have the same size, to the stored one. */
 
  void sum( const Solution * solution , double multiplier ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a copy of the SatelliteSolution
  /** Returns a copy of the SatelliteSolution; if empty == true the copy has
   * the same size but its value is zero. */

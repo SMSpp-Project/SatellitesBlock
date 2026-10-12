@@ -493,13 +493,13 @@ class DiscreteSatelliteSolution : public Solution {
 
  explicit DiscreteSatelliteSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// de-serialize a DiscreteSatelliteSolution out of netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// destructor: it is virtual, and empty
 
  ~DiscreteSatelliteSolution() override = default;
@@ -514,7 +514,7 @@ class DiscreteSatelliteSolution : public Solution {
 
  void read( const Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// write the values of the y[][] into the given DiscreteSatelliteBlock
  /** Writes the stored values into the y[][] Variable of the given
   * DiscreteSatelliteBlock, which must have the same size as this
@@ -523,25 +523,25 @@ class DiscreteSatelliteSolution : public Solution {
 
  void write( Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// serialize a DiscreteSatelliteSolution into a netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void serialize( netCDF::NcGroup & group ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a DiscreteSatelliteSolution with the values multiplied by factor
 
  DiscreteSatelliteSolution * scale( double factor ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// adds the given DiscreteSatelliteSolution, multiplied by multiplier
  /** Adds multiplier times the values of the given DiscreteSatelliteSolution,
   * which must have the same size, to the stored ones. */
 
  void sum( const Solution * solution , double multiplier ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a copy of the DiscreteSatelliteSolution
  /** Returns a copy of the DiscreteSatelliteSolution; if empty == true the
   * copy has the same size but all its values are zero. */

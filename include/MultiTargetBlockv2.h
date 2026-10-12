@@ -492,13 +492,13 @@ class MultiTargetSolution : public Solution {
 
  explicit MultiTargetSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// de-serialize a MultiTargetSolution out of netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// destructor: it is virtual, and empty
 
  ~MultiTargetSolution() override = default;
@@ -513,32 +513,32 @@ class MultiTargetSolution : public Solution {
 
  void read( const Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// write the values of the Deltat into the given MultiTargetBlockv2
  /** Writes the stored values into the Variable Deltat[] of the given
   * MultiTargetBlockv2; does nothing if the MultiTargetSolution is empty. */
 
  void write( Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// serialize a MultiTargetSolution into a netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void serialize( netCDF::NcGroup & group ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a MultiTargetSolution with the values multiplied by factor
 
  MultiTargetSolution * scale( double factor ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// adds the given MultiTargetSolution, multiplied by multiplier
  /** Adds multiplier times the values of the given MultiTargetSolution,
   * which must have the same size, to the stored ones. */
 
  void sum( const Solution * solution , double multiplier ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a copy of the MultiTargetSolution
  /** Returns a copy of the MultiTargetSolution; if empty == true the copy
   * has the same size but all its values are zero. */

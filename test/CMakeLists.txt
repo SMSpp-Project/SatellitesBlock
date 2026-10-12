@@ -29,7 +29,7 @@ else ()
     endif ()
 endif ()
 
-# ----- SatellitesBlock_unit_test --------------------------------------------- #
+# ----- SatellitesBlock_unit_test ------------------------------------------- #
 
 add_executable(${modName}_unit_test test.cpp)
 target_link_libraries(${modName}_unit_test PRIVATE ${modNamespace}::${modName})
