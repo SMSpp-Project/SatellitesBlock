@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- the C++20 module `smspp.satellitesblock` (`src/SatellitesBlock.cppm`),
+  which exports every name that the headers declare at namespace scope and
+  re-exports `smspp`, so that a source file can write `import
+  smspp.satellitesblock;` in place of the `#include` of the headers; it is
+  built with the CMake option `SMSpp_BUILD_MODULE`, as the target
+  `SMS++::SatellitesBlock_module`
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
