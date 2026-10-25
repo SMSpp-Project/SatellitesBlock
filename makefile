@@ -49,6 +49,12 @@ SBkH   = $(SBkSDR)/include/ConstellationBlock.h \
          $(SBkSDR)/include/SatelliteSolver.h \
          $(SBkSDR)/include/SingleTargetBlock.h
 
+# the C++20 module smspp.satellitesblock - - - - - - - - - - - - - - - - - -
+# [see makefile-mod of SMS++]
+
+$(eval $(call SMSppMODrule,SBk,$(SBkSDR),SatellitesBlock,\
+	smspp.satellitesblock,$(SMS++MOD)))
+
 # clean - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 clean::
