@@ -53,7 +53,7 @@ SBkH   = $(SBkSDR)/include/ConstellationBlock.h \
 # [see makefile-mod of SMS++]
 
 $(eval $(call SMSppMODrule,SBk,$(SBkSDR),SatellitesBlock,\
-	smspp.satellitesblock,$(SMS++MOD)))
+	smspp.satellitesblock,SMS++))
 
 # clean - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -62,39 +62,51 @@ clean::
 
 # dependencies: every .o from its .cpp + every recursively included .h- - - -
 
-$(SBkSDR)/obj/ConstellationBlock.o: $(SBkSDR)/src/ConstellationBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/ConstellationBlock.o: $(SBkSDR)/src/ConstellationBlock.cpp \
+	$(SBkH) $(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/ConstellationBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/MultiTargetBlock.o: $(SBkSDR)/src/MultiTargetBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/MultiTargetBlock.o: $(SBkSDR)/src/MultiTargetBlock.cpp $(SBkH) \
+	$(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/MultiTargetBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/MultiTargetBlockv2.o: $(SBkSDR)/src/MultiTargetBlockv2.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/MultiTargetBlockv2.o: $(SBkSDR)/src/MultiTargetBlockv2.cpp \
+	$(SBkH) $(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/MultiTargetBlockv2.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/SatelliteBlock.o: $(SBkSDR)/src/SatelliteBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/SatelliteBlock.o: $(SBkSDR)/src/SatelliteBlock.cpp $(SBkH) \
+	$(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/SatelliteBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/SatelliteSolver.o: $(SBkSDR)/src/SatelliteSolver.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/SatelliteSolver.o: $(SBkSDR)/src/SatelliteSolver.cpp $(SBkH) \
+	$(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/SatelliteSolver.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/SingleTargetBlock.o: $(SBkSDR)/src/SingleTargetBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/SingleTargetBlock.o: $(SBkSDR)/src/SingleTargetBlock.cpp \
+	$(SBkH) $(SMS++H) $(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/SingleTargetBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/DiscreteConstellationBlock.o: $(SBkSDR)/src/DiscreteConstellationBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/DiscreteConstellationBlock.o: \
+	$(SBkSDR)/src/DiscreteConstellationBlock.cpp $(SBkH) $(SMS++H) \
+	$(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/DiscreteConstellationBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/DiscreteSatelliteBlock.o: $(SBkSDR)/src/DiscreteSatelliteBlock.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/DiscreteSatelliteBlock.o: \
+	$(SBkSDR)/src/DiscreteSatelliteBlock.cpp $(SBkH) $(SMS++H) \
+	$(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/DiscreteSatelliteBlock.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
-$(SBkSDR)/obj/DiscreteSatelliteSolver.o: $(SBkSDR)/src/DiscreteSatelliteSolver.cpp $(SBkH) $(SMS++H) $(SMS++OBJ)
+$(SBkSDR)/obj/DiscreteSatelliteSolver.o: \
+	$(SBkSDR)/src/DiscreteSatelliteSolver.cpp $(SBkH) $(SMS++H) \
+	$(SMS++OBJ)
 	$(CC) -c $(SBkSDR)/src/DiscreteSatelliteSolver.cpp -o $@ \
 	$(SBkINC) $(SMS++INC) $(SW)
 
