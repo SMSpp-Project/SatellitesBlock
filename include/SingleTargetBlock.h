@@ -480,7 +480,7 @@ class SingleTargetBlock : public Block {
  FNumber dt;        ///< the time step [s]
  FNumber T;         ///< the time horizon [s]
  FNumber alphaHalf; ///< the half-aperture of the sensors
- FNumber thetaVal;  ///< the maximum threshold theta^{\max}
+ FNumber thetaVal;  ///< the maximum threshold theta^max
 
  boost::multi_array< double , 2 > CoverageSatLat;
  ///< CoverageSatLat[ k ][ c ], the latitude distances
@@ -506,7 +506,7 @@ class SingleTargetBlock : public Block {
  ///< the orbit Variable pi[ i ][ c ]
 
  std::vector< FRowConstraint > orbitSelection; ///< sum_c pi[ i ][ c ] = 1
- std::vector< FRowConstraint > theta_UB;       ///< theta[ i ] <= theta^{\max}
+ std::vector< FRowConstraint > theta_UB;       ///< theta[ i ] <= theta^max
 
  std::vector< FRowConstraint > Deltat_max_dt1; ///< Deltat >= dt
  std::vector< FRowConstraint > Deltat_max1;    ///< the forward part of (4)

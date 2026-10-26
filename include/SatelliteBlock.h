@@ -88,7 +88,7 @@ using c_Vec_SatelliteBlock_it = c_Vec_SatelliteBlock::iterator;
  * between the ground track and every target m at every time stamp t are
  * known (they are computed by ConstellationBlock::load()). The Variable are
  *
- * - \f$ \pi[ c ] \in \{ 0 , 1 \} \f$, c \in [C], which is 1 if the
+ * - \f$ \pi[ c ] \in \{ 0 , 1 \} \f$, \f$ c \in [C] \f$, which is 1 if the
  *   satellite is placed on orbit c (activation);
  *
  * - \f$ \xi[ m ][ t ] \in \{ 0 , 1 \} \f$, which is 1 if the satellite
@@ -573,7 +573,7 @@ class SatelliteBlock : public Block {
  FNumber T;           ///< the time horizon [s]
  FNumber alphaHalf;   ///< the half-aperture of the sensor
  FNumber altitudeVal; ///< the altitude of the orbits [m]
- FNumber thetaVal;    ///< the maximum threshold theta^{\max}
+ FNumber thetaVal;    ///< the maximum threshold theta^max
 
  Vec_CNumber periods; ///< the number of revisit periods per target
 
@@ -589,8 +589,8 @@ class SatelliteBlock : public Block {
  ///< the observation Variable xi[ m ][ t ]
 
  std::vector< FRowConstraint > orbitSelection; ///< the constraint (2)
- std::vector< FRowConstraint > thetaUB;        ///< theta <= theta^{\max} zeta
- std::vector< FRowConstraint > thetaLB; ///< theta >= theta^{\max} zeta / 20
+ std::vector< FRowConstraint > thetaUB;        ///< theta <= theta^max zeta
+ std::vector< FRowConstraint > thetaLB; ///< theta >= theta^max zeta / 20
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst;
  ///< the constraints xi[ m ][ t ] <= zeta (3)
  std::vector< FRowConstraint > activationSat_cnst_1;
