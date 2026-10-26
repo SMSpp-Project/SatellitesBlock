@@ -29,13 +29,10 @@ module;
 
 #include "ConstellationBlock.h"
 #include "DiscreteConstellationBlock.h"
-#include "DiscreteSatelliteBlock.h"
 #include "DiscreteSatelliteSolver.h"
 #include "MultiTargetBlock.h"
 #include "MultiTargetBlockv2.h"
-#include "SatelliteBlock.h"
 #include "SatelliteSolver.h"
-#include "SingleTargetBlock.h"
 
 /*--------------------------------------------------------------------------*/
 /*----------------------------- MODULE PURVIEW -----------------------------*/
