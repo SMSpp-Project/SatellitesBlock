@@ -1,5 +1,11 @@
 # SatellitesBlock
 
+[![Pipeline](https://gitlab.com/smspp/satellitesblock/badges/develop/pipeline.svg)](https://gitlab.com/smspp/satellitesblock/-/pipelines?ref=develop)
+[![Release](https://gitlab.com/smspp/satellitesblock/-/badges/release.svg)](https://gitlab.com/smspp/satellitesblock/-/releases)
+[![Documentation](https://img.shields.io/badge/docs-Doxygen-blue)](https://smspp.gitlab.io/smspp-project/)
+[![C++ Standard](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL_v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+
 Implementation of different `Block` for the Satellite Constellation Design
 Problem (SCDP) for the minimization of the number of satellites in the
 constellation or of the sum of the maximum revisit times per target. In the
@@ -26,6 +32,10 @@ for the satellite constellation design problem" by L. Mencarelli (2025).
 
 These instructions will let you build the `SatellitesBlock` module on
 your system.
+
+The channels that distribute SMS++ are listed in its [installation
+guide](https://gitlab.com/smspp/smspp-project/-/wikis/Installing-SMS++); what
+follows is about building the module yourself.
 
 ### Requirements
 

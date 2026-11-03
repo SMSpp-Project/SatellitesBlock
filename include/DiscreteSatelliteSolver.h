@@ -208,7 +208,7 @@ class DiscreteSatelliteSolver : public Solver {
   return( f_has_sol ? f_value : -Inf< OFValue >() );
   }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns the optimal value found by the last call to compute()
  /** Same as get_lb(), but returning +Inf before any successful compute(). */
 
@@ -216,7 +216,7 @@ class DiscreteSatelliteSolver : public Solver {
   return( f_has_sol ? f_value : Inf< OFValue >() );
   }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns the value of the solution found by the last call to compute()
 
  OFValue get_var_value( void ) override { return( get_ub() ); }

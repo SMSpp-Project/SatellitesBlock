@@ -245,7 +245,7 @@ class SatelliteSolver : public Solver {
   return( f_has_sol ? objective_opt : -Inf< OFValue >() );
   }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns the value found by the last call to compute()
  /** Same as get_lb(), but returning +Inf before any successful compute(). */
 
@@ -253,7 +253,7 @@ class SatelliteSolver : public Solver {
   return( f_has_sol ? objective_opt : Inf< OFValue >() );
   }
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns the value of the solution found by the last call to compute()
 
  OFValue get_var_value( void ) override { return( get_ub() ); }

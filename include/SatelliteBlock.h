@@ -88,7 +88,7 @@ using c_Vec_SatelliteBlock_it = c_Vec_SatelliteBlock::iterator;
  * between the ground track and every target m at every time stamp t are
  * known (they are computed by ConstellationBlock::load()). The Variable are
  *
- * - \f$ \pi[ c ] \in \{ 0 , 1 \} \f$, c \in [C], which is 1 if the
+ * - \f$ \pi[ c ] \in \{ 0 , 1 \} \f$, \f$ c \in [C] \f$, which is 1 if the
  *   satellite is placed on orbit c (activation);
  *
  * - \f$ \xi[ m ][ t ] \in \{ 0 , 1 \} \f$, which is 1 if the satellite
@@ -573,7 +573,7 @@ class SatelliteBlock : public Block {
  FNumber T;           ///< the time horizon [s]
  FNumber alphaHalf;   ///< the half-aperture of the sensor
  FNumber altitudeVal; ///< the altitude of the orbits [m]
- FNumber thetaVal;    ///< the maximum threshold theta^{\max}
+ FNumber thetaVal;    ///< the maximum threshold theta^max
 
  Vec_CNumber periods; ///< the number of revisit periods per target
 
@@ -589,8 +589,8 @@ class SatelliteBlock : public Block {
  ///< the observation Variable xi[ m ][ t ]
 
  std::vector< FRowConstraint > orbitSelection; ///< the constraint (2)
- std::vector< FRowConstraint > thetaUB;        ///< theta <= theta^{\max} zeta
- std::vector< FRowConstraint > thetaLB; ///< theta >= theta^{\max} zeta / 20
+ std::vector< FRowConstraint > thetaUB;        ///< theta <= theta^max zeta
+ std::vector< FRowConstraint > thetaLB; ///< theta >= theta^max zeta / 20
  boost::multi_array< FRowConstraint , 2 > activationSat_cnst;
  ///< the constraints xi[ m ][ t ] <= zeta (3)
  std::vector< FRowConstraint > activationSat_cnst_1;
@@ -652,13 +652,13 @@ class SatelliteSolution : public Solution {
 
  explicit SatelliteSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// de-serialize a SatelliteSolution out of netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// destructor: it is virtual, and empty
 
  ~SatelliteSolution() override = default;
@@ -671,32 +671,32 @@ class SatelliteSolution : public Solution {
 
  void read( const Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// write the value of zeta into the given SatelliteBlock
  /** Writes the stored value into the Variable zeta of the given
   * SatelliteBlock; does nothing if the SatelliteSolution is empty. */
 
  void write( Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// serialize a SatelliteSolution into a netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void serialize( netCDF::NcGroup & group ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a SatelliteSolution with the value multiplied by factor
 
  SatelliteSolution * scale( double factor ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// adds the given SatelliteSolution, multiplied by multiplier
  /** Adds multiplier times the value of the given SatelliteSolution, which
   * must have the same size, to the stored one. */
 
  void sum( const Solution * solution , double multiplier ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a copy of the SatelliteSolution
  /** Returns a copy of the SatelliteSolution; if empty == true the copy has
   * the same size but its value is zero. */

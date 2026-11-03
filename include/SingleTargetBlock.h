@@ -480,7 +480,7 @@ class SingleTargetBlock : public Block {
  FNumber dt;        ///< the time step [s]
  FNumber T;         ///< the time horizon [s]
  FNumber alphaHalf; ///< the half-aperture of the sensors
- FNumber thetaVal;  ///< the maximum threshold theta^{\max}
+ FNumber thetaVal;  ///< the maximum threshold theta^max
 
  boost::multi_array< double , 2 > CoverageSatLat;
  ///< CoverageSatLat[ k ][ c ], the latitude distances
@@ -506,7 +506,7 @@ class SingleTargetBlock : public Block {
  ///< the orbit Variable pi[ i ][ c ]
 
  std::vector< FRowConstraint > orbitSelection; ///< sum_c pi[ i ][ c ] = 1
- std::vector< FRowConstraint > theta_UB;       ///< theta[ i ] <= theta^{\max}
+ std::vector< FRowConstraint > theta_UB;       ///< theta[ i ] <= theta^max
 
  std::vector< FRowConstraint > Deltat_max_dt1; ///< Deltat >= dt
  std::vector< FRowConstraint > Deltat_max1;    ///< the forward part of (4)
@@ -594,13 +594,13 @@ class SingleTargetSolution : public Solution {
 
  explicit SingleTargetSolution( void ) {}
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// de-serialize a SingleTargetSolution out of netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void deserialize( const netCDF::NcGroup & group ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// destructor: it is virtual, and empty
 
  ~SingleTargetSolution() override = default;
@@ -613,32 +613,32 @@ class SingleTargetSolution : public Solution {
 
  void read( const Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// write the value of Deltat into the given SingleTargetBlock
  /** Writes the stored value into the Variable Deltat of the given
   * SingleTargetBlock; does nothing if the SingleTargetSolution is empty. */
 
  void write( Block * block ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// serialize a SingleTargetSolution into a netCDF::NcGroup
  /** Not implemented: exception is thrown. */
 
  void serialize( netCDF::NcGroup & group ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a SingleTargetSolution with the value multiplied by factor
 
  SingleTargetSolution * scale( double factor ) const override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// adds the given SingleTargetSolution, multiplied by multiplier
  /** Adds multiplier times the value of the given SingleTargetSolution,
   * which must have the same size, to the stored one. */
 
  void sum( const Solution * solution , double multiplier ) override final;
 
-/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - --*/
+/*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  /// returns a copy of the SingleTargetSolution
  /** Returns a copy of the SingleTargetSolution; if empty == true the copy
   * has the same size but its value is zero. */
