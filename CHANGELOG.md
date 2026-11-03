@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-03
+
 ### Added
 
 - the makefiles build the C++20 module `smspp.satellitesblock` when
@@ -52,7 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   debugging information, which clang++ and g++ spell differently
   (`-ferror-limit=1` and `-glldb` against `-fmax-errors=1` and `-ggdb`),
   from `SMSppSWERR` and `SMSppSWDBG` of `lib/makefile-OS` of SMS++
-
 
 ## [0.1.0] - 2026-10-09
 
@@ -109,5 +110,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MultiTargetBlockv2 deleted twice the LinearFunction of two observation
   constraints that were never added to the model
 
-[Unreleased]: https://gitlab.com/smspp/satellitesblock/-/compare/0.1.0...develop
+[Unreleased]: https://gitlab.com/smspp/satellitesblock/-/compare/0.2.0...develop
+[0.2.0]: https://gitlab.com/smspp/satellitesblock/-/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.com/smspp/satellitesblock/-/tags/0.1.0
