@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-16
+
 
 ### Fixed
 
@@ -117,6 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MultiTargetBlockv2 deleted twice the LinearFunction of two observation
   constraints that were never added to the model
 
-[Unreleased]: https://gitlab.com/smspp/satellitesblock/-/compare/0.2.0...develop
+[Unreleased]: https://gitlab.com/smspp/satellitesblock/-/compare/0.3.0...develop
+[0.3.0]: https://gitlab.com/smspp/satellitesblock/-/compare/0.2.0...0.3.0
 [0.2.0]: https://gitlab.com/smspp/satellitesblock/-/compare/0.1.0...0.2.0
 [0.1.0]: https://gitlab.com/smspp/satellitesblock/-/tags/0.1.0
