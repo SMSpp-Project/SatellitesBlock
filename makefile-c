@@ -50,4 +50,8 @@ SBkINC := $(SBkINC) $(SMS++INC)
 # external libraries for SatellitesBlock
 SBkLIB = $(SMS++LIB)
 
+# the objects as the shared libraries of the module and of those whose
+# objects it takes [see SMS++/lib/makefile-shared]
+$(eval $(call SMSppSOlib,SBk))
+
 ############################ End of makefile #################################
